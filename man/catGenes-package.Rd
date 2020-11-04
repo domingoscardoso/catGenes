@@ -17,7 +17,7 @@ concatenated phylogenetic or phylogenomic analyses. By using the functions
 \code{\link{writeNexus}} or \code{\link{writePhylip}} the user can write the
 catfullGenes- or catmultGenes-derived list of DNA alignments in nexus or phylip
 format, respectively, which can serve for downstream model-based phylogenetic
-analyses in Mr.Bayes, BEAST, RAxML or PAUP.
+analyses in MrBayes, BEAST, RAxML or PAUP.
 
 Another set of functions in this package allow the user to write a \code{data.frame}
 formatted DNA alignment (two-column-sized table including the taxon names and
@@ -38,7 +38,7 @@ Date: \tab 2020-10-25\cr
 }
 }
 \references{
-Cardoso, D., Cavalcante, Q. & Vilela, B. (2020). catGenes: a new R package for combining individual DNA alignments for multigene analysis in phylogenetics and phylogenomics.
+Cardoso, D., Cavalcante, Q. & Vilela, B. (2020). catGenes: a new R package for combining multiple DNA alignments for multigene analysis in phylogenetics and phylogenomics.
 }
 \author{
 \strong{Domingos Cardoso}\cr
