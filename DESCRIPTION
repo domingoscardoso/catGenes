@@ -1,14 +1,29 @@
 Package: catGenes
-Type: Package
-Title: Concatenate DNA alignments
+Title: Concatenating multiple DNA alignments made easy
 Version: 0.1.0
 Author: Domingos Cardoso, Quezia Cavalcante, and Bruno Vilela
-Maintainer: Domingos Cardoso <cardosobot@gmail.com>
 Description: The catGenes package is intended to help researchers in phylogenetics and phylogenomics to build a fully concatenated or combined (non-interleaved) dataset by automatically comparing individual DNA alignments.
-Depends: R (>= 3.5.0), dplyr, tidyr, stringr, R.utils, rmarkdown, ape, shiny (>= 1.1.0), shinydashboard, shinyjs, tibble, stats
+Maintainer: Domingos Cardoso <cardosobot@gmail.com>
+URL: https://github.com/domingoscardoso/catGenes
+Language: en-US
+Depends:
+    R (>= 3.5.0)
+Imports:
+    dplyr,
+    tidyr,
+    stringr,
+    R.utils,
+    rmarkdown,
+    ape,
+    shiny (>= 1.1.0),
+    shinydashboard,
+    shinyjs,
+    tibble,
+    stats
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
+Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Suggests: knitr
 VignetteBuilder: knitr

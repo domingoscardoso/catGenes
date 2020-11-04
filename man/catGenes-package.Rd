@@ -17,14 +17,15 @@ concatenated phylogenetic or phylogenomic analyses. By using the functions
 \code{\link{writeNexus}} or \code{\link{writePhylip}} the user can write the
 catfullGenes- or catmultGenes-derived list of DNA alignments in nexus or phylip
 format, respectively, which can serve for downstream model-based phylogenetic
-analyses in Mr. Bayes, BEAST, RAxML or PAUP.
+analyses in Mr.Bayes, BEAST, RAxML or PAUP.
 
 Another set of functions in this package allow the user to write a \code{data.frame}
 formatted DNA alignment (two-column-sized table including the taxon names and
-corresponding DNA sequence) as fasta or nexus formats: \code{\link{fastadframe}}
-and \code{\link{nexusdframe}}. These are useful for readily writing each gene
-dataset from within the resulting list of compared gene datasets, after running
-the functions \code{\link{catfullGenes}} or \code{\link{catmultGenes}}.
+corresponding DNA sequence) as nexus, phylip or fasta formats: \code{\link{nexusdframe}},
+\code{\link{phylipdframe}}, \code{\link{fastadframe}}. These are useful for
+readily writing each gene dataset from within the resulting list of compared
+gene datasets, after running the functions \code{\link{catfullGenes}},
+\code{\link{catmultGenes}} or \code{\link{dropSeq}}.
 
 For the most recent version of the catGenes, you are directed to
 package's page on github (\url{http://www.github.com/domingoscardoso/catGenes}).
