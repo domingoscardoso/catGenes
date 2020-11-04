@@ -1,0 +1,50 @@
+#' The catGenes package is under development and is intended to help researchers
+#' in phylogenetics and phylogenomics to build a fully concatenated or combined
+#' (non-interleaved) dataset by automatically comparing individual DNA alignments.
+#'
+#' The package's main functions \code{\link{catfullGenes}} and \code{\link{catmultGenes}}
+#' compare at least two individual DNA alignments with differing (or equal) number
+#' of sequences and creates equally-sized DNA alignments that are useful for
+#' concatenated phylogenetic or phylogenomic analyses. By using the functions
+#' \code{\link{writeNexus}} or \code{\link{writePhylip}} the user can write the
+#' catfullGenes- or catmultGenes-derived list of DNA alignments in nexus or phylip
+#' format, respectively, which can serve for downstream model-based phylogenetic
+#' analyses in Mr. Bayes, BEAST, RAxML or PAUP.
+#'
+#' Another set of functions in this package allow the user to write a \code{data.frame}
+#' formatted DNA alignment (two-column-sized table including the taxon names and
+#' corresponding DNA sequence) as fasta or nexus formats: \code{\link{fastadframe}}
+#' and \code{\link{nexusdframe}}. These are useful for readily writing each gene
+#' dataset from within the resulting list of compared gene datasets, after running
+#' the functions \code{\link{catfullGenes}} or \code{\link{catmultGenes}}.
+#'
+#' For the most recent version of the catGenes, you are directed to
+#' package's page on github (\url{http://www.github.com/domingoscardoso/catGenes}).
+#'
+#' @name catGenes-package
+#' @aliases catGenes-package
+#' @docType package
+#' @title Tools for combining individual DNA alignments for multigene analysis in phylogenetics and phylogenomics
+#' @author \strong{Domingos Cardoso}\cr
+#' (email: \email{cardosobot@@gmail.com};
+#' Website: \url{https://biologia.ufba.br/domingos-benicio-oliveira-silva-cardoso})
+#' @author \strong{Quezia Cavalcante}\cr
+#' (email: \email{queziacs@@yahoo.com.br})
+#' @author \strong{Bruno Vilela}\cr
+#' (email: \email{brunovilelasilva@@hotmail.com};
+#' Website: \url{http://bvilela.weebly.com/})
+#'
+#' @keywords package
+#'
+#' @details \tabular{ll}{
+#' Package: \tab catGenes\cr
+#' Type: \tab Package\cr
+#' Version: \tab 0.10\cr
+#' Date: \tab 2020-10-25\cr
+#' }
+#'
+#' @references Cardoso, D., Cavalcante, Q. & Vilela, B. (2020). catGenes: a new R package for combining individual DNA alignments for multigene analysis in phylogenetics and phylogenomics.
+#'
+#' @import dplyr tidyr stringr R.utils rmarkdown ape shiny shinydashboard shinyjs
+
+NULL

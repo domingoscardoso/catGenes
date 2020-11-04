@@ -1,0 +1,124 @@
+#' Writes dataframe-formatted DNA alignment into nexus-formatted file
+#'
+#' @author Domingos Cardoso
+#'
+#' @description Writes \code{data.frame} formatted DNA alignment into nexus-formatted file.
+#' It is useful for writing each gene dataset from within the resulting list of
+#' compared gene datasets, after running the functions \code{\link{catfullGenes}}
+#' and \code{\link{catmultGenes}}.
+#'
+#' @usage
+#' nexusdframe(x, file,
+#'             dropmisseq = TRUE)
+#'
+#' @param x The object to be written, any two-column-sized \code{data.frame} where the first
+#' column contains the taxon names and the second column the DNA sequence.
+#'
+#' @param file Either a character string naming a file or a \code{\link{connection}}
+#'  open for writing.
+#'
+#' @param dropmisseq Logical, if \code{FALSE} the function will not drop species
+#' with empty DNA sequence. After running the concatenating function
+#' \code{\link{catmultGenes}} using missdata = \code{TRUE}, and then using
+#' \code{\link{dropSeq}} to remove duplicated accessions of the same species,
+#' you might find useful to keep dropmisseq = \code{TRUE} so as to save each
+#' individual DNA alignment by also removing species that fully miss the sequence
+#' data.
+#'
+#' @seealso \code{\link{catfullGenes}}
+#' @seealso \code{\link{catmultGenes}}
+#' @seealso \code{\link{dropSeq}}
+#'
+#' @examples \dontrun{
+#' data(DNAlignments)
+#' datasets4comb <- genefullcomp(DNAlignments,
+#'                               multiaccessions = FALSE,
+#'                               shortaxlabel = TRUE,
+#'                               missdata = FALSE,
+#'                               outgroup = "Abutilon_costicalyx")
+#'
+#' ITS <- datasets4comb[[1]]
+#' petLpsbE <- datasets4comb[[2]]
+#' rpl16 <- datasets4comb[[3]]
+#'
+#' nexusdframe(ITS, file = "filename.nex")
+#' nexusdframe(petLpsbE, file = "filename.nex")
+#' nexusdframe(rpl16, file = "filename.nex")
+#' }
+#'
+#' @import dplyr
+#' @importFrom stringr str_trunc str_pad str_extract_all
+#' @importFrom tidyr unite
+#'
+#' @export
+
+nexusdframe <- function(x, file,
+                        dropmisseq = TRUE) {
+
+  if(!is.data.frame(x)){
+    x <- data.frame(x)
+  }
+
+  ncolumns <- length(x)
+  if (ncolumns == 1){
+    stop("You must provide a two-column-sized data.frame containing the taxon names and DNA sequences
+          Find help also at DBOSLab-UFBA (Domingos Cardoso; cardosobot@gmail.com)")
+  }
+
+  if(names(x)[1] != "species" | names(x)[2] != "sequence"){
+    names(x) <- c("species", "sequence")
+  }
+
+  if(dropmisseq){
+    # Get number of missing data "N" and "?" in each sequence
+    missdata <- vector()
+    missdataN <- vector()
+    misstotal_temp <- list()
+    numbchar <- nchar(x[1,2])
+    for (i in seq_along(x$sequence)){
+      missdata <- length(stringr::str_extract_all(x$sequence[i], "[?]", simplify = FALSE)[[1]])
+      missdataN <- length(stringr::str_extract_all(x$sequence[i], "N", simplify = FALSE)[[1]])
+      misstotal_temp[i] <- missdata + missdataN
+    }
+    # Dropping species with empty seqs
+    x <- x[!unlist(misstotal_temp) %in% numbchar,]
+  }
+
+  nexus <- paste("#NEXUS", "", sep="\n")
+  begindata <- paste("BEGIN DATA;")
+  dimname <- paste("DIMENSIONS")
+  ntax <- paste0("NTAX=", length(rownames(x)))
+  numbchar <- paste0("NCHAR=", nchar(as.character(x[1,2])),";")
+  dimensions <- paste(dimname, ntax, numbchar, sep = " ")
+  format <- paste("FORMAT DATATYPE=DNA GAP=- MISSING=?;")
+  matrix <- paste("MATRIX", "", sep = "\n")
+
+  # Calculating the space between the taxon labels and corresponding DNA sequence
+  vector.list1 <- vector("list")
+  for (i in x$species){
+    vector.list1[[i]] <- nchar(i)
+  }
+  numtaxlab <- as.data.frame(unlist(vector.list1, use.names = FALSE))
+  colnames(numtaxlab) <- "numtaxlab"
+  row.names(numtaxlab) <- x$species
+
+  x$species <- x$species %>%
+    stringr::str_trunc(max(numtaxlab$numtaxlab, na.rm = FALSE) + 5) %>% # Just increase this last number if we want to add more space
+    stringr::str_pad(max(numtaxlab$numtaxlab, na.rm = FALSE) + 5, "right")
+  x <- tidyr::unite(x, "unamed", colnames(x), sep = "")
+  end <- paste(";","END;", sep = "\n")
+  x[nrow(x) + 1,] <- end
+  colnames(x) <- paste(nexus,
+                       begindata,
+                       dimensions,
+                       format,
+                       matrix,
+                       sep = "\n")
+
+  zz <- file(file, "w")
+  write.table(x, zz,
+              append = FALSE, quote = FALSE, sep = " ",
+              eol = "\n", na = "NA", dec = ".", row.names=FALSE,
+              col.names = TRUE)
+  close(zz)
+}
