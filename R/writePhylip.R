@@ -33,16 +33,16 @@
 #' @seealso \code{\link{catmultGenes}}
 #'
 #' @examples \dontrun{
-#' data(DNAlignments)
-#' datasets4comb <- catfullGenes(DNAlignments,
-#'                               shortaxlabel = TRUE,
-#'                               missdata = FALSE,
-#'                               outgroup = "Abutilon_costicalyx")
+#' data(Gaya)
+#' df <- catfullGenes(Gaya,
+#'                    shortaxlabel = TRUE,
+#'                    missdata = FALSE,
+#'                    outgroup = "Abutilon_costicalyx")
 #'
-#' writePhylip(datasets4comb,
-#'            file = "filename.phy",
-#'            catalignments = TRUE,
-#'            partitionfile = TRUE)
+#' writePhylip(df,
+#'             file = "filename.phy",
+#'             catalignments = TRUE,
+#'             partitionfile = TRUE)
 #' }
 #'
 #' @importFrom R.utils insert

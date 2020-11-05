@@ -37,17 +37,17 @@
 #' @seealso \code{\link{fastadframe}}
 #'
 #' @examples \dontrun{
-#' data(DNAlignments)
-#' datasets4comb <- catfullGenes(DNAlignments,
-#'                               shortaxlabel = TRUE,
-#'                               missdata = FALSE,
-#'                               outgroup = "Abutilon_costicalyx")
+#' data(Gaya)
+#' catdf <- catfullGenes(Gaya,
+#'                       shortaxlabel = TRUE,
+#'                       missdata = FALSE,
+#'                       outgroup = "Abutilon_costicalyx")
 #'
 #' outgrouptaxa <- c("Abutilon_costicalyx", "Abutilon_itatiaie")
-#' datasets4comb <- catfullGenes(DNAlignments,
-#'                               shortaxlabel = TRUE,
-#'                               missdata = FALSE,
-#'                               outgroup = outgrouptaxa)
+#' catdf <- catfullGenes(Gaya,
+#'                       shortaxlabel = TRUE,
+#'                       missdata = FALSE,
+#'                       outgroup = outgrouptaxa)
 #' }
 #'
 #' @importFrom dplyr arrange
@@ -61,7 +61,6 @@ catfullGenes <- function(...,
                          outgroup = NULL) {
 
   # Loading all individual genes into a single named list
-
   datset <- .namedlist(...)
 
   if(length(datset) == 1){

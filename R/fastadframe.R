@@ -30,20 +30,22 @@
 #' @seealso \code{\link{dropSeq}}
 #'
 #' @examples \dontrun{
-#' data(DNAlignments)
-#' datasets4comb <- genefullcomp(DNAlignments,
-#'                               multiaccessions = FALSE,
-#'                               shortaxlabel = TRUE,
-#'                               missdata = FALSE,
-#'                               outgroup = "Abutilon_costicalyx")
+#' data(Gaya)
+#' catdf <- catfullGenes(Gaya,
+#'                       multiaccessions = FALSE,
+#'                       shortaxlabel = TRUE,
+#'                       missdata = TRUE)
 #'
-#' ITS <- datasets4comb[[1]]
-#' petLpsbE <- datasets4comb[[2]]
-#' rpl16 <- datasets4comb[[3]]
+#' ITS <- catdf[[1]]
+#' petLpsbE <- catdf[[2]]
+#' rpl16 <- catdf[[3]]
 #'
-#' fastadframe(ITS, file = "filename.fasta")
-#' fastadframe(petLpsbE, file = "filename.fasta")
-#' fastadframe(rpl16, file = "filename.fasta")
+#' fastadframe(ITS, file = "filename.fasta",
+#'             dropmisseq = TRUE)
+#' fastadframe(petLpsbE, file = "filename.fasta",
+#'             dropmisseq = TRUE)
+#' fastadframe(rpl16, file = "filename.fasta",
+#'             dropmisseq = TRUE)
 #' }
 #'
 #' @importFrom stringr str_extract_all

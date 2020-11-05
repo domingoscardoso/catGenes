@@ -21,23 +21,31 @@
 #' @seealso \code{\link{catmultGenes}}
 #' @seealso \code{\link{writeNexus}}
 #' @seealso \code{\link{writePhylip}}
+#' @seealso \code{\link{nexusdframe}}
+#' @seealso \code{\link{phylipdframe}}
+#' @seealso \code{\link{fastadframe}}
 #'
 #' @examples \dontrun{
-#' data(DNAlignments)
+#' data(Ormosia)
 #'
-#' # Run dropSeq for one or more individual DNA alignment
-#' df <- dropSeq(DNAlignments)
+#' # Run dropSeq for one or more individual DNA alignment and then save each
+#' # dataset with non-duplicated species using nexusdframe, phylipdframe or fastadframe
+#' df <- dropSeq(Ormosia)
+#' ITS <- df[[1]]
+#' nexusdframe(ITS, file = "filename.nex")
+#'
 #'
 #' # Run function catmultGenes first
-#' cat_df <- catfullGenes(DNAlignments,
-#'                        shortaxlabel = TRUE,
-#'                        missdata = TRUE)
+#' catdf <- catmultGenes(Ormosia,
+#'                       maxspp = TRUE
+#'                       shortaxlabel = TRUE,
+#'                       missdata = TRUE)
 #'
 #' # Run dropSeq for the entire concatenated DNA alignments
-#' df <- dropSeq(cat_df)
+#' catdf <- dropSeq(catdf)
 #'
 #' # Then save the concatenated DNA alignment
-#' writeNexus(df,
+#' writeNexus(catdf,
 #'            file = "filename.nex",
 #'            bayesblock = TRUE,
 #'            interleave = TRUE)

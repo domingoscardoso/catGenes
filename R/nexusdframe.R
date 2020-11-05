@@ -30,16 +30,16 @@
 #' @seealso \code{\link{dropSeq}}
 #'
 #' @examples \dontrun{
-#' data(DNAlignments)
-#' datasets4comb <- genefullcomp(DNAlignments,
-#'                               multiaccessions = FALSE,
-#'                               shortaxlabel = TRUE,
-#'                               missdata = FALSE,
-#'                               outgroup = "Abutilon_costicalyx")
+#' data(Gaya)
+#' catdf <- catfullGenes(Gaya,
+#'                       multiaccessions = FALSE,
+#'                       shortaxlabel = TRUE,
+#'                       missdata = FALSE,
+#'                       outgroup = "Abutilon_costicalyx")
 #'
-#' ITS <- datasets4comb[[1]]
-#' petLpsbE <- datasets4comb[[2]]
-#' rpl16 <- datasets4comb[[3]]
+#' ITS <- catdf[[1]]
+#' petLpsbE <- catdf[[2]]
+#' rpl16 <- catdf[[3]]
 #'
 #' nexusdframe(ITS, file = "filename.nex")
 #' nexusdframe(petLpsbE, file = "filename.nex")

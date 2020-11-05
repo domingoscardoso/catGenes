@@ -20,7 +20,7 @@ Imports:
     shinyjs,
     tibble,
     stats
-License: What license is it under?
+License: AGPL-3
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)

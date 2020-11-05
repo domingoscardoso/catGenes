@@ -55,19 +55,18 @@
 #' @seealso \code{\link{fastadframe}}
 #'
 #' @examples \dontrun{
-#' data(DNAlignments)
-#' datasets4comb <- catmultGenes(DNAlignments,
-#'                               maxspp = TRUE,
-#'                               shortaxlabel = TRUE,
-#'                               missdata = TRUE,
-#'                               outgroup = "Abutilon_costicalyx")
+#' data(Luetzelburgia)
+#' catdf <- catmultGenes(Luetzelburgia,
+#'                       maxspp = TRUE,
+#'                       shortaxlabel = TRUE,
+#'                       missdata = TRUE)
 #'
-#' outgrouptaxa <- c("Abutilon_costicalyx", "Abutilon_itatiaie")
-#' datasets4comb <- catmultGenes(DNAlignments,
-#'                               maxspp = FALSE,
-#'                               shortaxlabel = TRUE,
-#'                               missdata = FALSE,
-#'                               outgroup = outgrouptaxa)
+#' outgrouptaxa <- c("Vataireopsis_araroba", "Vataireopsis_speciosa")
+#' catdf <- catmultGenes(Luetzelburgia,
+#'                       maxspp = FALSE,
+#'                       shortaxlabel = TRUE,
+#'                       missdata = FALSE,
+#'                       outgroup = outgrouptaxa)
 #' }
 #'
 #' @importFrom dplyr arrange
