@@ -7,14 +7,12 @@ Maintainer: Domingos Cardoso <cardosobot@gmail.com>
 URL: https://github.com/domingoscardoso/catGenes
 Language: en-US
 Depends:
-    R (>= 3.5.0)
+    R (>= 3.5.0), ape, dplyr
 Imports:
-    dplyr,
-    tidyr,
+    tidyr, 
+    rmarkdown,
     stringr,
     R.utils,
-    rmarkdown,
-    ape,
     shiny (>= 1.1.0),
     shinydashboard,
     shinyjs,

@@ -45,7 +45,7 @@ shinyServer <- function(input, output, session) {
                          outgroup = outgrps)
         } else {
             catmultGenes(genedatasets,
-                         maximizespp = maxispp,
+                         maxspp = maxispp,
                          shortaxlabel = shortax,
                          missdata = missdat,
                          outgroup = outgrps)

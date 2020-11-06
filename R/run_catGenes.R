@@ -16,9 +16,6 @@
 #' run_catGenes()
 #' }
 #'
-#' @import shiny
-#' @import shinydashboard
-#' @import shinyjs
 #'
 #' @export
 

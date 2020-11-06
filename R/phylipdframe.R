@@ -46,7 +46,6 @@
 #' phylipdframe(rpl16, file = "filename.nex")
 #' }
 #'
-#' @import dplyr
 #' @importFrom stringr str_trunc str_pad str_extract_all
 #' @importFrom tidyr unite
 #'
