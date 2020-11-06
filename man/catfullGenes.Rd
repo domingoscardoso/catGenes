@@ -10,8 +10,8 @@ catfullGenes(\dots,
              outgroup = NULL)
 }
 \arguments{
-\item{...}{a list of nexus-formatted gene datasets as read by ape's \code{\link{read.nexus.data}}
-or at least two individually ape-read objects of nexus-formatted gene datasets.}
+\item{...}{a list of NEXUS-formatted gene datasets as read by ape's \code{\link{read.nexus.data}}
+or at least two individually ape-read objects of NEXUS-formatted gene datasets.}
 
 \item{shortaxlabel}{Logical, if \code{FALSE} the final individual gene dataset will maintain
 the accession numbers associated with each species or sequence.}
@@ -36,17 +36,17 @@ accessions, please use \code{\link{catmultGenes}}.
 }
 \examples{
 \dontrun{
-data(DNAlignments)
-datasets4comb <- catfullGenes(DNAlignments,
-                              shortaxlabel = TRUE,
-                              missdata = FALSE,
-                              outgroup = "Abutilon_costicalyx")
+data(Gaya)
+catdf <- catfullGenes(Gaya,
+                      shortaxlabel = TRUE,
+                      missdata = FALSE,
+                      outgroup = "Abutilon_costicalyx")
 
 outgrouptaxa <- c("Abutilon_costicalyx", "Abutilon_itatiaie")
-datasets4comb <- catfullGenes(DNAlignments,
-                              shortaxlabel = TRUE,
-                              missdata = FALSE,
-                              outgroup = outgrouptaxa)
+catdf <- catfullGenes(Gaya,
+                      shortaxlabel = TRUE,
+                      missdata = FALSE,
+                      outgroup = outgrouptaxa)
 }
 
 }

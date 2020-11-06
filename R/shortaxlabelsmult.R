@@ -1,7 +1,7 @@
 # Function to delete all extra identifiers of the DNA sequence (e.g. GenBank numbers)
 # so as to maintain just the scientific names and associated collector number
 
-# Used inside genecompmult function
+# Used inside catmultGenes function
 
 # Author: Domingos Cardoso
 

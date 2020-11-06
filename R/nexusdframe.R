@@ -1,8 +1,8 @@
-#' Writes dataframe-formatted DNA alignment into nexus-formatted file
+#' Writes a NEXUS-formatted DNA alignment from a dataframe-formatted DNA alignment
 #'
 #' @author Domingos Cardoso
 #'
-#' @description Writes \code{data.frame} formatted DNA alignment into nexus-formatted file.
+#' @description Writes \code{data.frame} formatted DNA alignment into NEXUS-formatted file.
 #' It is useful for writing each gene dataset from within the resulting list of
 #' compared gene datasets, after running the functions \code{\link{catfullGenes}}
 #' and \code{\link{catmultGenes}}.

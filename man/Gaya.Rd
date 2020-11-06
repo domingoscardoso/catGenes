@@ -5,16 +5,15 @@
 \alias{Gaya}
 \title{DNA alignments of the genus Gaya (Malvaceae)}
 \format{
-DNA sequences in NEXUS format as read by \code{\link{ape::read.nexus.data}}.
+DNA sequences in NEXUS format as read by ape's function \code{\link{read.nexus.data}}.
 }
 \source{
 \url{https://www.ingentaconnect.com/content/aspt/sb/2018/00000043/00000003/art00004;jsessionid=20r008g64rupe.x-ic-live-02}
 }
 \usage{
-Gaya
+data(Gaya)
 }
 \description{
 List of three DNA matrices of the neotropical genus Gaya (Malvaceae), containing
 nuclear ribossomal (ITS) and plastid (petL-psbE, rpL16) genes.
 }
-\keyword{datasets}

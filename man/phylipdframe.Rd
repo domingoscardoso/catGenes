@@ -2,7 +2,7 @@
 % Please edit documentation in R/phylipdframe.R
 \name{phylipdframe}
 \alias{phylipdframe}
-\title{Writes dataframe-formatted DNA alignment into phylip-formatted file}
+\title{Writes a PHYLIP-formatted DNA alignment from a dataframe-formatted DNA alignment}
 \usage{
 phylipdframe(x, file,
              dropmisseq = TRUE)
@@ -23,23 +23,23 @@ individual DNA alignment by also removing species that fully miss the sequence
 data.}
 }
 \description{
-Writes \code{data.frame} formatted DNA alignment into phylip-formatted file.
+Writes \code{data.frame} formatted DNA alignment into PHYLIP-formatted file.
 It is useful for writing each gene dataset from within the resulting list of
 compared gene datasets, after running the functions \code{\link{catfullGenes}}
 and \code{\link{catmultGenes}}.
 }
 \examples{
 \dontrun{
-data(DNAlignments)
-datasets4comb <- genefullcomp(DNAlignments,
-                              multiaccessions = FALSE,
-                              shortaxlabel = TRUE,
-                              missdata = FALSE,
-                              outgroup = "Abutilon_costicalyx")
+data(Gaya)
+catdf <- catfullGenes(Gaya,
+                      multiaccessions = FALSE,
+                      shortaxlabel = TRUE,
+                      missdata = FALSE,
+                      outgroup = "Abutilon_costicalyx")
 
-ITS <- datasets4comb[[1]]
-petLpsbE <- datasets4comb[[2]]
-rpl16 <- datasets4comb[[3]]
+ITS <- catdf[[1]]
+petLpsbE <- catdf[[2]]
+rpl16 <- catdf[[3]]
 
 phylipdframe(ITS, file = "filename.nex")
 phylipdframe(petLpsbE, file = "filename.nex")

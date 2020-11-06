@@ -49,7 +49,7 @@ between the genus and specific epithet, but they must be separated by an
 underscore.
 
 ![Example with no identifiers in the
-sequences](labelling_no_identifiers.png)
+sequences](vignettes/labelling_no_identifiers.png)
 
 The species/sequences may also be named as
 **Genus\_species\_everythingelse** or **G\_species\_everythingelse**,
@@ -62,7 +62,7 @@ just like in the example below, note that you could also format like
 **Vatairea\_fusca\_Cardoso2939\_JX152598**.
 
 ![Example with identifiers in the
-sequences](labelling_with_identifiers_no_duplicated_species.png)
+sequences](vignettes/labelling_with_identifiers_no_duplicated_species.png)
 
 In brief, no matter the input DNA alignments have or not an associated
 identifier, the species/sequences should be consistently named, either
@@ -81,7 +81,7 @@ unique identifiers. Then, the sequ3nces/species must be formatted as
 **G\_species\_identifier\_everythingelse**, as exemplified below:
 
 ![Example when species are duplicated with multiple
-accessions](labelling_with_identifiers_and_duplicated_species.png)
+accessions](vignettes/labelling_with_identifiers_and_duplicated_species.png)
 
 ### *Naming the individual DNA alignment files*
 
@@ -122,7 +122,8 @@ originally named:
 
 ``` r
 names(Vataireoids)
-#> [1] "ETS"   "ITS"   "matK"  "psbA"  "rpS16" "trnDT" "trnL"  "trnQ"
+#> [1] "ETS"      "ITS"      "matK"     "psbAtrnH" "rpS16"    "trnDT"    "trnL"    
+#> [8] "trnQ"
 ```
 
 Note that in your computer the individual DNA alignments could be loaded
@@ -187,9 +188,9 @@ names(Vataireoids) <- gsub("[.].*", "", names(Vataireoids))
 
 # Running the concatenating analysis
 # Note that the main steps during concatenation will be printed in the R console
-cat_datasets <- catfullGenes(Vataireoids,
-                             shortaxlabel = TRUE,
-                             missdata = TRUE)
+catdf <- catfullGenes(Vataireoids,
+                      shortaxlabel = TRUE,
+                      missdata = TRUE)
 #> Matching first the gene ETS with: ITS... matK...
 #> 
 #> Gene comparison will exclude sequence set from ETS that is not in ITS...
@@ -237,9 +238,9 @@ cat_datasets <- catfullGenes(Vataireoids,
 #> Full gene match is finished!
 ```
 
-### *Writing the concatenated matrix in nexus format*
+### *Writing the concatenated matrix in NEXUS format*
 
-This new function **writeNexus** will write a nexus-formatted combined
+This new function **writeNexus** will write a NEXUS-formatted combined
 dataset with each individual gene alignment as interleaved and including
 a preliminary [MrBayes](http://nbisweden.github.io/MrBayes/) command
 block, including the charset of each partition. Note that you may choose
@@ -247,7 +248,7 @@ to concatenate the DNA alignments as non-interleaved and without the
 charset at the end of the matrix block.
 
 ``` r
-writeNexus(cat_datasets, 
+writeNexus(catdf, 
            file = "Vataireoids.nex",
            bayesblock = TRUE, 
            interleave = TRUE)
@@ -270,26 +271,26 @@ writeNexus(cat_datasets,
 #> Gene concatenation is finished!
 ```
 
-See below a screenshot of the beggining of the nexus-formatted
+See below a screenshot of the beggining of the NEXUS-formatted
 concatenated matrix:
 
-![catGenes Shiny app](concatenatedmatrix1.png)
+![catGenes Shiny app](vignettes/concatenatedmatrix1.png)
 
-See below a screenshot of the end of the nexus-formatted concatenated
+See below a screenshot of the end of the NEXUS-formatted concatenated
 matrix, showing the charset of each partition:
 
-![catGenes Shiny app](concatenatedmatrix2.png)
+![catGenes Shiny app](vignettes/concatenatedmatrix2.png)
 
-### *Writing the concatenated matrix in phylip format*
+### *Writing the concatenated matrix in PHYLIP format*
 
-This new function **writePhylip** will write both a phylip-formatted
+This new function **writePhylip** will write both a PHYLIP-formatted
 concatenated matrix and an associated partition file for
 [RAxML](https://cme.h-its.org/exelixis/web/software/raxml/index.html)
 concatenated phylogenetic analysis using a mixed/partitioned model, as
 available in [CIPRES](http://www.phylo.org/).
 
 ``` r
-writePhylip(cat_datasets, 
+writePhylip(catdf, 
             file = "Vataireoids_dataset.phy",
             catalignments = TRUE,
             partitionfile = TRUE)
@@ -308,15 +309,15 @@ writePhylip(cat_datasets,
 #> Gene concatenation is finished!
 ```
 
-See below a screenshot of the phylip-formatted concatenated matrix:
+See below a screenshot of the PHYLIP-formatted concatenated matrix:
 
-![catGenes Shiny app](concatenatedmatrix3.png)
+![catGenes Shiny app](vignettes/concatenatedmatrix3.png)
 
 See below a screenshot of the partition file to be uploaded in CIPRES
 for a RAxML concatenated phylogenetic analysis using a mixed/partitioned
 model:
 
-![catGenes Shiny app](concatenatedmatrix3_partitition.png)
+![catGenes Shiny app](vignettes/concatenatedmatrix3_partitition.png)
 
 ## Documentation
 
@@ -337,11 +338,11 @@ Below some screenshots of the *catGenes* application that will open
 automatically in the default internet browser, or the viewer if running
 from [RStudio](https://rstudio.com/).
 
-![catGenes Shiny app](shiny1.png)
+![catGenes Shiny app](vignettes/shiny1.png)
 
-![catGenes Shiny app](shiny2.png)
+![catGenes Shiny app](vignettes/shiny2.png)
 
-![catGenes Shiny app; donwload button](shiny3.png)
+![catGenes Shiny app; donwload button](vignettes/shiny3.png)
 
 ## Citation
 

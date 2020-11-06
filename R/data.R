@@ -66,3 +66,5 @@ NULL
 #' @source <https://www.ingentaconnect.com/content/aspt/sb/2018/00000043/00000003/art00004;jsessionid=20r008g64rupe.x-ic-live-02>
 #'
 #' @usage data(Gaya)
+
+NULL

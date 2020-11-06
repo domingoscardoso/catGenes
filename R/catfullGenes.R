@@ -14,8 +14,8 @@
 #'              missdata = TRUE,
 #'              outgroup = NULL)
 #'
-#' @param ... a list of nexus-formatted gene datasets as read by ape's \code{\link{read.nexus.data}}
-#' or at least two individually ape-read objects of nexus-formatted gene datasets.
+#' @param ... a list of NEXUS-formatted gene datasets as read by ape's \code{\link{read.nexus.data}}
+#' or at least two individually ape-read objects of NEXUS-formatted gene datasets.
 #'
 #' @param shortaxlabel Logical, if \code{FALSE} the final individual gene dataset will maintain
 #' the accession numbers associated with each species or sequence.

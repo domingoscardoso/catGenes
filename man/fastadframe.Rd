@@ -2,7 +2,7 @@
 % Please edit documentation in R/fastadframe.R
 \name{fastadframe}
 \alias{fastadframe}
-\title{Writes dataframe-formatted DNA alignment into fasta-formatted file}
+\title{Writes a FASTA-formatted DNA dataset from a dataframe-formatted DNA alignment}
 \usage{
 fastadframe(x, file,
             dropmisseq = TRUE)
@@ -23,27 +23,29 @@ individual DNA alignment by also removing species that fully miss the sequence
 data.}
 }
 \description{
-Writes a \code{data.frame} formatted DNA alignment into fasta-formatted file.
+Writes a \code{data.frame} formatted DNA alignment into FASTA-formatted file.
 It is useful for writing each gene dataset from within the resulting list of
 compared gene datasets, after running the functions \code{\link{catfullGenes}}
 and \code{\link{catmultGenes}}.
 }
 \examples{
 \dontrun{
-data(DNAlignments)
-datasets4comb <- genefullcomp(DNAlignments,
-                              multiaccessions = FALSE,
-                              shortaxlabel = TRUE,
-                              missdata = FALSE,
-                              outgroup = "Abutilon_costicalyx")
+data(Gaya)
+catdf <- catfullGenes(Gaya,
+                      multiaccessions = FALSE,
+                      shortaxlabel = TRUE,
+                      missdata = TRUE)
 
-ITS <- datasets4comb[[1]]
-petLpsbE <- datasets4comb[[2]]
-rpl16 <- datasets4comb[[3]]
+ITS <- catdf[[1]]
+petLpsbE <- catdf[[2]]
+rpl16 <- catdf[[3]]
 
-fastadframe(ITS, file = "filename.fasta")
-fastadframe(petLpsbE, file = "filename.fasta")
-fastadframe(rpl16, file = "filename.fasta")
+fastadframe(ITS, file = "filename.fasta",
+            dropmisseq = TRUE)
+fastadframe(petLpsbE, file = "filename.fasta",
+            dropmisseq = TRUE)
+fastadframe(rpl16, file = "filename.fasta",
+            dropmisseq = TRUE)
 }
 
 }

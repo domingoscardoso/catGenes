@@ -42,14 +42,15 @@ as following:
 The species/sequences may be simply named as __Genus_species__, just like the example below. The generic name could even be abbreviated but always keeping separated from the specific epithet like __G_species__. Note that the sequences 
 may also be labeled by including "cf" or "aff" between the genus and specific epithet, but they must be separated by an underscore.
 
-![Example with no identifiers in the sequences](labelling_no_identifiers.png)
+
+![Example with no identifiers in the sequences](vignettes/labelling_no_identifiers.png)
 
 
 The species/sequences may also be named as __Genus_species_everythingelse__ or
 __G_species_everythingelse__, that is, the scientific name is separated by the accession identifier (e.g. collector surname and associated collection number). The "everything else" means that the sequence here may have as many identifiers as desired, provided that at least the scientific name is consistently formatted. For example, in addition to format the sequences just like in the example
 below, note that you could also format like __Vatairea_fusca_Cardoso2939_JX152598__.
 
-![Example with identifiers in the sequences](labelling_with_identifiers_no_duplicated_species.png)
+![Example with identifiers in the sequences](vignettes/labelling_with_identifiers_no_duplicated_species.png)
 
 In brief, no matter the input DNA alignments have or not an associated identifier,
 the species/sequences should be consistently named, either with the genus name abbreviated or not, and always separated from the identifier(s) by an underscore.
@@ -61,7 +62,7 @@ when any species are duplicated with multiple accessions, i.e. the species is re
 formatted as __Genus_species_identifier_everythingelse__ or
 __G_species_identifier_everythingelse__, as exemplified below:
 
-![Example when species are duplicated with multiple accessions](labelling_with_identifiers_and_duplicated_species.png)
+![Example when species are duplicated with multiple accessions](vignettes/labelling_with_identifiers_and_duplicated_species.png)
 
 ### _Naming the individual DNA alignment files_
 Before loading the individual DNA alignments for concatenation, we recommend that
@@ -158,51 +159,51 @@ names(Vataireoids) <- gsub("[.].*", "", names(Vataireoids))
 
 # Running the concatenating analysis
 # Note that the main steps during concatenation will be printed in the R console
-cat_datasets <- catfullGenes(Vataireoids,
-                             shortaxlabel = TRUE,
-                             missdata = TRUE)
+catdf <- catfullGenes(Vataireoids,
+                      shortaxlabel = TRUE,
+                      missdata = TRUE)
 
 ```
 
-### _Writing the concatenated matrix in nexus format_
+### _Writing the concatenated matrix in NEXUS format_
 
-This new function __writeNexus__ will write a nexus-formatted combined dataset with 
+This new function __writeNexus__ will write a NEXUS-formatted combined dataset with 
 each individual gene alignment as interleaved and including a preliminary [MrBayes](http://nbisweden.github.io/MrBayes/) command block, including the charset
 of each partition. Note that you may choose to concatenate the DNA alignments as non-interleaved and without the charset at the end of the matrix block.
 ```{r, message=FALSE, warning=FALSE}
-writeNexus(cat_datasets, 
+writeNexus(catdf, 
            file = "Vataireoids.nex",
            bayesblock = TRUE, 
            interleave = TRUE)
 ```
 
-See below a screenshot of the beggining of the nexus-formatted concatenated matrix:
+See below a screenshot of the beggining of the NEXUS-formatted concatenated matrix:
 
-![catGenes Shiny app](concatenatedmatrix1.png)
+![catGenes Shiny app](vignettes/concatenatedmatrix1.png)
 
-See below a screenshot of the end of the nexus-formatted concatenated matrix, 
+See below a screenshot of the end of the NEXUS-formatted concatenated matrix, 
 showing the charset of each partition:
 
-![catGenes Shiny app](concatenatedmatrix2.png)
+![catGenes Shiny app](vignettes/concatenatedmatrix2.png)
 
-### _Writing the concatenated matrix in phylip format_
-This new function __writePhylip__ will write both a phylip-formatted concatenated matrix and an associated partition file for [RAxML](https://cme.h-its.org/exelixis/web/software/raxml/index.html) concatenated phylogenetic analysis using a mixed/partitioned model, as available in [CIPRES](http://www.phylo.org/).
+### _Writing the concatenated matrix in PHYLIP format_
+This new function __writePhylip__ will write both a PHYLIP-formatted concatenated matrix and an associated partition file for [RAxML](https://cme.h-its.org/exelixis/web/software/raxml/index.html) concatenated phylogenetic analysis using a mixed/partitioned model, as available in [CIPRES](http://www.phylo.org/).
 ```{r, message=FALSE, warning=FALSE}
-writePhylip(cat_datasets, 
+writePhylip(catdf, 
             file = "Vataireoids_dataset.phy",
             catalignments = TRUE,
             partitionfile = TRUE)
 
 ```
 
-See below a screenshot of the phylip-formatted concatenated matrix:
+See below a screenshot of the PHYLIP-formatted concatenated matrix:
 
-![catGenes Shiny app](concatenatedmatrix3.png)
+![catGenes Shiny app](vignettes/concatenatedmatrix3.png)
 
 See below a screenshot of the partition file to be uploaded in CIPRES for a RAxML 
 concatenated phylogenetic analysis using a mixed/partitioned model:
 
-![catGenes Shiny app](concatenatedmatrix3_partitition.png)
+![catGenes Shiny app](vignettes/concatenatedmatrix3_partitition.png)
 
 ## Documentation
 A detailed description of the _catGenes_' full functionality will soon be available
@@ -217,11 +218,11 @@ run_catGenes()
 ```
 Below some screenshots of the _catGenes_ application that will open automatically in the default internet browser, or the viewer if running from [RStudio](https://rstudio.com/).
 
-![catGenes Shiny app](shiny1.png)
+![catGenes Shiny app](vignettes/shiny1.png)
 
-![catGenes Shiny app](shiny2.png)
+![catGenes Shiny app](vignettes/shiny2.png)
 
-![catGenes Shiny app; donwload button](shiny3.png)
+![catGenes Shiny app; donwload button](vignettes/shiny3.png)
 
 
 ## Citation

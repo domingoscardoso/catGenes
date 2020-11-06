@@ -12,8 +12,8 @@ catmultGenes(\dots,
              outgroup = NULL)
 }
 \arguments{
-\item{...}{a list of nexus-formatted gene datasets as read by ape's \code{\link{read.nexus.data}}
-or at least two individually ape-read objects of nexus-formatted gene datasets.}
+\item{...}{a list of NEXUS-formatted gene datasets as read by ape's \code{\link{read.nexus.data}}
+or at least two individually ape-read objects of NEXUS-formatted gene datasets.}
 
 \item{maxspp}{Logical, if \code{FALSE} any species never duplicated with
 multiple accessions in any indvidual DNA alignment might end either duplicated
@@ -53,19 +53,18 @@ name and associated identifying number.
 }
 \examples{
 \dontrun{
-data(DNAlignments)
-datasets4comb <- catmultGenes(DNAlignments,
-                              maxspp = TRUE,
-                              shortaxlabel = TRUE,
-                              missdata = TRUE,
-                              outgroup = "Abutilon_costicalyx")
+data(Luetzelburgia)
+catdf <- catmultGenes(Luetzelburgia,
+                      maxspp = TRUE,
+                      shortaxlabel = TRUE,
+                      missdata = TRUE)
 
-outgrouptaxa <- c("Abutilon_costicalyx", "Abutilon_itatiaie")
-datasets4comb <- catmultGenes(DNAlignments,
-                              maxspp = FALSE,
-                              shortaxlabel = TRUE,
-                              missdata = FALSE,
-                              outgroup = outgrouptaxa)
+outgrouptaxa <- c("Vataireopsis_araroba", "Vataireopsis_speciosa")
+catdf <- catmultGenes(Luetzelburgia,
+                      maxspp = FALSE,
+                      shortaxlabel = TRUE,
+                      missdata = FALSE,
+                      outgroup = outgrouptaxa)
 }
 
 }

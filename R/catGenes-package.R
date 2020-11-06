@@ -7,13 +7,13 @@
 #' of sequences and creates equally-sized DNA alignments that are useful for
 #' concatenated phylogenetic or phylogenomic analyses. By using the functions
 #' \code{\link{writeNexus}} or \code{\link{writePhylip}} the user can write the
-#' catfullGenes- or catmultGenes-derived list of DNA alignments in nexus or phylip
+#' catfullGenes- or catmultGenes-derived list of DNA alignments in NEXUS or PHYLIP
 #' format, respectively, which can serve for downstream model-based phylogenetic
 #' analyses in MrBayes, BEAST, RAxML or PAUP.
 #'
 #' Another set of functions in this package allow the user to write a \code{data.frame}
 #' formatted DNA alignment (two-column-sized table including the taxon names and
-#' corresponding DNA sequence) as nexus, phylip or fasta formats: \code{\link{nexusdframe}},
+#' corresponding DNA sequence) as NEXUS, PHYLIP or FASTA formats: \code{\link{nexusdframe}},
 #' \code{\link{phylipdframe}}, \code{\link{fastadframe}}. These are useful for
 #' readily writing each gene dataset from within the resulting list of compared
 #' gene datasets, after running the functions \code{\link{catfullGenes}},

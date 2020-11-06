@@ -1,8 +1,8 @@
-#' Writes dataframe-formatted DNA alignment into phylip-formatted file
+#' Writes a PHYLIP-formatted DNA alignment from a dataframe-formatted DNA alignment
 #'
 #' @author Domingos Cardoso
 #'
-#' @description Writes \code{data.frame} formatted DNA alignment into phylip-formatted file.
+#' @description Writes \code{data.frame} formatted DNA alignment into PHYLIP-formatted file.
 #' It is useful for writing each gene dataset from within the resulting list of
 #' compared gene datasets, after running the functions \code{\link{catfullGenes}}
 #' and \code{\link{catmultGenes}}.
