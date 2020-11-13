@@ -9,7 +9,6 @@
 .genecompmult <- function(...,
                          data = NULL,
                          loop = NULL,
-                         maxspp = TRUE,
                          shortaxlabel = TRUE,
                          missdata = TRUE,
                          outgroup = NULL) {
@@ -44,27 +43,6 @@
 
   colnames(gene_1) <- c("species", "sequence")
   colnames(gene_2) <- c("species", "sequence")
-
-  # Shortening the taxon labels (keeping just the scientific names) in species
-  # not dulicated with multipl accessions so as to maximize th taxon coverage in
-  # the final concatenation dataset.
-  if(maxspp){
-    gene_1_temp <- .shortaxlabels(gene_1)
-    gene_1_spp_temp <- gene_1_temp$species
-    gene_2_temp <- .shortaxlabels(gene_2)
-    gene_2_spp_temp <- gene_2_temp$species
-
-    gene1_dupspp <- c(duplicated(gene_1_spp_temp, fromLast = TRUE) |
-                    duplicated(gene_1_spp_temp))
-    gene_1$species <- as.character(gene_1$species)
-    gene_1$species[!gene1_dupspp] <- gene_1_spp_temp[!gene1_dupspp]
-
-    gene2_dupspp <- c(duplicated(gene_2_spp_temp, fromLast = TRUE) |
-                        duplicated(gene_2_spp_temp))
-    gene_2$species <- as.character(gene_2$species)
-    gene_2$species[!gene2_dupspp] <- gene_2_spp_temp[!gene2_dupspp]
-  }
-
 
   if (missdata) {
     cat(cat("Gene comparison will include missing data into",

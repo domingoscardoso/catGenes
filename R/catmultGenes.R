@@ -159,6 +159,46 @@ catmultGenes <- function(...,
     }
   }
 
+
+  # Shortening the taxon labels (keeping just the scientific names) in species
+  # not dulicated with multiple accessions so as to maximize the taxon coverage in
+  # the final concatenatenated dataset.
+  if(maxspp){
+    datset_temp <- datset
+    #names(datset_temp[[1]])
+    spp_labels <- lapply(datset_temp, function(x) gsub("(_[^_]+)_.*", "\\1", names(x)))
+    # for(i in seq_along(datset_temp)){
+    #   names(datset_temp[[i]]) <- spp_labels[[i]]
+    # }
+    dup_temp <- list()
+    dup_spp <- list()
+    nondup_spp_temp <- list()
+    for(i in seq_along(datset_temp)){
+
+      names(datset_temp[[i]]) <- spp_labels[[i]]
+
+      dup_temp[[i]] <- c(duplicated(names(datset_temp[[i]]), fromLast = TRUE) |
+                          duplicated(names(datset_temp[[i]])))
+      dup_spp[[i]] <- unique(names(datset_temp[[i]])[dup_temp[[i]]])
+      nondup_spp_temp[[i]] <- names(datset_temp[[i]])[!dup_temp[[i]]]
+    }
+
+    dup_spp <- unique(unlist(dup_spp))
+    nondup_spp <- list()
+    spp_labels <- list()
+    for(i in seq_along(datset_temp)){
+
+      nondup_spp[[i]] <- nondup_spp_temp[[i]][!nondup_spp_temp[[i]] %in% dup_spp]
+
+      spp_labels[[i]]  <- names(datset[[i]])
+
+      spp_labels[[i]][names(datset_temp[[i]]) %in% nondup_spp[[i]]] <- nondup_spp[[i]]
+
+      names(datset[[i]]) <- spp_labels[[i]]
+    }
+  }
+
+
   # Now running genecompmult function in a for loop
 
   cat(cat("Matching first the gene", names(datset[1]), "with:",
@@ -181,7 +221,6 @@ catmultGenes <- function(...,
     datsetcomp[[1]] <- .genecompmult(datset[[1]], datset[[i+1]],
                                      data = datset,
                                      loop = i,
-                                     maxspp = maxspp,
                                      shortaxlabel = shortaxlabel,
                                      missdata = missdata,
                                      outgroup = outgroup)
@@ -206,7 +245,6 @@ catmultGenes <- function(...,
     datset[[i]] <- .genecompmult(datset[[i]], datset[[1]],
                                  data = datset,
                                  loop = i-1,
-                                 maxspp = maxspp,
                                  shortaxlabel = shortaxlabel,
                                  missdata = missdata,
                                  outgroup = outgroup)
