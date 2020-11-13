@@ -115,6 +115,29 @@ catfullGenes <- function(...,
     }
   }
 
+  # Adjusting species names with infraspecific taxa
+  infra_spp <- lapply(datset, function(x) grepl("[[:upper:]][[:lower:]]+_[[:lower:]]+_[[:lower:]]+",
+                                                names(x)))
+  if(any(unlist(infra_spp))){
+    cat("Any gene dataset includes infraspecific taxa", sep = "\n")
+    # Finding species labels to rename
+    infraspp_to_rename <- list()
+    for(i in seq_along(datset)){
+      if(length(names(datset[[i]])[infra_spp[[i]]]) > 0){
+        infraspp_to_rename[[i]] <- names(datset[[i]])[infra_spp[[i]]]
+        infraspp_to_rename <- infraspp_to_rename[!is.na(infraspp_to_rename)]
+      }
+    }
+    spp_labels <- list()
+    for (i in seq_along(datset)){
+      spp_labels[[i]]  <- names(datset[[i]])
+
+      spp_labels[[i]][infra_spp[[i]]] <- gsub("(_[^_]+)_", "\\1",
+                                              spp_labels[[i]][infra_spp[[i]]])
+      names(datset[[i]]) <- spp_labels[[i]]
+    }
+  }
+
   # Now running genecomp function in a for loop
 
   cat(cat("Matching first the gene", names(datset[1]), "with:",
@@ -168,11 +191,15 @@ catfullGenes <- function(...,
 
   # Putting back the names under cf. and aff.
   if(any(unlist(adjust_cf))){
-    names_temp <- gsub("_cf_", "_cf", unique(unlist(spp_to_rename_cf)))
+    names_temp_orig <- unique(unlist(spp_to_rename_cf))
+    if(shortaxlabel){
+      names_temp_orig <- gsub("(_[^_]+)_.*", "\\1", names_temp_orig)
+    }
+    names_temp <- gsub("_cf_", "_cf", names_temp_orig)
     n = 0
     for (i in names_temp){
       n = n + 1
-      spp_labels <- lapply(datset, function(x) gsub(i, unique(unlist(spp_to_rename_cf))[n], x[[1]]))
+      spp_labels <- lapply(datset, function(x) gsub(i, names_temp_orig[n], x[[1]]))
 
       for(j in seq_along(datset)){
         datset[[j]][[1]] <- spp_labels[[j]]
@@ -180,11 +207,33 @@ catfullGenes <- function(...,
     }
   }
   if(any(unlist(adjust_aff))){
-    names_temp <- gsub("_aff_", "_aff", unique(unlist(spp_to_rename_aff)))
+    names_temp_orig <- unique(unlist(spp_to_rename_aff))
+    if(shortaxlabel){
+      names_temp_orig <- gsub("(_[^_]+)_.*", "\\1", names_temp_orig)
+    }
+    names_temp <- gsub("_aff_", "_aff", names_temp_orig)
     n = 0
     for (i in names_temp){
       n = n + 1
-      spp_labels <- lapply(datset, function(x) gsub(i, unique(unlist(spp_to_rename_aff))[n], x[[1]]))
+      spp_labels <- lapply(datset, function(x) gsub(i, names_temp_orig[n], x[[1]]))
+
+      for(j in seq_along(datset)){
+        datset[[j]][[1]] <- spp_labels[[j]]
+      }
+    }
+  }
+
+  # Adjusting names with infraspecific taxa
+  if(any(unlist(infra_spp))){
+    names_temp_orig <- unique(unlist(infraspp_to_rename))
+    if(shortaxlabel){
+      names_temp_orig <- gsub("(_[^_]+)_.*", "\\1", names_temp_orig)
+    }
+    names_temp <- gsub("(_[^_]+)_", "\\1", names_temp_orig)
+    n = 0
+    for (i in names_temp){
+      n = n + 1
+      spp_labels <- lapply(datset, function(x) gsub(i, names_temp_orig[n], x[[1]]))
 
       for(j in seq_along(datset)){
         datset[[j]][[1]] <- spp_labels[[j]]
