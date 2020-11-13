@@ -165,17 +165,14 @@ catmultGenes <- function(...,
   # the final concatenatenated dataset.
   if(maxspp){
     datset_temp <- datset
-    #names(datset_temp[[1]])
     spp_labels <- lapply(datset_temp, function(x) gsub("(_[^_]+)_.*", "\\1", names(x)))
-    # for(i in seq_along(datset_temp)){
-    #   names(datset_temp[[i]]) <- spp_labels[[i]]
-    # }
+    for(i in seq_along(datset_temp)){
+      names(datset_temp[[i]]) <- spp_labels[[i]]
+    }
     dup_temp <- list()
     dup_spp <- list()
     nondup_spp_temp <- list()
     for(i in seq_along(datset_temp)){
-
-      names(datset_temp[[i]]) <- spp_labels[[i]]
 
       dup_temp[[i]] <- c(duplicated(names(datset_temp[[i]]), fromLast = TRUE) |
                           duplicated(names(datset_temp[[i]])))
