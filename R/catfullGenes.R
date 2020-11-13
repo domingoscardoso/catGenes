@@ -84,14 +84,14 @@ catfullGenes <- function(...,
   if(any(unlist(adjust_cf))){
     cat("Any gene dataset includes species under \"cf.\"", sep = "\n")
     # Finding species labels to rename
-    spp_to_rename <- list()
+    spp_to_rename_cf <- list()
     for(i in seq_along(datset)){
        if(length(names(datset[[i]])[adjust_cf[[i]]]) > 0){
-         spp_to_rename[[i]] <- names(datset[[i]])[adjust_cf[[i]]]
-         spp_to_rename <- spp_to_rename[!is.na(spp_to_rename)]
+         spp_to_rename_cf[[i]] <- names(datset[[i]])[adjust_cf[[i]]]
+         spp_to_rename_cf <- spp_to_rename_cf[!is.na(spp_to_rename_cf)]
       }
     }
-    cat(unique(unlist(spp_to_rename)), "WERE RENAMED TO", gsub("_cf_", "_cf", unique(unlist(spp_to_rename))), "", sep = "\n")
+    #cat(unique(unlist(spp_to_rename_cf)), "WERE RENAMED TO ", gsub("_cf_", "_cf", unique(unlist(spp_to_rename_cf))), "", sep = "\n")
     spp_labels <- lapply(datset, function(x) gsub("_cf_", "_cf", names(x)))
     for(i in seq_along(datset)){
       names(datset[[i]]) <- spp_labels[[i]]
@@ -101,14 +101,14 @@ catfullGenes <- function(...,
   if(any(unlist(adjust_aff))){
     cat("Any gene dataset includes species under \"aff.\"", sep = "\n")
     # Finding species labels to rename
-    spp_to_rename <- list()
+    spp_to_rename_aff <- list()
     for(i in seq_along(datset)){
       if(length(names(datset[[i]])[adjust_aff[[i]]]) > 0){
-        spp_to_rename[[i]] <- names(datset[[i]])[adjust_aff[[i]]]
-        spp_to_rename <- spp_to_rename[!is.na(spp_to_rename)]
+        spp_to_rename_aff[[i]] <- names(datset[[i]])[adjust_aff[[i]]]
+        spp_to_rename_aff <- spp_to_rename_aff[!is.na(spp_to_rename_aff)]
       }
     }
-    cat(unique(unlist(spp_to_rename)), "WERE RENAMED TO", gsub("_aff_", "_aff", unique(unlist(spp_to_rename))), "", sep = "\n")
+    #cat(unique(unlist(spp_to_rename_aff)), "WERE RENAMED TO", gsub("_aff_", "_aff", unique(unlist(spp_to_rename_aff))), "", sep = "\n")
     spp_labels <- lapply(datset, function(x) gsub("_aff_", "_aff", names(x)))
     for(i in seq_along(datset)){
       names(datset[[i]]) <- spp_labels[[i]]
@@ -165,6 +165,33 @@ catfullGenes <- function(...,
                              missdata = missdata,
                              outgroup = outgroup)
   }
+
+  # Putting back the names under cf. and aff.
+  if(any(unlist(adjust_cf))){
+    names_temp <- gsub("_cf_", "_cf", unique(unlist(spp_to_rename_cf)))
+    n = 0
+    for (i in names_temp){
+      n = n + 1
+      spp_labels <- lapply(datset, function(x) gsub(i, unique(unlist(spp_to_rename_cf))[n], x[[1]]))
+
+      for(j in seq_along(datset)){
+        datset[[j]][[1]] <- spp_labels[[j]]
+      }
+    }
+  }
+  if(any(unlist(adjust_aff))){
+    names_temp <- gsub("_aff_", "_aff", unique(unlist(spp_to_rename_aff)))
+    n = 0
+    for (i in names_temp){
+      n = n + 1
+      spp_labels <- lapply(datset, function(x) gsub(i, unique(unlist(spp_to_rename_aff))[n], x[[1]]))
+
+      for(j in seq_along(datset)){
+        datset[[j]][[1]] <- spp_labels[[j]]
+      }
+    }
+  }
+
   datsetcomp <- datset
 
   cat("Full gene match is finished!", "",

@@ -34,6 +34,24 @@ NULL
 
 NULL
 
+#' @name Brongniartia
+#'
+#' @docType data
+#'
+#' @title DNA alignments of the papilionid legume genus Brongniartia
+#'
+#' @description List of three DNA matrices of the predominantly Mesoamerican genus
+#' Brongniartia of papilinoid legumes, containing
+#' nuclear ribossomal (ITS, ETS) and plastid (matK, trnLF) genes.
+#'
+#' @format DNA sequences in NEXUS format as read by ape's function \code{\link{read.nexus.data}}.
+#'
+#' @source Dorado, Snak, São-Mateus, Delgado-Salinas, Queiroz  & Cardoso (unpubl. data)
+#'
+#' @usage data(Brongniartia)
+
+NULL
+
 #' @name Ormosia
 #'
 #' @docType data

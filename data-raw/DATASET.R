@@ -40,7 +40,7 @@ names(Vataireoids) <- gsub("[.].*", "", names(Vataireoids))
 usethis::use_data(Vataireoids, overwrite = TRUE)
 
 
-# Loading Vataireoids example
+# Loading Gaya example
 genes <- list.files("data-raw/DNAlignments/Gaya")
 Gaya <- list()
 for (i in genes){
@@ -50,3 +50,15 @@ names(Gaya) <- gsub("[.].*", "", names(Gaya))
 
 # Adding dataset for tests
 usethis::use_data(Gaya, overwrite = TRUE)
+
+
+# Loading Brongniartia example
+genes <- list.files("data-raw/DNAlignments/Brongniartia")
+Brongniartia <- list()
+for (i in genes){
+  Brongniartia[[i]] <- ape::read.nexus.data(paste0("data-raw/DNAlignments/Brongniartia/",i))
+}
+names(Brongniartia) <- gsub("[.].*", "", names(Brongniartia))
+
+# Adding dataset for tests
+usethis::use_data(Brongniartia, overwrite = TRUE)
