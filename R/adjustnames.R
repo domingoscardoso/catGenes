@@ -3,11 +3,12 @@
 
 # Author: Domingos Cardoso
 
-.adjustnames <- function(datset) {
+.adjustnames <- function(datset,
+                         adjust_cf = NULL,
+                         adjust_aff = NULL,
+                         infra_spp = NULL) {
 
   # Adjusting species labels when they have cf or aff
-  adjust_cf <- lapply(datset, function(x) grepl("_cf_", names(x)))
-  adjust_aff <- lapply(datset, function(x) grepl("_aff_", names(x)))
 
   if(any(unlist(adjust_cf))){
     #cat("Any gene dataset includes species under \"cf.\"", sep = "\n")
@@ -44,8 +45,6 @@
   }
 
   # Adjusting species names with infraspecific taxa just for the cross-gene comparisons
-  infra_spp <- lapply(datset, function(x) grepl("[[:upper:]][[:lower:]]+_[[:lower:]]+_[[:lower:]]+",
-                                                names(x)))
   if(any(unlist(infra_spp))){
     #cat("Any gene dataset includes infraspecific taxa", sep = "\n")
     # Finding species labels to rename

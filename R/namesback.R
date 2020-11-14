@@ -4,6 +4,9 @@
 # Author: Domingos Cardoso
 
 .namesback <- function(datset,
+                       adjust_cf = NULL,
+                       adjust_aff = NULL,
+                       infra_spp = NULL,
                        shortaxlabel = TRUE) {
 
   # Putting back the names under cf. and aff.

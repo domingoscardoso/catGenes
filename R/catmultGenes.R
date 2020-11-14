@@ -100,7 +100,14 @@ catmultGenes <- function(...,
 
   # Adjusting species labels when they have cf or aff
   # Adjusting species names with infraspecific taxa just for the cross-gene comparisons
-  datset <- .adjustnames(datset)
+  adjust_cf <- lapply(datset, function(x) grepl("_cf_", names(x)))
+  adjust_aff <- lapply(datset, function(x) grepl("_aff_", names(x)))
+  infra_spp <- lapply(datset, function(x) grepl("[[:upper:]][[:lower:]]+_[[:lower:]]+_[[:lower:]]+",
+                                                names(x)))
+  datset <- .adjustnames(datset,
+                         adjust_cf = adjust_cf,
+                         adjust_aff = adjust_aff,
+                         infra_spp = infra_spp)
 
 
   # Shortening the taxon labels (keeping just the scientific names) in species
@@ -194,6 +201,9 @@ catmultGenes <- function(...,
   # Putting back the names under cf. and aff.
   # Adjusting names with infraspecific taxa
   datset <- .namesback(datset,
+                       adjust_cf = adjust_cf,
+                       adjust_aff = adjust_aff,
+                       infra_spp = infra_spp,
                        shortaxlabel = shortaxlabel)
 
 

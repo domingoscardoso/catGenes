@@ -316,7 +316,14 @@ dropSeq <- function(...){
 
       # Adjusting species labels when they have cf or aff
       # Adjusting species names with infraspecific taxa
-      datset <- .adjustnames(datset)
+      adjust_cf <- lapply(datset, function(x) grepl("_cf_", names(x)))
+      adjust_aff <- lapply(datset, function(x) grepl("_aff_", names(x)))
+      infra_spp <- lapply(datset, function(x) grepl("[[:upper:]][[:lower:]]+_[[:lower:]]+_[[:lower:]]+",
+                                                    names(x)))
+      datset <- .adjustnames(datset,
+                             adjust_cf = adjust_cf,
+                             adjust_aff = adjust_aff,
+                             infra_spp = infra_spp)
 
       temp_name <- names(datset)
       for (j in seq_along(datset)){
@@ -407,12 +414,16 @@ dropSeq <- function(...){
         datset[[j]] <- datset[[j]] %>% filter(duplicate == FALSE) %>% select(c("species", "sequence"))
       }
     }
+
+    # Putting back the names under cf. and aff.
+    # Adjusting names with infraspecific taxa
+    datset <- .namesback(datset,
+                         adjust_cf = adjust_cf,
+                         adjust_aff = adjust_aff,
+                         infra_spp = infra_spp,
+                         shortaxlabel = shortaxlabel)
   }
 
-  # Putting back the names under cf. and aff.
-  # Adjusting names with infraspecific taxa
-  datset <- .namesback(datset,
-                       shortaxlabel = TRUE)
 
 
   return(datset)
