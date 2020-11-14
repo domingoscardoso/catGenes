@@ -241,10 +241,8 @@ catfullGenes <- function(...,
     }
   }
 
-  datsetcomp <- datset
-
   cat("Full gene match is finished!", "",
       sep="\n")
 
-  return(datsetcomp)
+  return(datset)
 }

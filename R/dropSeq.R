@@ -63,15 +63,75 @@ dropSeq <- function(...){
 
   datset <- .namedlist(...)
 
+  # # Adjusting species labels when they have cf or aff
+  # adjust_cf <- lapply(datset, function(x) grepl("_cf_", names(x)))
+  # adjust_aff <- lapply(datset, function(x) grepl("_aff_", names(x)))
+  #
+  # if(any(unlist(adjust_cf))){
+  #   # Finding species labels to rename
+  #   spp_to_rename_cf <- list()
+  #   for(i in seq_along(datset)){
+  #     if(length(names(datset[[i]])[adjust_cf[[i]]]) > 0){
+  #       spp_to_rename_cf[[i]] <- names(datset[[i]])[adjust_cf[[i]]]
+  #       spp_to_rename_cf <- spp_to_rename_cf[!is.na(spp_to_rename_cf)]
+  #     }
+  #   }
+  #   #cat(unique(unlist(spp_to_rename_cf)), "WERE RENAMED TO", gsub("_cf_", "_cf", unique(unlist(spp_to_rename_cf))), "", sep = "\n")
+  #   spp_labels <- lapply(datset, function(x) gsub("_cf_", "_cf", names(x)))
+  #   for(i in seq_along(datset)){
+  #     names(datset[[i]]) <- spp_labels[[i]]
+  #   }
+  # }
+  #
+  # if(any(unlist(adjust_aff))){
+  #   # Finding species labels to rename
+  #   spp_to_rename_aff <- list()
+  #   for(i in seq_along(datset)){
+  #     if(length(names(datset[[i]])[adjust_aff[[i]]]) > 0){
+  #       spp_to_rename_aff[[i]] <- names(datset[[i]])[adjust_aff[[i]]]
+  #       spp_to_rename_aff <- spp_to_rename_aff[!is.na(spp_to_rename_aff)]
+  #     }
+  #   }
+  #   #cat(unique(unlist(spp_to_rename_aff)), "WERE RENAMED TO", gsub("_aff_", "_aff", unique(unlist(spp_to_rename_aff))), "", sep = "\n")
+  #   spp_labels <- lapply(datset, function(x) gsub("_aff_", "_aff", names(x)))
+  #   for(i in seq_along(datset)){
+  #     names(datset[[i]]) <- spp_labels[[i]]
+  #   }
+  # }
+  #
+  # # Adjusting species names with infraspecific taxa just for the cross-gene comparisons
+  # infra_spp <- lapply(datset, function(x) grepl("[[:upper:]][[:lower:]]+_[[:lower:]]+_[[:lower:]]+",
+  #                                               names(x)))
+  # if(any(unlist(infra_spp))){
+  #   # Finding species labels to rename
+  #   infraspp_to_rename <- list()
+  #   for(i in seq_along(datset)){
+  #     if(length(names(datset[[i]])[infra_spp[[i]]]) > 0){
+  #       infraspp_to_rename[[i]] <- names(datset[[i]])[infra_spp[[i]]]
+  #       infraspp_to_rename <- infraspp_to_rename[!is.na(infraspp_to_rename)]
+  #     }
+  #   }
+  #   spp_labels <- list()
+  #   for (i in seq_along(datset)){
+  #     spp_labels[[i]]  <- names(datset[[i]])
+  #
+  #     spp_labels[[i]][infra_spp[[i]]] <- gsub("(_[^_]+)_", "\\1",
+  #                                             spp_labels[[i]][infra_spp[[i]]])
+  #     names(datset[[i]]) <- spp_labels[[i]]
+  #   }
+  # }
+
+
   # Removing sequences for a dataset already passed through the catmultGenes
   if (colnames(datset[[1]][[1]])[1] == "species" &
       colnames(datset[[1]][[1]])[2] == "sequence"){
 
     datset <- datset[[1]]
+    datset_orig <- datset
     datset_temp <- datset
     numberdatset <- length(datset)
 
-    # Keeping the species collumn in just the first dataset.
+    # Keeping the species column in just the first dataset.
     for (i in 2:numberdatset){
       datset_temp[[i]] <- data.frame(sequences=datset_temp[[i]][,2])
     }
@@ -98,7 +158,7 @@ dropSeq <- function(...){
       misstotal[i] <- missdata[i] + missdataN[i]
     }
     # Adding the total number of missing char in each sequence into a newly
-    # created collumn in both the temp dataset and each individual gene dataset.
+    # created column in both the temp dataset and each individual gene dataset.
     datset_temp <- tibble::add_column(datset_temp, missites = misstotal, .after = "species")
     for (i in seq_along(datset)){
       datset[[i]] <- tibble::add_column(datset[[i]], missites = misstotal, .after = "species")
@@ -150,6 +210,82 @@ dropSeq <- function(...){
       datset[[j]][["species"]] <- gsub("(_[^_]+)_.*", "\\1", datset[[j]][["species"]])
     }
 
+    ############################################################################
+    # Replacing missing seqs in any gene
+    missdata <- list()
+    for (j in seq_along(datset)){
+      for (i in seq_along(datset[[j]][["sequence"]])){
+        missdata[[i]] <- length(stringr::str_extract_all(datset[[j]][["sequence"]][i], "[?]", simplify = FALSE)[[1]])
+      }
+      datset[[j]] <- tibble::add_column(datset[[j]], missites = unlist(missdata), .after = "species")
+    }
+
+    datset_orig <- lapply(datset_orig, .shortaxlabels)
+    missdata <- list()
+    for (j in seq_along(datset_orig)){
+      for (i in seq_along(datset_orig[[j]][["sequence"]])){
+        missdata[[i]] <- length(stringr::str_extract_all(datset_orig[[j]][["sequence"]][i], "[?]", simplify = FALSE)[[1]])
+      }
+      datset_orig[[j]] <- tibble::add_column(datset_orig[[j]], missites = unlist(missdata), .after = "species")
+    }
+
+    # Droping smaller duplicated seqs and empty seqs
+    for (i in seq_along(datset_orig)){
+      multispp <- list()
+      multispp[[i]] <- c(duplicated(datset_orig[[i]][,"species"], fromLast = TRUE) |
+                           duplicated(datset_orig[[i]][,"species"]))
+      datset_orig[[i]] <- tibble::add_column(datset_orig[[i]], duplicate = unlist(multispp), .after = "species")
+      # Inserting a temp column with species name without voucher
+      datset_orig[[i]] <- tibble::add_column(datset_orig[[i]], species_temp = datset_orig[[i]][,"species"], .after = "species")
+    }
+
+    # Arranging by species name each dataframe inside the list
+    datset_orig <- lapply(datset_orig, function(x) dplyr::arrange(x, species))
+
+    ## Deleting duplicated accessions
+    for (i in seq_along(datset_orig)){
+      multispp <- vector()
+      datset_orig[[i]] <- datset_orig[[i]][duplicated(datset_orig[[i]][,c("species_temp","missites")],
+                                                      fromLast = FALSE)==F,]
+      multispp <- c(duplicated(datset_orig[[i]][,"species_temp"], fromLast = TRUE) |
+                      duplicated(datset_orig[[i]][,"species_temp"]))
+      datset_orig[[i]][["duplicate"]] <- multispp
+    }
+
+    for (j in seq_along(datset_orig)){
+      tokeep <- vector()
+      for (i in unique(datset_orig[[j]][["species_temp"]])){
+        tokeep <- datset_orig[[j]][["species_temp"]] == i & datset_orig[[j]][["missites"]] == min(datset_orig[[j]][["missites"]][datset_orig[[j]][["species_temp"]] == i])
+        datset_orig[[j]][["duplicate"]][tokeep] <- FALSE
+      }
+      datset_orig[[j]] <- datset_orig[[j]] %>% filter(duplicate == FALSE)
+    }
+    for (j in seq_along(datset_orig)){
+      todel <- vector()
+      for (i in datset_orig[[j]][["species_temp"]]){
+        todel <- datset_orig[[j]][["species_temp"]] == i & datset_orig[[j]][["missites"]] == max(datset_orig[[j]][["missites"]])
+        datset_orig[[j]][["duplicate"]][todel] <- TRUE
+      }
+
+      datset_orig[[j]] <- datset_orig[[j]] %>% filter(duplicate == FALSE)
+    }
+
+    # Inserting the missing seqs
+    misseqs <- list()
+    seqs <- list()
+    misspp <- list()
+    for(i in seq_along(datset)){
+      misseqs[[i]] <- datset[[i]][["species"]][datset[[i]][["missites"]] == max(datset[[i]][["missites"]])]
+      seqs[[i]]  <- datset[[i]][["sequence"]]
+      misspp[[i]] <- datset_orig[[i]][["species"]][datset_orig[[i]][["species"]] %in% misseqs[[i]]]
+
+      seqs[[i]][datset[[i]][["species"]] %in% misspp[[i]]] <-
+        datset_orig[[i]][["sequence"]][datset_orig[[i]][["species"]] %in% misseqs[[i]]]
+
+      datset[[i]][["sequence"]] <- seqs[[i]]
+      datset[[i]] <- datset[[i]] %>% select(c("species", "sequence"))
+    }
+
   }else{
 
     numberdatset <- length(datset)
@@ -177,6 +313,11 @@ dropSeq <- function(...){
     }else{
       # Tranforming the original matrix as read by ape into list of dataframes
       datset <- datset[[1]]
+
+      # Adjusting species labels when they have cf or aff
+      # Adjusting species names with infraspecific taxa
+      datset <- .adjustnames(datset)
+
       temp_name <- names(datset)
       for (j in seq_along(datset)){
 
@@ -210,7 +351,7 @@ dropSeq <- function(...){
         missdataN[i] <- length(stringr::str_extract_all(datset[[j]][["sequence"]][i], "N", simplify = FALSE)[[1]])
         misstotal_temp[i] <- missdata[[i]] + missdataN[[i]]
       }
-      # Adding the total number of missing char in each sequence into a newly created collumn
+      # Adding the total number of missing char in each sequence into a newly created column
       # misstotal[[j]] <- unlist(misstotal_temp)
       datset[[j]] <- tibble::add_column(datset[[j]], missites = unlist(misstotal_temp), .after = "species")
     }
@@ -235,7 +376,7 @@ dropSeq <- function(...){
     datset <- lapply(datset, function(x) dplyr::arrange(x, species))
 
     ## Deleting duplicate accessions when there is only one gene dataset
-    # Get first how many sequences are ther in each dataset
+    # Get first how many sequences are there in each dataset
     nseqs <- as.vector(sapply(datset, nrow))
     if(length(datset) == 1 | length(datset) > 1 & !equalnumb(nseqs)){
 
@@ -267,6 +408,12 @@ dropSeq <- function(...){
       }
     }
   }
+
+  # Putting back the names under cf. and aff.
+  # Adjusting names with infraspecific taxa
+  datset <- .namesback(datset,
+                       shortaxlabel = TRUE)
+
 
   return(datset)
 }
