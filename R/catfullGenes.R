@@ -77,6 +77,7 @@ catfullGenes <- function(...,
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   cf <- lapply(datset, function(x) grepl("_cf_", names(x)))
   aff <- lapply(datset, function(x) grepl("_aff_", names(x)))
   spp_temp <- lapply(datset, function(x) gsub("_aff_|_cf_", " ", names(x)))
@@ -99,6 +100,8 @@ catfullGenes <- function(...,
   }
 
 =======
+=======
+>>>>>>> 1b9658920d6f23287175a314e9fb37660c5a3601
   adjust_cf <- lapply(datset, function(x) grepl("_cf_", names(x)))
   adjust_aff <- lapply(datset, function(x) grepl("_aff_", names(x)))
   infra_spp <- lapply(datset, function(x) grepl("[[:upper:]][[:lower:]]+_[[:lower:]]+_[[:lower:]]+",
@@ -112,6 +115,7 @@ catfullGenes <- function(...,
                            infra_spp = infra_spp)
   }
 >>>>>>> 1b9658920d6f23287175a314e9fb37660c5a3601
+
 
 
   # Now running genecomp function in a for loop
@@ -166,6 +170,7 @@ catfullGenes <- function(...,
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   if(any(unlist(cf))|any(unlist(aff))|any(unlist(infraspp))){
     # Putting back the names under cf. and aff.
     # Adjusting names with infraspecific taxa
@@ -177,6 +182,8 @@ catfullGenes <- function(...,
                          rename_aff = nr[["rename_aff"]],
                          rename_infraspp = nr[["rename_infraspp"]],
 =======
+=======
+>>>>>>> 1b9658920d6f23287175a314e9fb37660c5a3601
   if(any(unlist(adjust_cf))|any(unlist(adjust_aff))|any(unlist(infra_spp))){
     # Putting back the names under cf. and aff.
     # Adjusting names with infraspecific taxa
@@ -184,6 +191,9 @@ catfullGenes <- function(...,
                          adjust_cf = adjust_cf,
                          adjust_aff = adjust_aff,
                          infra_spp = infra_spp,
+<<<<<<< HEAD
+>>>>>>> 1b9658920d6f23287175a314e9fb37660c5a3601
+=======
 >>>>>>> 1b9658920d6f23287175a314e9fb37660c5a3601
                          shortaxlabel = shortaxlabel,
                          multispp = FALSE)

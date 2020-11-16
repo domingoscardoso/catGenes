@@ -130,6 +130,9 @@ catmultGenes <- function(...,
                            adjust_cf = adjust_cf,
                            adjust_aff = adjust_aff,
                            infra_spp = infra_spp)
+<<<<<<< HEAD
+>>>>>>> 1b9658920d6f23287175a314e9fb37660c5a3601
+=======
 >>>>>>> 1b9658920d6f23287175a314e9fb37660c5a3601
   }
 
@@ -222,6 +225,7 @@ catmultGenes <- function(...,
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   if(any(unlist(cf))|any(unlist(aff))|any(unlist(infraspp))){
     # Putting back the names under cf. and aff.
     # Adjusting names with infraspecific taxa
@@ -233,6 +237,8 @@ catmultGenes <- function(...,
                          rename_aff = nr[["rename_aff"]],
                          rename_infraspp = nr[["rename_infraspp"]],
 =======
+=======
+>>>>>>> 1b9658920d6f23287175a314e9fb37660c5a3601
   if(any(unlist(adjust_cf))|any(unlist(adjust_aff))|any(unlist(infra_spp))){
     # Putting back the names under cf. and aff.
     # Adjusting names with infraspecific taxa
@@ -240,6 +246,9 @@ catmultGenes <- function(...,
                          adjust_cf = adjust_cf,
                          adjust_aff = adjust_aff,
                          infra_spp = infra_spp,
+<<<<<<< HEAD
+>>>>>>> 1b9658920d6f23287175a314e9fb37660c5a3601
+=======
 >>>>>>> 1b9658920d6f23287175a314e9fb37660c5a3601
                          shortaxlabel = shortaxlabel,
                          multispp = TRUE)
