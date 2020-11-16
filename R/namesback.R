@@ -4,16 +4,19 @@
 # Author: Domingos Cardoso
 
 .namesback <- function(datset,
-                       adjust_cf = NULL,
-                       adjust_aff = NULL,
-                       infra_spp = NULL,
+                       cf = NULL,
+                       aff = NULL,
+                       infraspp = NULL,
+                       rename_cf = NULL,
+                       rename_aff = NULL,
+                       rename_infraspp = NULL,
                        shortaxlabel = TRUE,
                        multispp = TRUE) {
 
   if(multispp){
     # Putting back the names under cf. and aff.
-    if(any(unlist(adjust_cf))){
-      names_temp_orig <- unique(unlist(spp_to_rename_cf))
+    if(any(unlist(cf))){
+      names_temp_orig <- unique(unlist(rename_cf))
       if(shortaxlabel){
         names_temp_orig <- gsub("(_[^_]+_[^_]+)_.*", "\\1", names_temp_orig)
       }
@@ -28,8 +31,8 @@
         }
       }
     }
-    if(any(unlist(adjust_aff))){
-      names_temp_orig <- unique(unlist(spp_to_rename_aff))
+    if(any(unlist(aff))){
+      names_temp_orig <- unique(unlist(rename_aff))
       if(shortaxlabel){
         names_temp_orig <- gsub("(_[^_]+_[^_]+)_.*", "\\1", names_temp_orig)
       }
@@ -46,8 +49,8 @@
     }
 
     # Adjusting names with infraspecific taxa
-    if(any(unlist(infra_spp))){
-      names_temp_orig <- unique(unlist(infraspp_to_rename))
+    if(any(unlist(infraspp))){
+      names_temp_orig <- unique(unlist(rename_infraspp))
       if(shortaxlabel){
         names_temp_orig <- gsub("(_[^_]+_[^_]+)_.*", "\\1", names_temp_orig)
       }
@@ -66,8 +69,8 @@
 
   if(!multispp){
     # Putting back the names under cf. and aff.
-    if(any(unlist(adjust_cf))){
-      names_temp_orig <- unique(unlist(spp_to_rename_cf))
+    if(any(unlist(cf))){
+      names_temp_orig <- unique(unlist(rename_cf))
       if(shortaxlabel){
         names_temp_orig <- gsub("(_[^_]+)_.*", "\\1", names_temp_orig)
       }
@@ -82,8 +85,8 @@
         }
       }
     }
-    if(any(unlist(adjust_aff))){
-      names_temp_orig <- unique(unlist(spp_to_rename_aff))
+    if(any(unlist(aff))){
+      names_temp_orig <- unique(unlist(rename_aff))
       if(shortaxlabel){
         names_temp_orig <- gsub("(_[^_]+)_.*", "\\1", names_temp_orig)
       }
@@ -100,8 +103,8 @@
     }
 
     # Adjusting names with infraspecific taxa
-    if(any(unlist(infra_spp))){
-      names_temp_orig <- unique(unlist(infraspp_to_rename))
+    if(any(unlist(infraspp))){
+      names_temp_orig <- unique(unlist(rename_infraspp))
       if(shortaxlabel){
         names_temp_orig <- gsub("(_[^_]+)_.*", "\\1", names_temp_orig)
       }

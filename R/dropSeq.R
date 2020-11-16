@@ -72,19 +72,25 @@ dropSeq <- function(...){
     datset_temp <- datset
     numberdatset <- length(datset)
 
+    cf <- lapply(datset, function(x) grepl("_cf_", x[[1]]))
+    aff <- lapply(datset, function(x) grepl("_aff_", x[[1]]))
+    spp_temp <- lapply(datset, function(x) gsub("_aff_|_cf_", " ", x[[1]]))
+    infraspp <- lapply(spp_temp, function(x) grepl("[[:upper:]][[:lower:]]+_[[:lower:]]+_[[:lower:]]+",
+                                                   x))
 
-    adjust_cf <- lapply(datset_temp, function(x) grepl("_cf_", names(x)))
-    adjust_aff <- lapply(datset_temp, function(x) grepl("_aff_", names(x)))
-    infra_spp <- lapply(datset_temp, function(x) grepl("[[:upper:]][[:lower:]]+_[[:lower:]]+_[[:lower:]]+",
-                                                       names(x)))
+    if(any(unlist(cf))|any(unlist(aff))|any(unlist(infraspp))){
 
-    if(any(unlist(adjust_cf))|any(unlist(adjust_aff))|any(unlist(infra_spp))){
-      # Adjusting species labels when they have cf or aff
+      nr <- .namesTorename(datset,
+                           cf = cf,
+                           aff = aff,
+                           infraspp = infraspp)
+
+      # Adjusting species labels when they have cf. or aff.
       # Adjusting species names with infraspecific taxa
       datset_temp <- .adjustnames(datset_temp,
-                                  adjust_cf = adjust_cf,
-                                  adjust_aff = adjust_aff,
-                                  infra_spp = infra_spp)
+                                  cf = cf,
+                                  aff = aff,
+                                  infraspp = infraspp)
     }
 
 
@@ -135,7 +141,7 @@ dropSeq <- function(...){
     }
 
     # For each duplicated species with seqs that have the same length, keep just one of them.
-    # Do this for both the temp gene dataset and them in a loop for each individual gene dataset.
+    # Do this for both the temp gene dataset and then in a loop for each individual gene dataset.
     datset_temp <- datset_temp[duplicated(datset_temp[,c("species_temp","missites")],
                                           fromLast = FALSE) == FALSE,]
     multispp <- c(duplicated(datset_temp[,"species_temp"], fromLast = TRUE) |
@@ -157,14 +163,43 @@ dropSeq <- function(...){
     }
     datset_temp <- datset_temp %>% filter(duplicate == FALSE) %>% select(c("species", "sequence"))
 
-    for (j in seq_along(datset)){
-      tokeep <- vector()
-      for (i in unique(datset[[j]][["species_temp"]])){
-        tokeep <- datset[[j]][["species_temp"]] == i & datset[[j]][["missites"]] == min(datset[[j]][["missites"]][datset[[j]][["species_temp"]] == i])
-        datset[[j]][["duplicate"]][tokeep] <- FALSE
+    if (any(unlist(cf))|any(unlist(aff))|any(unlist(infraspp))){
+      for (j in seq_along(datset)){
+        datset[[j]] <- tibble::add_column(datset[[j]], cf_aff_infraspp = NA, .after = "species")
+        datset[[j]][["cf_aff_infraspp"]][cf[[j]]] <- TRUE
+        datset[[j]][["cf_aff_infraspp"]][aff[[j]]] <- TRUE
+        datset[[j]][["cf_aff_infraspp"]][infraspp[[j]]] <- TRUE
+        datset[[j]][["cf_aff_infraspp"]][is.na(datset[[j]][["cf_aff_infraspp"]])] <- FALSE
+        datset_orig[[j]] <- tibble::add_column(datset_orig[[j]], cf_aff_infraspp = unlist(datset[[j]][["cf_aff_infraspp"]]), .after = "species")
+        tokeep <- vector()
+        for (i in unique(datset[[j]][["species_temp"]])){
+
+          tokeep <- datset[[j]][["species_temp"]] == i & datset[[j]][["missites"]] == min(datset[[j]][["missites"]][datset[[j]][["species_temp"]] == i])
+          datset[[j]][["duplicate"]][tokeep] <- FALSE
+        }
+        datset[[j]][["species"]][datset[[j]][["cf_aff_infraspp"]] == T] <- gsub("(_[^_]+_[^_]+)_.*", "\\1", datset[[j]][["species"]][datset[[j]][["cf_aff_infraspp"]] == T])
+        datset[[j]][["species"]][datset[[j]][["cf_aff_infraspp"]] == F] <- gsub("(_[^_]+)_.*", "\\1", datset[[j]][["species"]][datset[[j]][["cf_aff_infraspp"]] == F])
+        datset_orig[[j]][["species"]][datset_orig[[j]][["cf_aff_infraspp"]] == T] <- gsub("(_[^_]+_[^_]+)_.*", "\\1", datset_orig[[j]][["species"]][datset_orig[[j]][["cf_aff_infraspp"]] == T])
+        datset_orig[[j]][["species"]][datset_orig[[j]][["cf_aff_infraspp"]] == F] <- gsub("(_[^_]+)_.*", "\\1", datset_orig[[j]][["species"]][datset_orig[[j]][["cf_aff_infraspp"]] == F])
+
+        datset[[j]] <- datset[[j]] %>% filter(duplicate == FALSE) %>% select(c("species", "sequence"))
+        datset_orig[[j]] <- datset_orig[[j]] %>% select(c("species", "sequence"))
       }
-      datset[[j]] <- datset[[j]] %>% filter(duplicate == FALSE) %>% select(c("species", "sequence"))
-      datset[[j]][["species"]] <- gsub("(_[^_]+)_.*", "\\1", datset[[j]][["species"]])
+
+    }else{
+
+      for (j in seq_along(datset)){
+        tokeep <- vector()
+        for (i in unique(datset[[j]][["species_temp"]])){
+          tokeep <- datset[[j]][["species_temp"]] == i & datset[[j]][["missites"]] == min(datset[[j]][["missites"]][datset[[j]][["species_temp"]] == i])
+          datset[[j]][["duplicate"]][tokeep] <- FALSE
+        }
+        datset[[j]] <- datset[[j]] %>% filter(duplicate == FALSE) %>% select(c("species", "sequence"))
+
+
+        datset[[j]][["species"]] <- gsub("(_[^_]+)_.*", "\\1", datset[[j]][["species"]])
+      }
+      datset_orig <- lapply(datset_orig, .shortaxlabels)
     }
 
     ############################################################################
@@ -177,7 +212,6 @@ dropSeq <- function(...){
       datset[[j]] <- tibble::add_column(datset[[j]], missites = unlist(missdata), .after = "species")
     }
 
-    datset_orig <- lapply(datset_orig, .shortaxlabels)
     missdata <- list()
     for (j in seq_along(datset_orig)){
       for (i in seq_along(datset_orig[[j]][["sequence"]])){
@@ -243,15 +277,6 @@ dropSeq <- function(...){
       datset[[i]] <- datset[[i]] %>% select(c("species", "sequence"))
     }
 
-    if(any(unlist(adjust_cf))|any(unlist(adjust_aff))|any(unlist(infra_spp))){
-      datset <- .namesback(datset,
-                           adjust_cf = adjust_cf,
-                           adjust_aff = adjust_aff,
-                           infra_spp = infra_spp,
-                           shortaxlabel = shortaxlabel,
-                           multispp = TRUE)
-    }
-
   }else{
 
     numberdatset <- length(datset)
@@ -280,17 +305,25 @@ dropSeq <- function(...){
       # Tranforming the original matrix as read by ape into list of dataframes
       datset <- datset[[1]]
 
-      adjust_cf <- lapply(datset, function(x) grepl("_cf_", names(x)))
-      adjust_aff <- lapply(datset, function(x) grepl("_aff_", names(x)))
-      infra_spp <- lapply(datset, function(x) grepl("[[:upper:]][[:lower:]]+_[[:lower:]]+_[[:lower:]]+",
-                                                    names(x)))
-      if(any(unlist(adjust_cf))|any(unlist(adjust_aff))|any(unlist(infra_spp))){
+      cf <- lapply(datset, function(x) grepl("_cf_", names(x)))
+      aff <- lapply(datset, function(x) grepl("_aff_", names(x)))
+      spp_temp <- lapply(datset, function(x) gsub("_aff_|_cf_", " ", names(x)))
+      infraspp <- lapply(spp_temp, function(x) grepl("[[:upper:]][[:lower:]]+_[[:lower:]]+_[[:lower:]]+",
+                                                     x))
+
+      if(any(unlist(cf))|any(unlist(aff))|any(unlist(infraspp))){
+
+        nr <- .namesTorename(datset,
+                             cf = cf,
+                             aff = aff,
+                             infraspp = infraspp)
+
         # Adjusting species labels when they have cf or aff
         # Adjusting species names with infraspecific taxa
         datset <- .adjustnames(datset,
-                               adjust_cf = adjust_cf,
-                               adjust_aff = adjust_aff,
-                               infra_spp = infra_spp)
+                               cf = cf,
+                               aff = aff,
+                               infraspp = infraspp)
       }
 
       temp_name <- names(datset)
@@ -379,15 +412,19 @@ dropSeq <- function(...){
       }
     }
 
-    if(any(unlist(adjust_cf))|any(unlist(adjust_aff))|any(unlist(infra_spp))){
+    if(any(unlist(cf))|any(unlist(aff))|any(unlist(infraspp))){
       # Putting back the names under cf. and aff.
       # Adjusting names with infraspecific taxa
       datset <- .namesback(datset,
-                           adjust_cf = adjust_cf,
-                           adjust_aff = adjust_aff,
-                           infra_spp = infra_spp,
-                           shortaxlabel = shortaxlabel,
+                           cf = cf,
+                           aff = aff,
+                           infraspp = infraspp,
+                           rename_cf = nr[["rename_cf"]],
+                           rename_aff = nr[["rename_aff"]],
+                           rename_infraspp = nr[["rename_infraspp"]],
+                           shortaxlabel = TRUE,
                            multispp = TRUE)
+
     }
   }
 

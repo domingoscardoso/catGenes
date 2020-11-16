@@ -97,22 +97,29 @@ catmultGenes <- function(...,
          (Domingos Cardoso; cardosobot@gmail.com)")
   }
 
+  cf <- lapply(datset, function(x) grepl("_cf_", names(x)))
+  aff <- lapply(datset, function(x) grepl("_aff_", names(x)))
+  spp_temp <- lapply(datset, function(x) gsub("_aff_|_cf_", " ", names(x)))
+  infraspp <- lapply(spp_temp, function(x) grepl("[[:upper:]][[:lower:]]+_[[:lower:]]+_[[:lower:]]+",
+                                                x))
 
-  adjust_cf <- lapply(datset, function(x) grepl("_cf_", names(x)))
-  adjust_aff <- lapply(datset, function(x) grepl("_aff_", names(x)))
-  infra_spp <- lapply(datset, function(x) grepl("[[:upper:]][[:lower:]]+_[[:lower:]]+_[[:lower:]]+",
-                                                names(x)))
-  if(any(unlist(adjust_cf))|any(unlist(adjust_aff))|any(unlist(infra_spp))){
-    # Adjusting species labels when they have cf or aff
+  if(any(unlist(cf))|any(unlist(aff))|any(unlist(infraspp))){
+
+    nr <- .namesTorename(datset,
+                         cf = cf,
+                         aff = aff,
+                         infraspp = infraspp)
+
+    # Adjusting species labels when they have cf. or aff.
     # Adjusting species names with infraspecific taxa just for the cross-gene comparisons
     datset <- .adjustnames(datset,
-                           adjust_cf = adjust_cf,
-                           adjust_aff = adjust_aff,
-                           infra_spp = infra_spp)
+                           cf = cf,
+                           aff = aff,
+                           infraspp = infraspp)
   }
 
   # Shortening the taxon labels (keeping just the scientific names) in species
-  # not dulicated with multiple accessions so as to maximize the taxon coverage in
+  # not duplicated with multiple accessions so as to maximize the taxon coverage in
   # the final concatenatenated dataset.
   if(maxspp){
     datset_temp <- datset
@@ -199,13 +206,16 @@ catmultGenes <- function(...,
 
   }
 
-  if(any(unlist(adjust_cf))|any(unlist(adjust_aff))|any(unlist(infra_spp))){
+  if(any(unlist(cf))|any(unlist(aff))|any(unlist(infraspp))){
     # Putting back the names under cf. and aff.
     # Adjusting names with infraspecific taxa
     datset <- .namesback(datset,
-                         adjust_cf = adjust_cf,
-                         adjust_aff = adjust_aff,
-                         infra_spp = infra_spp,
+                         cf = cf,
+                         aff = aff,
+                         infraspp = infraspp,
+                         rename_cf = nr[["rename_cf"]],
+                         rename_aff = nr[["rename_aff"]],
+                         rename_infraspp = nr[["rename_infraspp"]],
                          shortaxlabel = shortaxlabel,
                          multispp = TRUE)
   }
