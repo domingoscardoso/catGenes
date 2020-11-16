@@ -98,17 +98,18 @@ catmultGenes <- function(...,
   }
 
 
-  # Adjusting species labels when they have cf or aff
-  # Adjusting species names with infraspecific taxa just for the cross-gene comparisons
   adjust_cf <- lapply(datset, function(x) grepl("_cf_", names(x)))
   adjust_aff <- lapply(datset, function(x) grepl("_aff_", names(x)))
   infra_spp <- lapply(datset, function(x) grepl("[[:upper:]][[:lower:]]+_[[:lower:]]+_[[:lower:]]+",
                                                 names(x)))
-  datset <- .adjustnames(datset,
-                         adjust_cf = adjust_cf,
-                         adjust_aff = adjust_aff,
-                         infra_spp = infra_spp)
-
+  if(any(unlist(adjust_cf))|any(unlist(adjust_aff))|any(unlist(infra_spp))){
+    # Adjusting species labels when they have cf or aff
+    # Adjusting species names with infraspecific taxa just for the cross-gene comparisons
+    datset <- .adjustnames(datset,
+                           adjust_cf = adjust_cf,
+                           adjust_aff = adjust_aff,
+                           infra_spp = infra_spp)
+  }
 
   # Shortening the taxon labels (keeping just the scientific names) in species
   # not dulicated with multiple accessions so as to maximize the taxon coverage in
@@ -116,13 +117,13 @@ catmultGenes <- function(...,
   if(maxspp){
     datset_temp <- datset
     spp_labels <- lapply(datset_temp, function(x) gsub("(_[^_]+)_.*", "\\1", names(x)))
-    for(i in seq_along(datset_temp)){
+    for (i in seq_along(datset_temp)) {
       names(datset_temp[[i]]) <- spp_labels[[i]]
     }
     dup_temp <- list()
     dup_spp <- list()
     nondup_spp_temp <- list()
-    for(i in seq_along(datset_temp)){
+    for (i in seq_along(datset_temp)) {
 
       dup_temp[[i]] <- c(duplicated(names(datset_temp[[i]]), fromLast = TRUE) |
                           duplicated(names(datset_temp[[i]])))
@@ -133,7 +134,7 @@ catmultGenes <- function(...,
     dup_spp <- unique(unlist(dup_spp))
     nondup_spp <- list()
     spp_labels <- list()
-    for(i in seq_along(datset_temp)){
+    for (i in seq_along(datset_temp)) {
 
       nondup_spp[[i]] <- nondup_spp_temp[[i]][!nondup_spp_temp[[i]] %in% dup_spp]
 
@@ -198,14 +199,16 @@ catmultGenes <- function(...,
 
   }
 
-  # Putting back the names under cf. and aff.
-  # Adjusting names with infraspecific taxa
-  datset <- .namesback(datset,
-                       adjust_cf = adjust_cf,
-                       adjust_aff = adjust_aff,
-                       infra_spp = infra_spp,
-                       shortaxlabel = shortaxlabel)
-
+  if(any(unlist(adjust_cf))|any(unlist(adjust_aff))|any(unlist(infra_spp))){
+    # Putting back the names under cf. and aff.
+    # Adjusting names with infraspecific taxa
+    datset <- .namesback(datset,
+                         adjust_cf = adjust_cf,
+                         adjust_aff = adjust_aff,
+                         infra_spp = infra_spp,
+                         shortaxlabel = shortaxlabel,
+                         multispp = TRUE)
+  }
 
   cat("Full gene match is finished!", "",
       sep="\n")
