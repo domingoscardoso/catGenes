@@ -76,8 +76,6 @@ catfullGenes <- function(...,
          (Domingos Cardoso; cardosobot@gmail.com)")
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
   cf <- lapply(datset, function(x) grepl("_cf_", names(x)))
   aff <- lapply(datset, function(x) grepl("_aff_", names(x)))
   spp_temp <- lapply(datset, function(x) gsub("_aff_|_cf_", " ", names(x)))
@@ -98,24 +96,6 @@ catfullGenes <- function(...,
                            aff = aff,
                            infraspp = infraspp)
   }
-
-=======
-=======
->>>>>>> 1b9658920d6f23287175a314e9fb37660c5a3601
-  adjust_cf <- lapply(datset, function(x) grepl("_cf_", names(x)))
-  adjust_aff <- lapply(datset, function(x) grepl("_aff_", names(x)))
-  infra_spp <- lapply(datset, function(x) grepl("[[:upper:]][[:lower:]]+_[[:lower:]]+_[[:lower:]]+",
-                                                names(x)))
-  if(any(unlist(adjust_cf))|any(unlist(adjust_aff))|any(unlist(infra_spp))){
-    # Adjusting species labels when they have cf or aff
-    # Adjusting species names with infraspecific taxa just for the cross-gene comparisons
-    datset <- .adjustnames(datset,
-                           adjust_cf = adjust_cf,
-                           adjust_aff = adjust_aff,
-                           infra_spp = infra_spp)
-  }
->>>>>>> 1b9658920d6f23287175a314e9fb37660c5a3601
-
 
 
   # Now running genecomp function in a for loop
@@ -169,8 +149,6 @@ catfullGenes <- function(...,
                              outgroup = outgroup)
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
   if(any(unlist(cf))|any(unlist(aff))|any(unlist(infraspp))){
     # Putting back the names under cf. and aff.
     # Adjusting names with infraspecific taxa
@@ -181,20 +159,6 @@ catfullGenes <- function(...,
                          rename_cf = nr[["rename_cf"]],
                          rename_aff = nr[["rename_aff"]],
                          rename_infraspp = nr[["rename_infraspp"]],
-=======
-=======
->>>>>>> 1b9658920d6f23287175a314e9fb37660c5a3601
-  if(any(unlist(adjust_cf))|any(unlist(adjust_aff))|any(unlist(infra_spp))){
-    # Putting back the names under cf. and aff.
-    # Adjusting names with infraspecific taxa
-    datset <- .namesback(datset,
-                         adjust_cf = adjust_cf,
-                         adjust_aff = adjust_aff,
-                         infra_spp = infra_spp,
-<<<<<<< HEAD
->>>>>>> 1b9658920d6f23287175a314e9fb37660c5a3601
-=======
->>>>>>> 1b9658920d6f23287175a314e9fb37660c5a3601
                          shortaxlabel = shortaxlabel,
                          multispp = FALSE)
   }
