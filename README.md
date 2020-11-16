@@ -76,7 +76,7 @@ alignments when any species are duplicated with multiple accessions,
 i.e. the species is represented by multiple sequences generated from
 different individuals. In this case, the concatenation will consider
 both the consistently-formatted scientific names and their associated
-unique identifiers. Then, the sequ3nces/species must be formatted as
+unique identifiers. Then, the sequences/species must be formatted as
 **Genus\_species\_identifier\_everythingelse** or
 **G\_species\_identifier\_everythingelse**, as exemplified below:
 
