@@ -91,8 +91,8 @@ should be simply named as **Genus\_sp**, or **Genus\_sp1** and
 example below. The generic name could even be abbreviated but always
 keeping separated from the “sp” and always without full period like
 **G\_sp** or **G\_sp1** or **G\_spA**. It is also possible to run any of
-the concatenating catGenes functions even when when accesions are fully
-identified with infraspecific taxa. Following the same general
+the concatenating *catGenes* functions even when when accesions are
+fully identified with infraspecific taxa. Following the same general
 formatting scheme for accessions idenfitied at species level, just add
 the infraspecific taxa after the specific epithet such as
 **Genus\_species\_variety\_identifier\_everythingelse** or
@@ -371,7 +371,7 @@ of the same species from the previous concatenated dataset:
 
 ![Concatenated genomic dataset](vignettes/dropseq2.png)
 
-### *Example of a catGenes-generated concatenated dataset of 78 genes*
+### *Performance of catGenes with large, genomic datasets*
 
 The concatenating *catGenes* functions have been developed to perform
 efficiently also with large datasets for phylogenomic analyses. See
@@ -379,11 +379,11 @@ below some screenshots of a NEXUS-formatted concatenated matrix after
 running the function **catmultGenes** with a list of 78 protein coding
 plastid genes for 122 species, as originally published by [Gonçalves et
 al. (2020)](https://bsapubs.onlinelibrary.wiley.com/doi/abs/10.1002/ajb2.1502)
-when investigating the historical biogeography Vochysiaceae across the
-Neotropics. The original data retrieved from
+when investigating the historical biogeography of Vochysiaceae across
+the Neotropics. The original data retrieved from
 [Dryad](https://doi.org/10.5061/dryad.sn02v6x1g) repository were also
 kindly permitted by [Deise Gonçalves](http://www.deisegoncalves.com/) to
-be used as example genomic data of the catGenes package.
+be used as example genomic data of the *catGenes* package.
 
 ![Concatenated genomic dataset](vignettes/Vochysiaceae1.png)
 

@@ -18,5 +18,5 @@ data(Vochysiaceae)
 \description{
 List of 78 protein coding plastid genes for 122 species from Vochysiaceae and
 seven other families of Myrtales as originally used to investigate the historical biogeography
-Vochysiaceae across the Neotropics (Goncalves et al. 2020).
+of Vochysiaceae across the Neotropics (Goncalves et al. 2020).
 }
