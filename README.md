@@ -378,7 +378,7 @@ efficiently also with large datasets for phylogenomic analyses. See
 below some screenshots of a NEXUS-formatted concatenated matrix after
 running the function **catmultGenes** with a list of 78 protein coding
 plastid genes for 122 species, as originally published by [Gonçalves et
-al. 2020](https://bsapubs.onlinelibrary.wiley.com/doi/abs/10.1002/ajb2.1502)
+al. (2020)](https://bsapubs.onlinelibrary.wiley.com/doi/abs/10.1002/ajb2.1502)
 when investigating the historical biogeography Vochysiaceae across the
 Neotropics. The original data retrieved from
 [Dryad](https://doi.org/10.5061/dryad.sn02v6x1g) repository were also

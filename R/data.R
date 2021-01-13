@@ -93,9 +93,9 @@ NULL
 #'
 #' @title Plastome dataset of Vochysiaceae (Myrtales)
 #'
-#' @description List of 78 protein coding plastid genes for 122 species from Vochysiaceae and 
+#' @description List of 78 protein coding plastid genes for 122 species from Vochysiaceae and
 #' seven other families of Myrtales as originally used to investigate the historical biogeography
-#' Vochysiaceae across the Neotropics (Goncalves et al. 2020).
+#' of Vochysiaceae across the Neotropics (Goncalves et al. 2020).
 #'
 #' @format DNA sequences in NEXUS format as read by ape's function \code{\link{read.nexus.data}}.
 #'

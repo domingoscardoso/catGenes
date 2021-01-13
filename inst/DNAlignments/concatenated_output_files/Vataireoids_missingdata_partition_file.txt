@@ -1,0 +1,9 @@
+DNA, gene1 = 1-426
+DNA, gene2 = 427-1256
+DNA, gene3 = 1257-3125
+DNA, gene4 = 3126-3751
+DNA, gene5 = 3752-4743
+DNA, gene6 = 4744-6496
+DNA, gene7 = 6497-7105
+DNA, gene8 = 7106-7875
+

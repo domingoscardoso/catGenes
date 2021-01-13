@@ -1,0 +1,5 @@
+DNA, gene1 = 1-478
+DNA, gene2 = 479-1352
+DNA, gene3 = 1353-3218
+DNA, gene4 = 3219-4351
+
