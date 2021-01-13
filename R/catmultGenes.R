@@ -84,7 +84,7 @@ catmultGenes <- function(...,
 
   datset <- .namedlist(...)
 
-  if(length(datset) == 1){
+  if (length(datset) == 1) {
     datset <- datset[[1]]
   }
 
@@ -97,13 +97,36 @@ catmultGenes <- function(...,
          (Domingos Cardoso; cardosobot@gmail.com)")
   }
 
+  spp_labels_original <- lapply(datset, function(x) names(x))
+
   cf <- lapply(datset, function(x) grepl("_cf_", names(x)))
   aff <- lapply(datset, function(x) grepl("_aff_", names(x)))
   spp_temp <- lapply(datset, function(x) gsub("_aff_|_cf_", " ", names(x)))
-  infraspp <- lapply(spp_temp, function(x) grepl("[[:upper:]][[:lower:]]+_[[:lower:]]+_[[:lower:]]+",
-                                                x))
+  infraspp <- lapply(spp_temp, function(x) grepl("[[:upper:]][[:lower:]]+_[[:lower:]]+_[[:lower:]]+", x))
 
-  if(any(unlist(cf))|any(unlist(aff))|any(unlist(infraspp))){
+
+  if(any(unlist(infraspp))){
+    infranames <- unique(as.vector(unlist(spp_labels_original))[as.vector(unlist(infraspp))])
+    n <- as.vector(unlist(spp_labels_original))[!as.vector(unlist(infraspp))]
+    nu <- unique(gsub("(_[^_]+).*", "\\1", n))
+    g <- grepl(paste(nu, collapse = "|"), infranames)
+
+    ni <- infranames[g]
+    nn <- unique(n[grepl(paste(gsub("(_[^_]+).*", "\\1", infranames[g]), collapse = "|"), n)])
+
+    if(any(g)){
+    stop("The following accessions are identified at infraspecific level:\n",
+         ni,
+         "\n\nBUT there are accessions of the same species that are NOT as well fully identified with infraspecific taxa...\n",
+         nn,
+         "\n\nYou should do so!\n
+         Find help also at DBOSLab-UFBA
+         (Domingos Cardoso; cardosobot@gmail.com)")
+    }
+  }
+
+
+  if (any(unlist(cf))|any(unlist(aff))|any(unlist(infraspp))) {
 
     nr <- .namesTorename(datset,
                          cf = cf,
@@ -121,7 +144,7 @@ catmultGenes <- function(...,
   # Shortening the taxon labels (keeping just the scientific names) in species
   # not duplicated with multiple accessions so as to maximize the taxon coverage in
   # the final concatenatenated dataset.
-  if(maxspp){
+  if (maxspp) {
     datset_temp <- datset
     spp_labels <- lapply(datset_temp, function(x) gsub("(_[^_]+)_.*", "\\1", names(x)))
     for (i in seq_along(datset_temp)) {
@@ -206,7 +229,8 @@ catmultGenes <- function(...,
 
   }
 
-  if(any(unlist(cf))|any(unlist(aff))|any(unlist(infraspp))){
+
+  if (any(unlist(cf))|any(unlist(aff))|any(unlist(infraspp))) {
     # Putting back the names under cf. and aff.
     # Adjusting names with infraspecific taxa
     datset <- .namesback(datset,
@@ -219,6 +243,28 @@ catmultGenes <- function(...,
                          shortaxlabel = shortaxlabel,
                          multispp = TRUE)
   }
+
+
+  #This is to insert original names back when using the arguments
+  # maxspp = T & shortaxlabel = F
+  if (maxspp == T & shortaxlabel == F) {
+    for (i in seq_along(datset)) {
+      grepl_temp <- !datset[[i]][["species"]] %in% spp_labels_original[[i]]
+      ntemp <- datset[[i]][["species"]][grepl_temp]
+      suppressWarnings({
+        for (j in seq_along(ntemp)) {
+          n <- spp_labels_original[[i]][grepl(ntemp[j], spp_labels_original[[i]])]
+          if (length(n) == 0) {
+            ntemp[j] <- ntemp[j]
+          } else {
+            ntemp[j] <- n
+          }
+        }
+      })
+      datset[[i]][["species"]][grepl_temp] <- ntemp
+    }
+  }
+
 
   cat("Full gene match is finished!", "",
       sep="\n")

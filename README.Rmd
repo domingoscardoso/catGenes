@@ -43,7 +43,7 @@ The species/sequences may be simply named as __Genus_species__, just like the ex
 ![Example with no identifiers in the sequences](vignettes/labelling_no_identifiers.png)
 
 
-The species/sequences may also be named as __Genus_species_everythingelse__ or __G_species_everythingelse__, that is, the scientific name is separated by the accession identifier (e.g. collector surname and associated collection number). The "everything else" means that the sequence here may have as many identifiers as desired, provided that at least the scientific name is consistently formatted. For example, in addition to format the sequences just like in the example below, note that you could also format like __Vatairea_fusca_Cardoso2939_JX152598__.
+The species/sequences may also be named as __Genus_species_everythingelse__ or __G_species_everythingelse__, that is, the scientific name is separated by the accession identifier (e.g. collector surname and associated collection number). The "everything else" means that the sequence here may have as many identifiers as desired, provided that at least the scientific name is consistently formatted. For example, in addition to format the sequences just like in the example below, note that you could also format like __Vatairea_fusca_Cardoso2939_JX152598__. 
 
 ![Example with identifiers in the sequences](vignettes/labelling_with_identifiers_no_duplicated_species.png)
 
@@ -54,6 +54,14 @@ In brief, no matter the input DNA alignments have or not an associated identifie
 The _catGenes_ package has specific functions to concatenate the DNA alignments when any species are duplicated with multiple accessions, i.e. the species is represented by multiple sequences generated from different individuals. In this case, the concatenation will consider both the consistently-formatted scientific names and their associated unique identifiers. Then, the sequences/species must be formatted as __Genus_species_identifier_everythingelse__ or __G_species_identifier_everythingelse__, as exemplified below:
 
 ![Example when species are duplicated with multiple accessions](vignettes/labelling_with_identifiers_and_duplicated_species.png)
+
+
+#### _3. Formatting labels for accessions identified just at genus level or fully identified with infraspecific taxa_
+
+The accessions/sequences not fully identified or just at genus level should be simply named as __Genus_sp__, or __Genus_sp1__ and __Genus_sp2__, or __Genus_spA__ and __Genus_spB__, just like the example below. The generic name could even be abbreviated but always keeping separated from the "sp" and always without full period  like __G_sp__ or __G_sp1__ or __G_spA__. It is also possible to run any of the concatenating catGenes functions even when when accesions are fully identified with infraspecific taxa. Following the same general formatting scheme for accessions idenfitied at species level, just add the infraspecific taxa after the specific epithet such as __Genus_species_variety_identifier_everythingelse__ or __Genus_species_subspecies_identifier_everythingelse__, but do not mention wheather they are "var"  or "subsp". See also some examples below:
+
+![Example with other label formatting](vignettes/other_label_fformatting.png)
+
 
 ### _Naming the individual DNA alignment files_
 Before loading the individual DNA alignments for concatenation, we recommend that each file is simply named with the corresponding gene names and do not use space or hyphen to separate the file name. For example: __ITS.nex__, __rbcL.nex__, __psbAtrnH.nex__, __COX1.nex__, etc. This is the best way to name the input files if you want to run _catGenes_ using the Shiny app. Also, it facilitates to load all DNA alignments by just using a _for_ loop that will create a list of the input genes ready for the concatenation. Note that we load the DNA alignments by using [_ape_](https://www.rdocumentation.org/packages/ape/versions/5.4-1)'s function [read.nexus.data](https://www.rdocumentation.org/packages/ape/versions/5.4-1/topics/read.nexus.data). 
@@ -161,6 +169,14 @@ See below a screenshot of the end of the NEXUS-formatted concatenated matrix, sh
 
 ![catGenes Shiny app](vignettes/concatenatedmatrix2.png)
 
+### _How the function writeNexus handles differing identifers when concatenating DNA alignments by keeping all original identifiers_
+It is possible to run the concatenating _catGenes_ functions so as to get a concatenated matrix that keeps all original identifiers in each individual partition (i.e. choosing the argument shortaxlabel = FALSE when running __catfullGenes__ or __catmultGenes__). But as shown in the next two screenshots below, note that the function __writeNexus__ will handle the with differing identifers across partitions by keeping them as comments inside brackets.
+
+![Concatenated genomic dataset](vignettes/catGenes_with_taxlabels1.png)
+
+![Concatenated genomic dataset](vignettes/catGenes_with_taxlabels2.png)
+
+
 ### _Writing the concatenated matrix in PHYLIP format_
 This new function __writePhylip__ will write both a PHYLIP-formatted concatenated matrix and an associated partition file for [RAxML](https://cme.h-its.org/exelixis/web/software/raxml/index.html) concatenated phylogenetic analysis using a mixed/partitioned model, as available in [CIPRES](http://www.phylo.org/).
 ```{r, message=FALSE, warning=FALSE}
@@ -178,6 +194,27 @@ See below a screenshot of the PHYLIP-formatted concatenated matrix:
 See below a screenshot of the partition file to be uploaded in CIPRES for a RAxML concatenated phylogenetic analysis using a mixed/partitioned model:
 
 ![catGenes Shiny app](vignettes/concatenatedmatrix3_partitition.png)
+
+
+### _Removing duplicated accessions of the same species in DNA alignments_
+This function __dropSeq__ will remove the smaller sequence(s) (with missing characters, either "?" or "N") for any species duplicated with multiple accessions in the DNA alignment. The next screenshot below show a concatenated dataset after run with __catmultGenes__, where there are species duplicated with multiple accessions. Before writing such a concatenated dataset with the function __writeNexus__, for example, it is possible to run the function __dropSeq__ so as to remove the duplicated accessions of the same species.
+
+![Concatenated genomic dataset](vignettes/dropseq1.png)
+
+Note below that the function __dropSeq__ removed all multiple accessions of the same species from the previous concatenated dataset:
+
+![Concatenated genomic dataset](vignettes/dropseq2.png)
+
+
+### _Example of a catGenes-generated concatenated dataset of 78 genes_
+The concatenating _catGenes_ functions have been developed to perform efficiently  also with large datasets for phylogenomic analyses. See below some screenshots of a NEXUS-formatted concatenated matrix after running the function __catmultGenes__ with a list of 78 protein coding plastid genes for 122 species, as originally published by [Gonçalves et al. 2020](https://bsapubs.onlinelibrary.wiley.com/doi/abs/10.1002/ajb2.1502) when investigating the historical biogeography Vochysiaceae across the Neotropics. The original data retrieved from [Dryad](https://doi.org/10.5061/dryad.sn02v6x1g) repository were also kindly permitted by [Deise Gonçalves](http://www.deisegoncalves.com/) to be used as example genomic data of the catGenes package.
+
+![Concatenated genomic dataset](vignettes/Vochysiaceae1.png)
+
+![Concatenated genomic dataset](vignettes/Vochysiaceae2.png)
+
+![Concatenated genomic dataset](vignettes/Vochysiaceae3.png)
+
 
 ## Documentation
 A detailed description of the _catGenes_' full functionality will soon be available in [here](https://github.com/domingoscardoso/catGenes/tree/main/vignettes/).

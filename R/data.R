@@ -86,3 +86,22 @@ NULL
 #' @usage data(Gaya)
 
 NULL
+
+#' @name Vochysiaceae
+#'
+#' @docType data
+#'
+#' @title Plastome dataset of Vochysiaceae (Myrtales)
+#'
+#' @description List of 78 protein coding plastid genes for 122 species from Vochysiaceae and 
+#' seven other families of Myrtales as originally used to investigate the historical biogeography
+#' Vochysiaceae across the Neotropics (Goncalves et al. 2020).
+#'
+#' @format DNA sequences in NEXUS format as read by ape's function \code{\link{read.nexus.data}}.
+#'
+#' @source <https://doi.org/10.5061/dryad.sn02v6x1g>
+#' @source <https://bsapubs.onlinelibrary.wiley.com/doi/abs/10.1002/ajb2.1502>
+#'
+#' @usage data(Vochysiaceae)
+
+NULL

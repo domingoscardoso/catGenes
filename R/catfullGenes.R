@@ -63,7 +63,7 @@ catfullGenes <- function(...,
   # Loading all individual genes into a single named list
   datset <- .namedlist(...)
 
-  if(length(datset) == 1){
+  if (length(datset) == 1) {
     datset <- datset[[1]]
   }
 
@@ -76,13 +76,14 @@ catfullGenes <- function(...,
          (Domingos Cardoso; cardosobot@gmail.com)")
   }
 
+
   cf <- lapply(datset, function(x) grepl("_cf_", names(x)))
   aff <- lapply(datset, function(x) grepl("_aff_", names(x)))
   spp_temp <- lapply(datset, function(x) gsub("_aff_|_cf_", " ", names(x)))
   infraspp <- lapply(spp_temp, function(x) grepl("[[:upper:]][[:lower:]]+_[[:lower:]]+_[[:lower:]]+",
                                                  x))
 
-  if(any(unlist(cf))|any(unlist(aff))|any(unlist(infraspp))){
+  if (any(unlist(cf))|any(unlist(aff))|any(unlist(infraspp))) {
 
     nr <- .namesTorename(datset,
                          cf = cf,
@@ -97,6 +98,9 @@ catfullGenes <- function(...,
                            infraspp = infraspp)
   }
 
+  if (missdata == FALSE) {
+    datset_temp <- datset
+  }
 
   # Now running genecomp function in a for loop
 
@@ -149,7 +153,19 @@ catfullGenes <- function(...,
                              outgroup = outgroup)
   }
 
-  if(any(unlist(cf))|any(unlist(aff))|any(unlist(infraspp))){
+  if (missdata == FALSE) {
+    for (j in seq_along(datset)){
+      for (i in seq_along(datset[[j]][["species"]])){
+        g <- grepl(datset[[j]][["species"]][i], names(datset_temp[[j]]))
+        if(any(g)){
+          n <- names(datset_temp[[j]])[g]
+          datset[[j]][["species"]][i] <- n
+        }
+      }
+    }
+  }
+
+  if (any(unlist(cf))|any(unlist(aff))|any(unlist(infraspp))) {
     # Putting back the names under cf. and aff.
     # Adjusting names with infraspecific taxa
     datset <- .namesback(datset,

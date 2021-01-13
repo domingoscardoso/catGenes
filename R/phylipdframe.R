@@ -54,27 +54,27 @@
 phylipdframe <- function(x, file,
                          dropmisseq = TRUE) {
 
-  if(!is.data.frame(x)){
+  if (!is.data.frame(x)) {
     x <- data.frame(x)
   }
 
   ncolumns <- length(x)
-  if (ncolumns == 1){
+  if (ncolumns == 1) {
     stop("You must provide a two-column-sized data.frame containing the taxon names and DNA sequences
           Find help also at DBOSLab-UFBA (Domingos Cardoso; cardosobot@gmail.com)")
   }
 
-  if(names(x)[1] != "species" | names(x)[2] != "sequence"){
+  if (names(x)[1] != "species" | names(x)[2] != "sequence") {
     names(x) <- c("species", "sequence")
   }
 
-  if(dropmisseq){
+  if (dropmisseq) {
     # Get number of missing data "N" and "?" in each sequence
     missdata <- vector()
     missdataN <- vector()
     misstotal_temp <- list()
     numbchar <- nchar(x[1,2])
-    for (i in seq_along(x$sequence)){
+    for (i in seq_along(x$sequence)) {
       missdata <- length(stringr::str_extract_all(x$sequence[i], "[?]", simplify = FALSE)[[1]])
       missdataN <- length(stringr::str_extract_all(x$sequence[i], "N", simplify = FALSE)[[1]])
       misstotal_temp[i] <- missdata + missdataN
@@ -90,7 +90,7 @@ phylipdframe <- function(x, file,
 
   # Calculating the space between the taxon labels and corresponding DNA sequence
   vector.list1 <- vector("list")
-  for (i in x$species){
+  for (i in x$species) {
     vector.list1[[i]] <- nchar(i)
   }
   numtaxlab <- as.data.frame(unlist(vector.list1, use.names = FALSE))

@@ -12,7 +12,7 @@
 #' @param launch.browser Run catGenes in browser
 #' @param port If launch.browser is FALSE, specify port to run catGenes
 #'
-#' @examples if(interactive()){
+#' @examples if (interactive()) {
 #' run_catGenes()
 #' }
 #'

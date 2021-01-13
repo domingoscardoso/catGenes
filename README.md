@@ -83,6 +83,26 @@ unique identifiers. Then, the sequences/species must be formatted as
 ![Example when species are duplicated with multiple
 accessions](vignettes/labelling_with_identifiers_and_duplicated_species.png)
 
+#### *3. Formatting labels for accessions identified just at genus level or fully identified with infraspecific taxa*
+
+The accessions/sequences not fully identified or just at genus level
+should be simply named as **Genus\_sp**, or **Genus\_sp1** and
+**Genus\_sp2**, or **Genus\_spA** and **Genus\_spB**, just like the
+example below. The generic name could even be abbreviated but always
+keeping separated from the “sp” and always without full period like
+**G\_sp** or **G\_sp1** or **G\_spA**. It is also possible to run any of
+the concatenating catGenes functions even when when accesions are fully
+identified with infraspecific taxa. Following the same general
+formatting scheme for accessions idenfitied at species level, just add
+the infraspecific taxa after the specific epithet such as
+**Genus\_species\_variety\_identifier\_everythingelse** or
+**Genus\_species\_subspecies\_identifier\_everythingelse**, but do not
+mention wheather they are “var” or “subsp”. See also some examples
+below:
+
+![Example with other label
+formatting](vignettes/other_label_fformatting.png)
+
 ### *Naming the individual DNA alignment files*
 
 Before loading the individual DNA alignments for concatenation, we
@@ -281,6 +301,20 @@ matrix, showing the charset of each partition:
 
 ![catGenes Shiny app](vignettes/concatenatedmatrix2.png)
 
+### *How the function writeNexus handles differing identifers when concatenating DNA alignments by keeping all original identifiers*
+
+It is possible to run the concatenating *catGenes* functions so as to
+get a concatenated matrix that keeps all original identifiers in each
+individual partition (i.e. choosing the argument shortaxlabel = FALSE
+when running **catfullGenes** or **catmultGenes**). But as shown in the
+next two screenshots below, note that the function **writeNexus** will
+handle the with differing identifers across partitions by keeping them
+as comments inside brackets.
+
+![Concatenated genomic dataset](vignettes/catGenes_with_taxlabels1.png)
+
+![Concatenated genomic dataset](vignettes/catGenes_with_taxlabels2.png)
+
 ### *Writing the concatenated matrix in PHYLIP format*
 
 This new function **writePhylip** will write both a PHYLIP-formatted
@@ -318,6 +352,44 @@ for a RAxML concatenated phylogenetic analysis using a mixed/partitioned
 model:
 
 ![catGenes Shiny app](vignettes/concatenatedmatrix3_partitition.png)
+
+### *Removing duplicated accessions of the same species in DNA alignments*
+
+This function **dropSeq** will remove the smaller sequence(s) (with
+missing characters, either “?” or “N”) for any species duplicated with
+multiple accessions in the DNA alignment. The next screenshot below show
+a concatenated dataset after run with **catmultGenes**, where there are
+species duplicated with multiple accessions. Before writing such a
+concatenated dataset with the function **writeNexus**, for example, it
+is possible to run the function **dropSeq** so as to remove the
+duplicated accessions of the same species.
+
+![Concatenated genomic dataset](vignettes/dropseq1.png)
+
+Note below that the function **dropSeq** removed all multiple accessions
+of the same species from the previous concatenated dataset:
+
+![Concatenated genomic dataset](vignettes/dropseq2.png)
+
+### *Example of a catGenes-generated concatenated dataset of 78 genes*
+
+The concatenating *catGenes* functions have been developed to perform
+efficiently also with large datasets for phylogenomic analyses. See
+below some screenshots of a NEXUS-formatted concatenated matrix after
+running the function **catmultGenes** with a list of 78 protein coding
+plastid genes for 122 species, as originally published by [Gonçalves et
+al. 2020](https://bsapubs.onlinelibrary.wiley.com/doi/abs/10.1002/ajb2.1502)
+when investigating the historical biogeography Vochysiaceae across the
+Neotropics. The original data retrieved from
+[Dryad](https://doi.org/10.5061/dryad.sn02v6x1g) repository were also
+kindly permitted by [Deise Gonçalves](http://www.deisegoncalves.com/) to
+be used as example genomic data of the catGenes package.
+
+![Concatenated genomic dataset](vignettes/Vochysiaceae1.png)
+
+![Concatenated genomic dataset](vignettes/Vochysiaceae2.png)
+
+![Concatenated genomic dataset](vignettes/Vochysiaceae3.png)
 
 ## Documentation
 

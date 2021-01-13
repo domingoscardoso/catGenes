@@ -21,7 +21,7 @@ If you have questions about the application, please email directly to
 Domingos Cardoso at \email{cardosobot@gmail.com}.
 }
 \examples{
-if(interactive()){
+if (interactive()) {
 run_catGenes()
 }
 
