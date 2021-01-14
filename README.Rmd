@@ -33,7 +33,7 @@ devtools::install_github("domingoscardoso/catGenes")
 ### _Formatting sequences with scientific names and accession identifiers_
 
 The concatenating functions available in _catGenes_ work by comparing the scientific names across the individual DNA alignments, when the input matrices do 
-not have species duplicated with multiple accessions. If the species are duplicated then the concatenating comparison will consider both the scientific names and an associated unique identifier. As such, before loading the DNA alignments and runing _catGenes_ concatenating functions, make sure they have the sequences consistently formatted. Depending on the input DNA alignments, the matrices must be formatted as following:
+not have species duplicated with multiple accessions. If the species are duplicated then the concatenating comparison will consider both the scientific names and an associated unique identifier (e.g. the collector number provided right after the taxon names). As such, before loading the DNA alignments and using any of the concatenating _catGenes_ functions, make sure the identification of the accessions across all DNA sequences is consistently formatted. So, depending on the input DNA alignments, they must be formatted as following:
 
 #### _1. When the DNA alignments have just a single sequence per species_
 

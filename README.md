@@ -33,11 +33,13 @@ The concatenating functions available in *catGenes* work by comparing
 the scientific names across the individual DNA alignments, when the
 input matrices do not have species duplicated with multiple accessions.
 If the species are duplicated then the concatenating comparison will
-consider both the scientific names and an associated unique identifier.
-As such, before loading the DNA alignments and runing *catGenes*
-concatenating functions, make sure they have the sequences consistently
-formatted. Depending on the input DNA alignments, the matrices must be
-formatted as following:
+consider both the scientific names and an associated unique identifier
+(e.g. the collector number provided right after the taxon names). As
+such, before loading the DNA alignments and using any of the
+concatenating *catGenes* functions, make sure the identification of the
+accessions across all DNA sequences is consistently formatted. So,
+depending on the input DNA alignments, they must be formatted as
+following:
 
 #### *1. When the DNA alignments have just a single sequence per species*
 
