@@ -1,4 +1,4 @@
-# Auxiliar function to obtain the intersection of a list of vectors
+# Auxiliary function to obtain the intersection of a list of vectors
 
 # Used inside the function delGaps
 

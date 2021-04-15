@@ -1,4 +1,4 @@
-# Function to delete all extra identifiers of the DNA sequence (e.g. GenBank numbers)
+# Auxiliary function to delete all extra identifiers of the DNA sequence (e.g. GenBank numbers)
 # so as to maintain just the scientific names and associated collector number
 
 # Used inside the function catmultGenes

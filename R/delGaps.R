@@ -1,4 +1,4 @@
-# Auxiliar function to delete gap-only columns
+# Auxiliary function to delete gap-only columns
 
 # Used inside the functions catfullGenes and catmultGenes
 

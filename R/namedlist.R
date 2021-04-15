@@ -1,4 +1,4 @@
-# Function to create a named list of the input individual genes.
+# Auxiliary function to create a named list of the input individual genes.
 
 # Used inside the functions catfullGenes, catmultGenes, writeNexus, and writePhylip.
 

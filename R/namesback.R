@@ -1,4 +1,5 @@
-# Function to adjust names with cf., aff, or infraspecific taxa
+# Auxiliary function to adjust names with cf., aff, or infraspecific taxa
+
 # Used inside catmultGenes and dropSeq functions
 
 # Author: Domingos Cardoso
