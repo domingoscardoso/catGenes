@@ -83,6 +83,7 @@ nexusdframe <- function(x, file,
     x <- x[!unlist(misstotal_temp) %in% numbchar,]
   }
 
+  writtenby <- paste("[catGenes (DBOSLab-UFBA), ", date(), "]\n\n", sep = "")
   nexus <- paste("#NEXUS", "", sep="\n")
   begindata <- paste("BEGIN DATA;")
   dimname <- paste("DIMENSIONS")
@@ -139,6 +140,7 @@ nexusdframe <- function(x, file,
 
 
   colnames(x) <- paste(nexus,
+                       writtenby,
                        begindata,
                        dimensions,
                        format,

@@ -154,10 +154,10 @@ catfullGenes <- function(...,
   }
 
   if (missdata == FALSE) {
-    for (j in seq_along(datset)){
-      for (i in seq_along(datset[[j]][["species"]])){
+    for (j in seq_along(datset)) {
+      for (i in seq_along(datset[[j]][["species"]])) {
         g <- grepl(datset[[j]][["species"]][i], names(datset_temp[[j]]))
-        if(any(g)){
+        if (any(g)) {
           n <- names(datset_temp[[j]])[g]
           datset[[j]][["species"]][i] <- n
         }
@@ -178,6 +178,13 @@ catfullGenes <- function(...,
                          shortaxlabel = shortaxlabel,
                          multispp = FALSE)
   }
+
+
+  # Removing empty, gap-only columns
+  if (missdata == FALSE) {
+    datset <- .delGaps(datset)
+  }
+
 
   cat("Full gene match is finished!", "",
       sep="\n")

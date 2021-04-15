@@ -281,6 +281,12 @@ catmultGenes <- function(...,
   }
 
 
+  # Removing empty, gap-only columns
+  if (missdata == FALSE) {
+    datset <- .delGaps(datset)
+  }
+
+
   cat("Full gene match is finished!", "",
       sep="\n")
 

@@ -90,7 +90,7 @@ writeNexus <- function(x, file,
   # Making all separate dataset within the list the same size to transforme into a dataframe with NAs whenever there is no sequence
   #datasets <- lapply(datasets, `length<-`, max(lengths(datasets)))
 
-  writtenby <- paste("[DBOSLab-UFBA R scripts, ", date(), "]\n\n", sep = "")
+  writtenby <- paste("[catGenes (DBOSLab-UFBA), ", date(), "]\n\n", sep = "")
   nexus <- paste("#NEXUS", "", sep = "\n")
   begindata <- paste("BEGIN DATA;")
   dimname <- paste("DIMENSIONS")

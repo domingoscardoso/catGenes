@@ -1,7 +1,7 @@
 # Function to delete all identifiers of the DNA sequence (e.g. collector and GenBank numbers)
 # so as to maintain just the scientific names
 
-# Used inside catfullGenes function
+# Used inside the function catfullGenes
 
 # Author: Domingos Cardoso
 
