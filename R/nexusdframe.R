@@ -91,6 +91,7 @@ nexusdframe <- function(x, file,
   dimensions <- paste(dimname, ntax, numbchar, sep = " ")
   format <- paste("FORMAT DATATYPE=DNA GAP=- MISSING=?;")
   matrix <- paste("MATRIX", "", sep = "\n")
+  n <- nchar(x[1,2])
 
   # Calculating the space between the taxon labels and corresponding DNA sequence
   vector.list1 <- vector("list")
@@ -106,7 +107,37 @@ nexusdframe <- function(x, file,
     stringr::str_pad(max(numtaxlab$numtaxlab, na.rm = FALSE) + 5, "right")
   x <- tidyr::unite(x, "unamed", colnames(x), sep = "")
   end <- paste(";","END;", sep = "\n")
-  x[nrow(x) + 1,] <- end
+  x[nrow(x) + 1, ] <- end
+
+  # Creating the scale of char length
+  x <- rbind(x[rep(1, 1), ], x)
+  npad <- nchar(sub("\\s.*", "", x[1, ]))
+  x[1, ] <- sub(".*?\\s", "", x[1, ])
+  x[1, ] <- paste0(paste(rep(" ", npad), collapse = ""), x[1, ])
+  x <- rbind(x[rep(1, 1), ], x)
+  x[1, ] <- gsub("^","[", x[1, ])
+  x[1, ] <- gsub("[[:upper:]].*|[[:lower:]].*|[?]","", x[1, ])
+
+  x[2, ] <- gsub("^","[", x[2, ])
+  x[2, ] <- gsub("[[:upper:]].*|[[:lower:]].*|[?]","", x[2, ])
+
+  nbr <- paste(seq(0, n+20, by = 10))
+  nbrseq <- vector()
+  dotseq <- vector()
+  for (i in seq_along(nbr)) {
+    if (nbr[i] == 0) {
+      nbrseq[i] <- paste(nbr[i], paste(rep(" ", 8-nchar(nbr[i])), collapse = ""), collapse = "")
+      dotseq[i] <- paste(".", paste(rep(" ", 8-nchar(nbr[1])), collapse = ""), collapse = "")
+    } else {
+      nbrseq[i] <- paste(nbr[i], paste(rep(" ", 9-nchar(nbr[i])), collapse = ""), collapse = "")
+      dotseq[i] <- paste(".", paste(rep(" ", 9-nchar(nbr[1])), collapse = ""), collapse = "")
+    }
+  }
+
+  x[1, ] <- paste0(x[1, ], paste0(paste(nbrseq, collapse = ""), "]"))
+  x[2, ] <- paste0(x[2, ], paste0(paste(dotseq, collapse = ""), "]"))
+
+
   colnames(x) <- paste(nexus,
                        begindata,
                        dimensions,

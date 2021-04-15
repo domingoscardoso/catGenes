@@ -267,11 +267,51 @@ writeNexus <- function(x, file,
     # Uniting the two columns inside a list of dataframes
     datset <- lapply(datset, function(x) tidyr::unite(x, "sequences", colnames(x), sep = " "))
 
+
+    # Creating the scale of char length for each dataset
+    for(i in seq_along(datset)){
+      datset[[i]] <- rbind(datset[[i]][rep(1, 1), ], datset[[i]])
+      npad <- nchar(sub("\\s.*", "", datset[[i]][1, ]))
+      datset[[i]][1, ] <- sub(".*?\\s", "", datset[[i]][1, ])
+      datset[[i]][1, ] <- paste0(paste(rep(" ", npad), collapse = ""), datset[[i]][1, ])
+      datset[[i]] <- rbind(datset[[i]][rep(1, 1), ], datset[[i]])
+      datset[[i]][1, ] <- gsub("^","[", datset[[i]][1, ])
+      datset[[i]][1, ] <- gsub("[[:upper:]].*|[[:lower:]].*|[?]","", datset[[i]][1, ])
+
+      datset[[i]][2, ] <- gsub("^","[", datset[[i]][2, ])
+      datset[[i]][2, ] <- gsub("[[:upper:]].*|[[:lower:]].*|[?]","", datset[[i]][2, ])
+    }
+
+    nbr <- list()
+    nbrseq <- list()
+    dotseq <- list()
+    for (j in seq_along(numbchar)) {
+      nbr[[j]] <- paste(seq(0, numbchar[[j]]+20, by = 10))
+      tempA <- list()
+      tempB <- list()
+      for (i in seq_along(nbr[[j]])) {
+        if (nbr[[j]][[i]] == 0) {
+          tempA[[i]] <- paste(nbr[[j]][[i]], paste(rep(" ", 8-nchar(nbr[[j]][[i]])), collapse = ""), collapse = "")
+          tempB[[i]] <- paste(".", paste(rep(" ", 8-nchar(nbr[[j]][[1]])), collapse = ""), collapse = "")
+        } else {
+          tempA[[i]] <- paste(nbr[[j]][[i]], paste(rep(" ", 9-nchar(nbr[[j]][[i]])), collapse = ""), collapse = "")
+          tempB[[i]] <- paste(".", paste(rep(" ", 9-nchar(nbr[[j]][[1]])), collapse = ""), collapse = "")
+        }
+      }
+      nbrseq[[j]] <- unlist(tempA)
+      dotseq[[j]] <- unlist(tempB)
+
+      datset[[j]][1, ] <- paste0(datset[[j]][1, ], paste0(paste(nbrseq[[j]], collapse = ""), "]"))
+      datset[[j]][2, ] <- paste0(datset[[j]][2, ], paste0(paste(dotseq[[j]], collapse = ""), "]"))
+    }
+
+
     # Adding the gene name and two extra spaces below each gene dataset
     ex_datset <- mapply(function(x, y) rbind(y, x, "", ""),
                         x = datset, y = paste0("[", as.list(genenames), "]"),
                         SIMPLIFY = FALSE)
 
+    teset <- ex_datset[[1]]
     # Combining the dataframes inside the list into a single dataframe
     genes <- data.frame(dplyr::bind_rows(ex_datset, .id = NULL)) # Somehow it was not working with .id="sequences" so I had to exclude the next line
     #genes <- data.frame(genes[, 2])

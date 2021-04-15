@@ -244,7 +244,6 @@ catmultGenes <- function(...,
                          multispp = TRUE)
   }
 
-
   #This is to insert original names back when using the arguments
   # maxspp = T & shortaxlabel = F
   if (maxspp == T & shortaxlabel == F) {
@@ -254,6 +253,9 @@ catmultGenes <- function(...,
       suppressWarnings({
         for (j in seq_along(ntemp)) {
           n <- spp_labels_original[[i]][grepl(ntemp[j], spp_labels_original[[i]])]
+          if (length(n) > 1) {
+             n <- n[gsub("(_[^_]+)_.*", "\\1", n) %in% ntemp[j]]
+          }
           if (length(n) == 0) {
             ntemp[j] <- ntemp[j]
           } else {
