@@ -269,17 +269,21 @@ writeNexus <- function(x, file,
 
 
     # Creating the scale of char length for each dataset
-    for(i in seq_along(datset)){
-      datset[[i]] <- rbind(datset[[i]][rep(1, 1), ], datset[[i]])
+    for (i in seq_along(datset)) {
+
+      # Finding the column with no brackets between accession numbers
+      c <- which(grepl("[[]", datset[[i]][["sequences"]]) == FALSE)[1]
+
+      datset[[i]] <- rbind(datset[[i]][rep(ifelse(c == 0, 1, c), 1), ], datset[[i]])
       npad <- nchar(sub("\\s.*", "", datset[[i]][1, ]))
       datset[[i]][1, ] <- sub(".*?\\s", "", datset[[i]][1, ])
       datset[[i]][1, ] <- paste0(paste(rep(" ", npad), collapse = ""), datset[[i]][1, ])
       datset[[i]] <- rbind(datset[[i]][rep(1, 1), ], datset[[i]])
       datset[[i]][1, ] <- gsub("^","[", datset[[i]][1, ])
-      datset[[i]][1, ] <- gsub("[[:upper:]].*|[[:lower:]].*|[?]","", datset[[i]][1, ])
+      datset[[i]][1, ] <- gsub("[[:upper:]].*|[[:lower:]].*|[?]|[-]", "", datset[[i]][1, ])
 
       datset[[i]][2, ] <- gsub("^","[", datset[[i]][2, ])
-      datset[[i]][2, ] <- gsub("[[:upper:]].*|[[:lower:]].*|[?]","", datset[[i]][2, ])
+      datset[[i]][2, ] <- gsub("[[:upper:]].*|[[:lower:]].*|[?]|[-]", "", datset[[i]][2, ])
     }
 
     nbr <- list()

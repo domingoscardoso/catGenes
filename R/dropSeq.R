@@ -331,7 +331,7 @@ dropSeq <- function(...,
          (Domingos Cardoso; cardosobot@gmail.com)")
     }
 
-    if(numberdatset == 1 & !any(lapply(datset[[1]], class) == "list")){
+    if (numberdatset == 1 & !any(lapply(datset[[1]], class) == "list")) {
       temp_name <- names(datset)
       datset <- datset[[1]]
       for (i in 1:length(datset)) {
@@ -425,12 +425,12 @@ dropSeq <- function(...,
     ## Deleting duplicate accessions when there is only one gene dataset
     # Get first how many sequences are there in each dataset
     nseqs <- as.vector(sapply(datset, nrow))
-    if(length(datset) == 1 | length(datset) > 1 & !equalnumb(nseqs)) {
+    if (length(datset) == 1 | length(datset) > 1 & !equalnumb(nseqs)) {
 
       cat("For each species duplicated with multiple accessions...", sep = "\n")
       cat("Smaller sequences (with more missing data) were dropped.", sep = "\n")
 
-      if(length(datset) > 1 & !equalnumb(nseqs)) {
+      if (length(datset) > 1 & !equalnumb(nseqs)) {
         cat("NOTE: You have entered more than one DNA alignment, each with differing number of sequences or taxa!", sep = "\n")
         cat("Consider running the concatenating function catmultGenes first, before using dropSeq", sep = "\n")
       }

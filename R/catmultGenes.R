@@ -105,7 +105,7 @@ catmultGenes <- function(...,
   infraspp <- lapply(spp_temp, function(x) grepl("[[:upper:]][[:lower:]]+_[[:lower:]]+_[[:lower:]]+", x))
 
 
-  if(any(unlist(infraspp))){
+  if (any(unlist(infraspp))) {
     infranames <- unique(as.vector(unlist(spp_labels_original))[as.vector(unlist(infraspp))])
     n <- as.vector(unlist(spp_labels_original))[!as.vector(unlist(infraspp))]
     nu <- unique(gsub("(_[^_]+).*", "\\1", n))
@@ -114,7 +114,7 @@ catmultGenes <- function(...,
     ni <- infranames[g]
     nn <- unique(n[grepl(paste(gsub("(_[^_]+).*", "\\1", infranames[g]), collapse = "|"), n)])
 
-    if(any(g)){
+    if (any(g)) {
     stop("The following accessions are identified at infraspecific level:\n",
          ni,
          "\n\nBUT there are accessions of the same species that are NOT as well fully identified with infraspecific taxa...\n",
@@ -140,6 +140,19 @@ catmultGenes <- function(...,
                            aff = aff,
                            infraspp = infraspp)
   }
+
+
+  # Stoping if the dataset do not include multiple accession
+  spp_temp <- lapply(datset, function(x) gsub("(_[^_]+)_.*", "\\1", names(x)))
+  dup <- lapply(spp_temp, function(x) duplicated(x))
+
+  if (!any(unlist(dup))) {
+
+    stop("The loaded alignments do not include species duplicated, with multiple accessions.\n",
+         "Please use the function catfullGenes.\n",
+         "Find help also at DBOSLab-UFBA (Domingos Cardoso; cardosobot@gmail.com)")
+  }
+
 
   # Shortening the taxon labels (keeping just the scientific names) in species
   # not duplicated with multiple accessions so as to maximize the taxon coverage in
