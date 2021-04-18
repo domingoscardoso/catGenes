@@ -5,50 +5,51 @@
 # Author: Domingos Cardoso
 
 
-.charScale <- function(datset,
+.charScale <- function(x,
                        numbchar = NULL,
-                       interleave = NULL) {
+                       interleave = NULL,
+                       genenames = NULL) {
 
   if (interleave) {
 
-    for (i in seq_along(datset)) {
+    for (i in seq_along(x)) {
 
       # Finding the column with no brackets between accession numbers
-      c <- which(grepl("[[]", datset[[i]][["sequences"]]) == FALSE)[1]
+      c <- which(grepl("[[]", x[[i]][["sequences"]]) == FALSE)[1]
 
       if (!is.na(c)) {
-        datset[[i]] <- rbind(datset[[i]][rep(ifelse(c == 0, 1, c), 1), ], datset[[i]])
-        npad <- nchar(sub("\\s.*", "", datset[[i]][1, ]))
-        datset[[i]][1, ] <- sub(".*?\\s", "", datset[[i]][1, ])
-        datset[[i]][1, ] <- paste0(paste(rep(" ", npad), collapse = ""), datset[[i]][1, ])
-        datset[[i]] <- rbind(datset[[i]][rep(1, 1), ], datset[[i]])
-        datset[[i]][1, ] <- gsub("^","[", datset[[i]][1, ])
-        datset[[i]][1, ] <- gsub("[[:upper:]].*|[[:lower:]].*|[?]|[-]", "", datset[[i]][1, ])
+        x[[i]] <- rbind(x[[i]][rep(ifelse(c == 0, 1, c), 1), ], x[[i]])
+        npad <- nchar(sub("\\s.*", "", x[[i]][1, ]))
+        x[[i]][1, ] <- sub(".*?\\s", "", x[[i]][1, ])
+        x[[i]][1, ] <- paste0(paste(rep(" ", npad), collapse = ""), x[[i]][1, ])
+        x[[i]] <- rbind(x[[i]][rep(1, 1), ], x[[i]])
+        x[[i]][1, ] <- gsub("^","[", x[[i]][1, ])
+        x[[i]][1, ] <- gsub("[[:upper:]].*|[[:lower:]].*|[?]|[-]", "", x[[i]][1, ])
 
-        datset[[i]][2, ] <- gsub("^","[", datset[[i]][2, ])
-        datset[[i]][2, ] <- gsub("[[:upper:]].*|[[:lower:]].*|[?]|[-]", "", datset[[i]][2, ])
+        x[[i]][2, ] <- gsub("^","[", x[[i]][2, ])
+        x[[i]][2, ] <- gsub("[[:upper:]].*|[[:lower:]].*|[?]|[-]", "", x[[i]][2, ])
 
       } else {
 
-        datset[[i]] <- rbind(datset[[i]][rep(1, 1), ], datset[[i]])
+        x[[i]] <- rbind(x[[i]][rep(1, 1), ], x[[i]])
 
-        npad_acc <- gsub("\\s{2}.*", "", datset[[i]][1, ])
+        npad_acc <- gsub("\\s{2}.*", "", x[[i]][1, ])
         npad_acc <- gsub(".*\\s", "", npad_acc)
 
-        datset[[i]][1, ] <- gsub("[[]\\w+[]]",
-                                 paste(rep(" ", nchar(npad_acc)), collapse = ""),
-                                 datset[[i]][1, ])
+        x[[i]][1, ] <- gsub("[[]\\w+[]]",
+                            paste(rep(" ", nchar(npad_acc)), collapse = ""),
+                            x[[i]][1, ])
 
 
-        npad <- nchar(sub("\\s.*", "", datset[[i]][1, ]))
-        datset[[i]][1, ] <- sub(".*?\\s", "", datset[[i]][1, ])
-        datset[[i]][1, ] <- paste0(paste(rep(" ", npad), collapse = ""), datset[[i]][1, ])
-        datset[[i]] <- rbind(datset[[i]][rep(1, 1), ], datset[[i]])
-        datset[[i]][1, ] <- gsub("^","[", datset[[i]][1, ])
-        datset[[i]][1, ] <- gsub("[[:upper:]].*|[[:lower:]].*|[?]|[-]", "", datset[[i]][1, ])
+        npad <- nchar(sub("\\s.*", "", x[[i]][1, ]))
+        x[[i]][1, ] <- sub(".*?\\s", "", x[[i]][1, ])
+        x[[i]][1, ] <- paste0(paste(rep(" ", npad), collapse = ""), x[[i]][1, ])
+        x[[i]] <- rbind(x[[i]][rep(1, 1), ], x[[i]])
+        x[[i]][1, ] <- gsub("^","[", x[[i]][1, ])
+        x[[i]][1, ] <- gsub("[[:upper:]].*|[[:lower:]].*|[?]|[-]", "", x[[i]][1, ])
 
-        datset[[i]][2, ] <- gsub("^","[", datset[[i]][2, ])
-        datset[[i]][2, ] <- gsub("[[:upper:]].*|[[:lower:]].*|[?]|[-]", "", datset[[i]][2, ])
+        x[[i]][2, ] <- gsub("^","[", x[[i]][2, ])
+        x[[i]][2, ] <- gsub("[[:upper:]].*|[[:lower:]].*|[?]|[-]", "", x[[i]][2, ])
       }
     }
 
@@ -71,16 +72,96 @@
       nbrseq[[j]] <- unlist(tempA)
       dotseq[[j]] <- unlist(tempB)
 
-      datset[[j]][1, ] <- paste0(datset[[j]][1, ], paste0(paste(nbrseq[[j]], collapse = ""), "]"))
-      datset[[j]][2, ] <- paste0(datset[[j]][2, ], paste0(paste(dotseq[[j]], collapse = ""), "]"))
+      x[[j]][1, ] <- paste0(x[[j]][1, ], paste0(paste(nbrseq[[j]], collapse = ""), "]"))
+      x[[j]][2, ] <- paste0(x[[j]][2, ], paste0(paste(dotseq[[j]], collapse = ""), "]"))
     }
 
-    #} else {
-    #number of chacter for non interleave
-    #}
+  } else {
 
+    # Creating the scale of char length for the non-interleaved concatenated matrix
+
+    # Finding the column with no brackets between accession numbers
+    c <- which(grepl("[[]", x[["sequences"]]) == FALSE)[1]
+
+    if (!is.na(c)) {
+      x <- rbind(x[rep(ifelse(c == 0, 1, c), 1), ], x)
+      npad <- nchar(sub("\\s.*", "", x[1, ]))
+      x[1, ] <- sub(".*?\\s", "", x[1, ])
+      x[1, ] <- paste0(paste(rep(" ", npad), collapse = ""), x[1, ])
+      x <- rbind(x[rep(1, 1), ], x)
+      x <- rbind(x[rep(1, 1), ], x)
+      x[3, ] <- gsub("^","[", x[3, ])
+      x[3, ] <- gsub("[[:upper:]].*|[[:lower:]].*|[?]|[-]", "", x[3, ])
+
+      x[2, ] <- gsub("^","[", x[2, ])
+      x[2, ] <- gsub("[[:upper:]].*|[[:lower:]].*|[?]|[-]", "", x[2, ])
+
+      x[1, ] <- gsub("[[:upper:]].*|[[:lower:]].*|[?]|[-]", "", x[1, ])
+      x[1, ] <- gsub("^"," ", x[1, ])
+
+    } else {
+
+      x <- rbind(x[rep(1, 1), ], x)
+
+      npad_acc <- gsub("\\s{2}.*", "", x[1, ])
+      npad_acc <- gsub(".*\\s", "", npad_acc)
+
+      x[1, ] <- gsub("[[]\\w+[]]",
+                     paste(rep(" ", nchar(npad_acc)), collapse = ""),
+                     x[1, ])
+
+
+      npad <- nchar(sub("\\s.*", "", x[1, ]))
+      x[1, ] <- sub(".*?\\s", "", x[1, ])
+      x[1, ] <- paste0(paste(rep(" ", npad), collapse = ""), x[1, ])
+      x <- rbind(x[rep(1, 1), ], x)
+      x <- rbind(x[rep(1, 1), ], x)
+      x[3, ] <- gsub("^","[", x[3, ])
+      x[3, ] <- gsub("[[:upper:]].*|[[:lower:]].*|[?]|[-]", "", x[3, ])
+
+      x[2, ] <- gsub("^","[", x[2, ])
+      x[2, ] <- gsub("[[:upper:]].*|[[:lower:]].*|[?]|[-]", "", x[2, ])
+
+      x[1, ] <- gsub("[[:upper:]].*|[[:lower:]].*|[?]|[-]", "", x[1, ])
+      x[1, ] <- gsub("^"," ", x[1, ])
+    }
+
+    s <- sum(unlist(numbchar))
+    nbr <- paste(seq(0, s+20, by = 10))
+    nbrseq <- list()
+    dotseq <- list()
+    for (i in seq_along(nbr)) {
+      if (nbr[[i]] == 0) {
+        nbrseq[[i]] <- paste(nbr[[i]], paste(rep(" ", 8-nchar(nbr[[i]])), collapse = ""), collapse = "")
+        dotseq[[i]] <- paste(".", paste(rep(" ", 8-nchar(nbr[[1]])), collapse = ""), collapse = "")
+      } else {
+        nbrseq[[i]] <- paste(nbr[[i]], paste(rep(" ", 9-nchar(nbr[[i]])), collapse = ""), collapse = "")
+        dotseq[[i]] <- paste(".", paste(rep(" ", 9-nchar(nbr[[1]])), collapse = ""), collapse = "")
+      }
+    }
+
+    x[2, ] <- paste0(x[2, ], paste0(paste(unlist(nbrseq), collapse = ""), "]"))
+    x[3, ] <- paste0(x[3, ], paste0(paste(unlist(dotseq), collapse = ""), "]"))
+
+
+    g <- paste0("[", as.list(genenames), "]")
+
+    geneseq <- list()
+    for (i in seq_along(g)) {
+      if (i == 1) {
+        geneseq[[i]] <- paste(g[i], paste(rep(" ", numbchar[[i]]-nchar(g[i])-1),
+                                          collapse = ""))
+      } else {
+
+        geneseq[[i]] <- paste(g[i], paste(rep(" ", numbchar[[i]]-nchar(g[i])-1),
+                                          collapse = ""), collapse = "")
+
+      }
+    }
+
+    x[1, ] <- paste0(x[1, ], paste(unlist(geneseq), collapse = ""))
 
   }
 
-  return(datset)
+  return(x)
 }

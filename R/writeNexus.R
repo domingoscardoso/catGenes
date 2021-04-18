@@ -271,7 +271,8 @@ writeNexus <- function(x, file,
     # Creating the scale of char length for each dataset
     datset <- .charScale(datset,
                          numbchar = numbchar,
-                         interleave = interleave)
+                         interleave = interleave,
+                         genenames = genenames)
 
 
     # Adding the gene name and two extra spaces below each gene dataset
@@ -279,7 +280,6 @@ writeNexus <- function(x, file,
                         x = datset, y = paste0("[", as.list(genenames), "]"),
                         SIMPLIFY = FALSE)
 
-    teset <- ex_datset[[1]]
     # Combining the dataframes inside the list into a single dataframe
     genes <- data.frame(dplyr::bind_rows(ex_datset, .id = NULL)) # Somehow it was not working with .id="sequences" so I had to exclude the next line
     #genes <- data.frame(genes[, 2])
@@ -304,7 +304,7 @@ writeNexus <- function(x, file,
     # Uniting the two columns inside just the first dataframe
     datset[[1]] <- tidyr::unite(datset[[1]], "sequences", colnames(datset[[1]]), sep = " ")
 
-    # Deleting the species collumn in the remaining dataset
+    # Deleting the species column in the remaining dataset
     for (i in 2:numberdatset) {
       datset[[i]] <- data.frame(sequences=datset[[i]][,2])
     }
@@ -315,6 +315,12 @@ writeNexus <- function(x, file,
     # Uniting all columns
     genes <- tidyr::unite(ex_datset, "sequences", sep = "")
     genes$sequences <- as.character(genes$sequences)
+
+    # Creating the scale of char length for the entire concatenated matrix
+    genes <- .charScale(genes,
+                        numbchar = numbchar,
+                        interleave = interleave,
+                        genenames = genenames)
 
     # Writing the data command block
     #n <- dim(genes)[1]
