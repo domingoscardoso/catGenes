@@ -1,4 +1,7 @@
-# Auxiliary function to insert a scale of character number for each individual alignment
+# Auxiliary function to insert a scale of character number for each individual
+# alignment in the interleaved-formatted concatenated matrix, as well as for the
+# entire non-interleaved concatenated matrix, and the associated gene names where
+# they starts along the matrix
 
 # Used inside the function writeNexus
 
@@ -39,7 +42,6 @@
         x[[i]][1, ] <- gsub("[[]\\w+[]]",
                             paste(rep(" ", nchar(npad_acc)), collapse = ""),
                             x[[i]][1, ])
-
 
         npad <- nchar(sub("\\s.*", "", x[[i]][1, ]))
         x[[i]][1, ] <- sub(".*?\\s", "", x[[i]][1, ])
@@ -84,6 +86,7 @@
     c <- which(grepl("[[]", x[["sequences"]]) == FALSE)[1]
 
     if (!is.na(c)) {
+
       x <- rbind(x[rep(ifelse(c == 0, 1, c), 1), ], x)
       npad <- nchar(sub("\\s.*", "", x[1, ]))
       x[1, ] <- sub(".*?\\s", "", x[1, ])
@@ -109,7 +112,6 @@
       x[1, ] <- gsub("[[]\\w+[]]",
                      paste(rep(" ", nchar(npad_acc)), collapse = ""),
                      x[1, ])
-
 
       npad <- nchar(sub("\\s.*", "", x[1, ]))
       x[1, ] <- sub(".*?\\s", "", x[1, ])
@@ -143,7 +145,6 @@
     x[2, ] <- paste0(x[2, ], paste0(paste(unlist(nbrseq), collapse = ""), "]"))
     x[3, ] <- paste0(x[3, ], paste0(paste(unlist(dotseq), collapse = ""), "]"))
 
-
     g <- paste0("[", as.list(genenames), "]")
 
     geneseq <- list()
@@ -152,10 +153,8 @@
         geneseq[[i]] <- paste(g[i], paste(rep(" ", numbchar[[i]]-nchar(g[i])-1),
                                           collapse = ""))
       } else {
-
         geneseq[[i]] <- paste(g[i], paste(rep(" ", numbchar[[i]]-nchar(g[i])-1),
                                           collapse = ""), collapse = "")
-
       }
     }
 
