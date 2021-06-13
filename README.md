@@ -272,8 +272,9 @@ charset at the end of the matrix block.
 ``` r
 writeNexus(catdf, 
            file = "Vataireoids.nex",
-           bayesblock = TRUE, 
-           interleave = TRUE)
+           genomics = FALSE,
+           interleave = TRUE,
+           bayesblock = TRUE)
 #> You are combining the following gene datasets:
 #> 
 #> ETS, ITS, matK
@@ -328,6 +329,7 @@ available in [CIPRES](http://www.phylo.org/).
 ``` r
 writePhylip(catdf, 
             file = "Vataireoids_dataset.phy",
+            genomics = FALSE,
             catalignments = TRUE,
             partitionfile = TRUE)
 #> You are combining the following gene datasets:

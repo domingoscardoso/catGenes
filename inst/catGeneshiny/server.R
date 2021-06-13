@@ -86,6 +86,9 @@ shinyServer <- function(input, output, session) {
     nexus <- reactive({
         nexus <- input$nexus
     })
+    genom <- reactive({
+        genom <- input$genomics
+    })
     interl <- reactive({
         interl <- input$interleave
     })
@@ -107,10 +110,12 @@ shinyServer <- function(input, output, session) {
         content = function(file) {
             if(nexus() == 2 & phylip() == 1){
                 writeNexus(catGenes_result(), file,
-                           bayesblock = charset(),
-                           interleave = interl())
+                           genomics = genom(),
+                           interleave = interl(),
+                           bayesblock = charset())
             }else{
                 writePhylip(catGenes_result(), file,
+                            genomics = genom(),
                             catalignments = TRUE,
                             partitionfile = FALSE)
             }
@@ -126,6 +131,7 @@ shinyServer <- function(input, output, session) {
         content = function(file) {
             if(phylip() == 2){
                 writePhylip(catGenes_result(), file,
+                            genomics = genom(),
                             catalignments = FALSE,
                             partitionfile = TRUE)
             }

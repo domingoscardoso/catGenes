@@ -157,8 +157,9 @@ This new function __writeNexus__ will write a NEXUS-formatted combined dataset w
 ```{r, message=FALSE, warning=FALSE}
 writeNexus(catdf, 
            file = "Vataireoids.nex",
-           bayesblock = TRUE, 
-           interleave = TRUE)
+           genomics = FALSE,
+           interleave = TRUE,
+           bayesblock = TRUE)
 ```
 
 See below a screenshot of the beggining of the NEXUS-formatted concatenated matrix:
@@ -182,6 +183,7 @@ This new function __writePhylip__ will write both a PHYLIP-formatted concatenate
 ```{r, message=FALSE, warning=FALSE}
 writePhylip(catdf, 
             file = "Vataireoids_dataset.phy",
+            genomics = FALSE,
             catalignments = TRUE,
             partitionfile = TRUE)
 

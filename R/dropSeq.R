@@ -59,6 +59,7 @@
 #' @importFrom dplyr arrange select filter
 #' @importFrom tibble add_column
 #' @importFrom tidyr unite
+#' @importFrom magrittr "%>%"
 #' @importFrom stringr str_extract_all
 #' @importFrom stats setNames
 #'

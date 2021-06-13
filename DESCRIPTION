@@ -7,8 +7,10 @@ Maintainer: Domingos Cardoso <cardosobot@gmail.com>
 URL: https://github.com/domingoscardoso/catGenes
 Language: en-US
 Depends:
-    R (>= 3.5.0), ape, dplyr
+    R (>= 3.5.0), ape
 Imports:
+    dplyr,
+    magrittr,
     tidyr, 
     rmarkdown,
     stringr,

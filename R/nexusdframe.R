@@ -48,6 +48,7 @@
 #'
 #' @importFrom stringr str_trunc str_pad str_extract_all
 #' @importFrom tidyr unite
+#' @importFrom magrittr "%>%"
 #'
 #' @export
 
