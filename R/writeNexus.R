@@ -228,7 +228,7 @@ writeNexus <- function(x, file,
                          duplicated(datset_temp[[i]][,"species"]))
       }
 
-      if (any(dupp[[1]] == TRUE)){
+      if (any(dupp[[1]] == TRUE)) {
 
         for (i in seq_along(datset_temp)) {
 
@@ -240,7 +240,7 @@ writeNexus <- function(x, file,
 
             ns <- gsub("\\s.*", "", datset[[i]][["species"]][dupp[[i]]][f][h])
 
-            g[h] <- gsub("[_]", " [", g[h])
+            g[h] <- sub("_", " [", g[h]) # Remove first occurrence of underscore in a string
             g[h] <- gsub("^[[]", "_", g[h])
 
             datset[[i]][["species"]][dupp[[i]]][f][h] <- paste0(ns, g[h])

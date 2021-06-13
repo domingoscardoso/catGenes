@@ -64,6 +64,19 @@ names(Brongniartia) <- gsub("[.].*", "", names(Brongniartia))
 usethis::use_data(Brongniartia, overwrite = TRUE)
 
 
+# Loading Cryptocarya example
+genes <- list.files("data-raw/DNAlignments/Cryptocarya")
+Cryptocarya <- list()
+for (i in seq_along(genes)) {
+
+  Cryptocarya[[i]] <- ape::read.nexus.data(paste0("data-raw/DNAlignments/Cryptocarya/", genes[i]))
+
+}
+names(Cryptocarya) <- gsub("[.].*", "", genes)
+
+# Adding dataset for tests
+usethis::use_data(Cryptocarya, overwrite = TRUE)
+
 
 # Loading Vochysiaceae example
 # See that the original DNA alignments are in Phylip format.
@@ -95,3 +108,4 @@ names(Vochysiaceae) <- gsub("[.].*", "", names(Vochysiaceae))
 
 # Adding dataset for tests
 usethis::use_data(Vochysiaceae, overwrite = TRUE)
+
