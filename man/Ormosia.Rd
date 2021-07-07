@@ -14,7 +14,7 @@ DNA sequences in NEXUS format as read by ape's function \code{\link{read.nexus.d
 data(Ormosia)
 }
 \description{
-List of four DNA matrices of the pantropical papilionoid legume
+List of four individual DNA alignments of the pantropical papilionoid legume
 genus Ormosia, containing nuclear ribossomal (ITS) and plastid (matK, trnK intron,
 trnLF) genes.
 }

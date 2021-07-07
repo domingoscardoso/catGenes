@@ -14,6 +14,6 @@ DNA sequences in NEXUS format as read by ape's function \code{\link{read.nexus.d
 data(Gaya)
 }
 \description{
-List of three DNA matrices of the neotropical genus Gaya (Malvaceae), containing
-nuclear ribossomal (ITS) and plastid (petL-psbE, rpL16) genes.
+List of three individual DNA alignments of the neotropical genus
+Gaya (Malvaceae), containing nuclear ribossomal (ITS) and plastid (petL-psbE, rpL16) genes.
 }

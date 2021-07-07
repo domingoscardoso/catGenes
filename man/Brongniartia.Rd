@@ -14,7 +14,7 @@ Dorado, Snak, São-Mateus, Delgado-Salinas, Queiroz  & Cardoso (unpubl. data)
 data(Brongniartia)
 }
 \description{
-List of three DNA matrices of the predominantly Mesoamerican genus
+List of three individual DNA alignments of the predominantly Mesoamerican genus
 Brongniartia of papilinoid legumes, containing
 nuclear ribossomal (ITS, ETS) and plastid (matK, trnLF) genes.
 }

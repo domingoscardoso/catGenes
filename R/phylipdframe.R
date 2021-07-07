@@ -2,17 +2,24 @@
 #'
 #' @author Domingos Cardoso
 #'
-#' @description Writes \code{data.frame} formatted DNA alignment into PHYLIP-formatted file.
-#' It is useful for writing each gene dataset from within the resulting list of
-#' compared gene datasets, after running the functions \code{\link{catfullGenes}}
-#' and \code{\link{catmultGenes}}.
+#' @description Writes \code{data.frame} formatted DNA alignment or \code{list}
+#' formatted NEXUS file as originally imported with \code{\link{ape}}'s function
+#' \code{\link{read.nexus.data}} into a PHYLIP-formatted file. It is useful for
+#' writing each gene dataset from within the resulting list of compared gene datasets,
+#' after running the concatenating functions \code{\link{catfullGenes}} and
+#' \code{\link{catmultGenes}}. The function is also useful for saving into PHYLIP
+#' format the origiginal list-formatted NEXUS object as read by \code{\link{read.nexus.data}},
+#' after making specific changes in such original individual alignment (e.g. corrections
+#' of species names).
 #'
 #' @usage
 #' phylipdframe(x, file,
 #'              dropmisseq = TRUE)
 #'
-#' @param x The object to be written, any two-column-sized \code{data.frame} where the first
-#' column contains the taxon names and the second column the DNA sequence.
+#' @param x The object to be written, any two-column-sized \code{data.frame} where
+#' the first column contains the taxon names and the second column the DNA sequence.
+#' Otherwise, the object may be a list-formatted NEXUS file as originally
+#' imported with \code{\link{ape}}'s function \code{\link{read.nexus.data}}.
 #'
 #' @param file Either a character string naming a file or a \code{\link{connection}}
 #'  open for writing.
@@ -53,6 +60,16 @@
 
 phylipdframe <- function(x, file,
                          dropmisseq = TRUE) {
+
+  if (class(x) == "list") {
+    for (i in 1:length(x)) {
+      x[[i]] <- paste(x[[i]], collapse = "")
+      x[[i]] <- toupper(x[[i]])
+    }
+    spp <- stats::setNames(data.frame(names(x)), "species")
+    seqs <- stats::setNames(data.frame(unlist(x, use.names = FALSE)), "sequence")
+    x <- cbind(spp, seqs)
+  }
 
   if (!is.data.frame(x)) {
     x <- data.frame(x)

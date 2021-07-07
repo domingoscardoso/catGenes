@@ -14,7 +14,7 @@ DNA sequences in NEXUS format as read by ape's function \code{\link{read.nexus.d
 data(Luetzelburgia)
 }
 \description{
-List of nine DNA matrices of the neotropical legume genus
+List of nine individual DNA alignments of the neotropical legume genus
 Luetzelburgia, containing nuclear ribossomal (ETS, ITS) and plastid
 (matK, psbA-trnH, rpS16, trnD-T, trnK intron, trnL intron, trnQ) genes.
 }

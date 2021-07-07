@@ -14,7 +14,7 @@ DNA sequences in NEXUS format as read by ape's function \code{\link{read.nexus.d
 data(Vataireoids)
 }
 \description{
-List of eight DNA matrices of the neotropical Vataireoid legumes,
+List of eight individual DNA alignments of the neotropical Vataireoid legumes,
 containing nuclear ribossomal (ETS, ITS) and plastid (matK, psbA-trnH, rpS16,
 trnD-T, trnL intron, trnQ) genes.
 }
