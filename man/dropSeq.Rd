@@ -39,7 +39,7 @@ nexusdframe(ITS, file = "filename.nex")
 
 # Run function catmultGenes first
 catdf <- catmultGenes(Ormosia,
-                      maxspp = TRUE
+                      maxspp = TRUE,
                       shortaxlabel = FALSE,
                       missdata = TRUE)
 

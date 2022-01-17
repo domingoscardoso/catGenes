@@ -41,7 +41,7 @@
 #'
 #' # Run function catmultGenes first
 #' catdf <- catmultGenes(Ormosia,
-#'                       maxspp = TRUE
+#'                       maxspp = TRUE,
 #'                       shortaxlabel = FALSE,
 #'                       missdata = TRUE)
 #'
@@ -68,7 +68,7 @@
 dropSeq <- function(...,
                     shortaxlabel = FALSE){
 
-  datset <- .namedlist(Ormosia)
+  datset <- .namedlist(...)
 
   # Removing sequences for a dataset already passed through the catmultGenes
   if (names(datset[[1]][[1]])[1] == "species" &
