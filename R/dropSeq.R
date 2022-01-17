@@ -56,7 +56,7 @@
 #'            interleave = TRUE)
 #' }
 #'
-#' @importFrom dplyr arrange select filter
+#' @importFrom dplyr select filter
 #' @importFrom tibble add_column
 #' @importFrom tidyr unite
 #' @importFrom magrittr "%>%"
@@ -68,11 +68,11 @@
 dropSeq <- function(...,
                     shortaxlabel = FALSE){
 
-  datset <- .namedlist(...)
+  datset <- .namedlist(Ormosia)
 
   # Removing sequences for a dataset already passed through the catmultGenes
-  if (colnames(datset[[1]][[1]])[1] == "species" &
-      colnames(datset[[1]][[1]])[2] == "sequence") {
+  if (names(datset[[1]][[1]])[1] == "species" &
+      names(datset[[1]][[1]])[2] == "sequence") {
 
     datset <- datset[[1]]
     datset_orig <- datset
@@ -220,9 +220,11 @@ dropSeq <- function(...,
 
 
         datset[[j]][["species"]] <- gsub("(_[^_]+)_.*", "\\1", datset[[j]][["species"]])
+
+        datset_orig[[j]][["species"]] <- gsub("(_[^_]+)_.*", "\\1", datset_orig[[j]][["species"]])
       }
-      datset_orig <- lapply(datset_orig, .shortaxlabels)
     }
+
 
     ############################################################################
     # Replacing missing seqs in any gene
@@ -253,7 +255,8 @@ dropSeq <- function(...,
     }
 
     # Arranging by species name each dataframe inside the list
-    datset_orig <- lapply(datset_orig, function(x) dplyr::arrange(x, species))
+    datset_orig <- lapply(datset_orig, function(x) x[order(x$species),])
+
 
     ## Deleting duplicated accessions
     for (i in seq_along(datset_orig)) {
@@ -421,7 +424,9 @@ dropSeq <- function(...,
     }
 
     # Arranging by species name each dataframe inside the list
-    datset <- lapply(datset, function(x) dplyr::arrange(x, species))
+    datset <- lapply(datset, function(x) x[order(x$species),])
+    #datset <- lapply(datset, function(x) dplyr::arrange(x, x[,1]))
+
 
     ## Deleting duplicate accessions when there is only one gene dataset
     # Get first how many sequences are there in each dataset
