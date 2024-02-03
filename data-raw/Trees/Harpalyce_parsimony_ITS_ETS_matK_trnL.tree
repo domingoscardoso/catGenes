@@ -1,0 +1,37 @@
+#NEXUS 
+
+Begin trees;  [Treefile saved Mon Dec 18 19:40:10 2017]
+[!
+>Data file = infile.nex
+>Bootstrap method with heuristic search:
+>  Number of bootstrap replicates = 2000
+>  Starting seed = generated automatically
+>  Number of characters resampled in each replicate = 3657
+>  Optimality criterion = parsimony
+>    Character-status summary:
+>      Of 3657 total characters:
+>        All characters are of type 'unord'
+>        All characters have equal weight
+>        2369 characters are constant
+>        443 variable characters are parsimony-uninformative
+>        Number of parsimony-informative characters = 845
+>    Gaps are treated as "missing"
+>    Multistate taxa interpreted as uncertainty
+>  Starting tree(s) obtained via stepwise addition
+>    Addition sequence: random
+>    Number of replicates = 1
+>    Starting seed = generated automatically
+>    Number of trees held at each step = 5
+>  Branch-swapping algorithm: tree-bisection-reconnection (TBR) with reconnection limit = 8
+>    Steepest descent option not in effect
+>  'Maxtrees' setting = 10000 (will not be increased)
+>  Branches collapsed (creating polytomies) if maximum branch length is zero
+>  'MulTrees' option not in effect; only 1 tree will be saved per replicate
+>  No topological constraints in effect
+>  Trees are unrooted
+>
+>  2000 bootstrap replicates completed
+>  Time used = 00:02:19 (CPU time = 00:02:19.3)
+]
+tree 'PAUP_1' = [&U] (Dermatophyllum_secundiflorum:100,Clathrotropis_nitida:100,(((Bowdichia_virgilioides:100,(Leptolobium_dasycarpum:100,Leptolobium_panamense:100):100):100,(Diplotropis_martiusii:100,(Guianodendron_praeclarum:100,Staminodianthus_duckei:100):99.95):94.5):99.4,(((((Amphiodon_effusus_Queiroz13051:100,Tabaroa_caatingicola_Cardoso3617:100):97.43,(((Harpalyce_brasiliana_Cardoso2510:100,Harpalyce_correntina_Harley28589:100,(Harpalyce_hilariana_Alves309:100,(Harpalyce_lepidota_Zanatta765:100,Harpalyce_speciosa_SaoMateus379:100):70.45,Harpalyce_macedoi_Fonseca6070:100):91.55,(Harpalyce_tombadorense_Munhoz7970:100,Harpalyce_sp_Walter4738:100):97.05,Harpalyce_sp_Pott11609:100,Harpalyce_sp_Sevilha4097:100):54,(Harpalyce_lanata_SaoMateus328:100,Harpalyce_riparia_Queiroz16125:100):90.15,Harpalyce_magnibracteata_SaoMateus325:100,Harpalyce_minor_SaoMateus329:100,Harpalyce_parvifolia_Queiroz7530:100,Harpalyce_sp_FortunaPerez1484:100):100,((((Harpalyce_arborescens_Lezama19187:100,(Harpalyce_sp2_DelgadoSalinas2831:100,Harpalyce_sp4_Zamudio13499:100):88.375):95.05,(Harpalyce_ferruginea_DelgadoSalinas2830:100,Harpalyce_formosa_Hughes2109:100,Harpalyce_pringlei_Pringle6827:100,Harpalyce_sousae_DelgadoSalinas2824:100,Harpalyce_sp1_Torres1825:100,Harpalyce_sp3_DelgadoSalinas2328:100,Harpalyce_sp5_DelgadoSalinas2826:100,Harpalyce_sp6_Nunez550:100,Harpalyce_aff_formosa_Campos1778:100):97.75):95.4,((Harpalyce_goldmanii:100,Harpalyce_rupicola_Hughes1470:100):96.9,(Harpalyce_torresii:100,Harpalyce_yucatanense_Tellez1276:100):100):95.4):100,Harpalyce_suberosa_BroLeon11542:100):72.883):99.95):99.95,((Behaimia_cubensis_Torke1426:100,Cyclolobium_brasiliense_Pereira3701B:100):93.8,(Limadendron_amazonicum_Meireles390:100,Limadendron_hostmannii_Meireles462:100):100):98.45,((((Brongniartia_bracteolata_Sousa10554:100,Brongniartia_foliolosa_Duran5525:100,Brongniartia_sousae_Sousa11942:100):98.1,(Brongniartia_minutifolia_Cardoso4182:100,Brongniartia_podalyrioides_Linares4489:100):99.3):99.9,Brongniartia_ulbrichiana_Wood21247:100):71.2,(((Cristonia_biloba_Crisp10899:100,(Plagiocarpus_conduplicatus_Barrett4013:100,Plagiocarpus_dispermus_Barret1839:100):100):89.25,(Lamprolobium_fruticosum_Clarkson8827:100,Thinicola_incana_Aston2844:100):99.85):97.75,(Hovea_acanthoclada_Kern17468:100,(((Hovea_chorizemifolia_Ardley_sn:100,Hovea_pungens_Mickle473:100):80.3,(Hovea_stricta_Davis12049:100,Hovea_trisperma_Keighery1300:100):100):99.55,Hovea_elliptica_Dornan357:100):100):94.45,((Templetonia_aculeata_Collins249:100,Templetonia_drumondii_Keighery6791:100,((Templetonia_neglecta_Thompson2043:100,Templetonia_retusa_Alford203:100):97.65,Templetonia_stenophylla_Lewis2129:100):92.6):99.95,Templetonia_hookeri_Legge76:100):92.9,(((((Templetonia_battii_Thompson1159:100,Templetonia_ceracea_Markey6094:100):95.25,Templetonia_rossi_Gray250:100):69.27,Templetonia_sulcata_Graham2079:100):95.8,Templetonia_smithiana_Hislop204_33:100):89.33,(Templetonia_egena_Vonow3171:100,Templetonia_incrassata_Douglas26301:100):100):100):71.05):99.95):95.3,(((Poecilanthe_falcata_Cardoso2218:100,(Poecilanthe_grandiflora_Lemos131:100,Poecilanthe_sp1_Mendonca2881:100):100):100,Poecilanthe_ulei_Queiroz9584:100):98.4,((Poecilanthe_itapuana_SaoMateus322:100,(Poecilanthe_subcordata_Franca3844:100,Poecilanthe_sp2_Saddi933:100):100):67.65,Poecilanthe_parviflora_Barbosa1:100):100):100):100,(Haplormosia_monophylla_vanBergen167:100,Haplormosia_monophylla_Harris8280:100):100):70.1):99.2);
+End;

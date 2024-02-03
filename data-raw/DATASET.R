@@ -1,9 +1,12 @@
 ## code to prepare `DATASET` dataset goes here
 
 library(ape)
+library(treeio)
+library(usethis)
 # Load each example DNA alignments
 # This will require the ape function read.nexus.data
 
+#-------------------------------------------------------------------------------
 # Loading Luetzelburgia example
 genes <- list.files("data-raw/DNAlignments/Luetzelburgia")
 Luetzelburgia <- list()
@@ -16,6 +19,7 @@ names(Luetzelburgia) <- gsub(".*_(.+)[.].*", "\\1", names(Luetzelburgia))
 usethis::use_data(Luetzelburgia, overwrite = TRUE)
 
 
+#-------------------------------------------------------------------------------
 # Loading Ormosia example
 genes <- list.files("data-raw/DNAlignments/Ormosia")
 Ormosia <- list()
@@ -28,6 +32,7 @@ names(Ormosia) <- gsub(".*_(.+)[.].*", "\\1", names(Ormosia))
 usethis::use_data(Ormosia, overwrite = TRUE)
 
 
+#-------------------------------------------------------------------------------
 # Loading Vataireoids example
 genes <- list.files("data-raw/DNAlignments/Vataireoids")
 Vataireoids <- list()
@@ -40,6 +45,7 @@ names(Vataireoids) <- gsub("[.].*", "", names(Vataireoids))
 usethis::use_data(Vataireoids, overwrite = TRUE)
 
 
+#-------------------------------------------------------------------------------
 # Loading Gaya example
 genes <- list.files("data-raw/DNAlignments/Gaya")
 Gaya <- list()
@@ -64,6 +70,7 @@ names(Brongniartia) <- gsub("[.].*", "", names(Brongniartia))
 usethis::use_data(Brongniartia, overwrite = TRUE)
 
 
+#-------------------------------------------------------------------------------
 # Loading Cryptocarya example
 genes <- list.files("data-raw/DNAlignments/Cryptocarya")
 Cryptocarya <- list()
@@ -78,6 +85,7 @@ names(Cryptocarya) <- gsub("[.].*", "", genes)
 usethis::use_data(Cryptocarya, overwrite = TRUE)
 
 
+#-------------------------------------------------------------------------------
 # Loading Vochysiaceae example
 # See that the original DNA alignments are in Phylip format.
 # So we will first import into R and them save in Nexus format
@@ -108,4 +116,18 @@ names(Vochysiaceae) <- gsub("[.].*", "", names(Vochysiaceae))
 
 # Adding dataset for tests
 usethis::use_data(Vochysiaceae, overwrite = TRUE)
+
+
+#-------------------------------------------------------------------------------
+# Load trees
+list.files("data-raw/Trees")
+Harpalyce_bayes_tree <- treeio::read.beast("data-raw/Trees/Harpalyce_Bayes_ITS_ETS_matK_trnL.tree")
+Harpalyce_parsimony_tree <- treeio::read.beast("data-raw/Trees/Harpalyce_parsimony_ITS_ETS_matK_trnL.tree")
+Harpalyce_raxml_tree <- treeio::read.raxml("data-raw/Trees/Harpalyce_RAxML_ITS_ETS_matK_trnL.tree")
+
+# Adding dataset for tests
+usethis::use_data(Harpalyce_bayes_tree, overwrite = TRUE)
+usethis::use_data(Harpalyce_parsimony_tree, overwrite = TRUE)
+usethis::use_data(Harpalyce_raxml_tree, overwrite = TRUE)
+
 

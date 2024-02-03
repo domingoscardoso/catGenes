@@ -1,3 +1,4 @@
+Type: Package
 Package: catGenes
 Title: Concatenating multiple DNA alignments made easy
 Version: 0.1.0
@@ -7,7 +8,7 @@ Maintainer: Domingos Cardoso <cardosobot@gmail.com>
 URL: https://github.com/domingoscardoso/catGenes
 Language: en-US
 Depends:
-    R (>= 3.5.0), ape
+    R (>= 3.5.0), ape, ggtree
 Imports:
     dplyr,
     magrittr,
@@ -19,11 +20,18 @@ Imports:
     shinydashboard,
     shinyjs,
     tibble,
-    stats
+    stats,
+    treeio,
+    ggplot2,
+    cowplot,
+    phangorn,
+    phytools,
+    tibble,
+    stringr
 License: AGPL-3
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.3
 Suggests: knitr
 VignetteBuilder: knitr
