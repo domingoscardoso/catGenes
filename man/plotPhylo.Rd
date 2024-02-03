@@ -62,10 +62,10 @@ the corresponding alternative name.}
 \item{gene_labels}{A title for the tree; usually a name of an specific gene
 (or set of genes) from which the tree was reconstructed.}
 
-\item{side_phylogram, }{if \code{TRUE}, a small phylogram with branch lengths
+\item{side_phylogram}{if \code{TRUE}, a small phylogram with branch lengths
 will be plotted on the upper left.}
 
-\item{phylogram_supports, }{if \code{TRUE}, the side phylogram will include
+\item{phylogram_supports}{if \code{TRUE}, the side phylogram will include
 the the same symbols of node support as those plotted in the main edited tree.}
 
 \item{phylogram_height}{A number to adjust the size of the side phylogram.}
