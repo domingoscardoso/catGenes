@@ -28,5 +28,5 @@ run_catGenes()
 
 }
 \author{
-Domingos Cardoso and Bruno Vilela
+Domingos Cardoso
 }

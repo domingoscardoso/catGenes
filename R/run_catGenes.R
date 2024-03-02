@@ -1,6 +1,6 @@
 #' Run  \emph{catGenes} under a Shiny Application
 #'
-#' @author Domingos Cardoso and Bruno Vilela
+#' @author Domingos Cardoso
 #'
 #' @description This function runs the \emph{catGenes} application. It will open
 #' the application by using the default internet browser, or the viewer if running

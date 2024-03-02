@@ -51,10 +51,10 @@
 #' \dontrun{
 #' library(catGenes)
 #'
-#' data(Harpalyce_bayes_tree)
+#' data(GenBank_accessions)
 #'
-#' mineSeq(inputdf = NULL,
-#'         gb.colnames = NULL,
+#' mineSeq(inputdf = GenBank_accessions,
+#'         gb.colnames = c("ETS", "ITS", "matK", "petBpetD", "trnTF", "Xdh"),
 #'         as.character = FALSE,
 #'         verbose = TRUE,
 #'         save = TRUE,
@@ -143,4 +143,3 @@ mineSeq <- function(inputdf = NULL,
 
   return(seqs)
 }
-

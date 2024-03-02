@@ -16,8 +16,8 @@ plotPhylo(tree = NULL,
           prune_taxa = NULL,
           size_tiplab = NULL,
           gene_labels = NULL,
-          side_phylogram,
-          phylogram_supports = TRUE,
+          phylogram_side = FALSE,
+          phylogram_supports = FALSE,
           phylogram_height = NULL,
           save = TRUE,
           dpi = 600,
@@ -62,11 +62,11 @@ the corresponding alternative name.}
 \item{gene_labels}{A title for the tree; usually a name of an specific gene
 (or set of genes) from which the tree was reconstructed.}
 
-\item{side_phylogram}{if \code{TRUE}, a small phylogram with branch lengths
+\item{phylogram_side}{if \code{TRUE}, a small phylogram with branch lengths
 will be plotted on the upper left.}
 
-\item{phylogram_supports}{if \code{TRUE}, the side phylogram will include
-the the same symbols of node support as those plotted in the main edited tree.}
+\item{phylogram_supports}{if \code{TRUE}, the side phylogram will include the
+same symbols of node support as those plotted in the main edited tree.}
 
 \item{phylogram_height}{A number to adjust the size of the side phylogram.}
 
@@ -105,9 +105,16 @@ data(Harpalyce_bayes_tree)
 data(Harpalyce_parsimony_tree)
 data(Harpalyce_raxml_tree)
 
-Harpalyce_clade <- "Harpalyce"
-outgroup_taxa <- c("Staminodianthus", "Guianodendron", "Diplotropis",
-                   "Leptolobium", "Bowdichia", "Clathrotropis", "Dermatophyllum")
+Harpalyce_clade <- c("Harpalyce_brasiliana_Cardoso2510", 
+                     "Harpalyce_formosa_Hughes2109")
+outgroup_taxa <- c("Staminodianthus_duckei", 
+                   "Guianodendron_praeclarum", 
+                   "Diplotropis_martiusii",
+                   "Leptolobium_dasycarpum",
+                   "Leptolobium_panamense", 
+                   "Bowdichia_virgilioides", 
+                   "Clathrotropis_nitida", 
+                   "Dermatophyllum_secundiflorum")
 
 plotPhylo(tree = Harpalyce_bayes_tree,
           add_raxml_tree = Harpalyce_raxml_tree,
@@ -117,7 +124,7 @@ plotPhylo(tree = Harpalyce_bayes_tree,
           understate_taxa = outgroup_taxa,
           size_tiplab = 4,
           gene_labels = c("ITS/5.8S", "ETS", "matK", "trnL intron"),
-          side_phylogram = TRUE,
+          phylogram_side = TRUE,
           phylogram_supports = TRUE,
           phylogram_height = 25,
           save = TRUE,
