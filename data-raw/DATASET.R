@@ -1,8 +1,10 @@
-## code to prepare `DATASET` dataset goes here
+## code to prepare `DATASET` goes here
 
 library(ape)
 library(treeio)
 library(usethis)
+library(openxlsx)
+
 # Load each example DNA alignments
 # This will require the ape function read.nexus.data
 
@@ -130,4 +132,12 @@ usethis::use_data(Harpalyce_bayes_tree, overwrite = TRUE)
 usethis::use_data(Harpalyce_parsimony_tree, overwrite = TRUE)
 usethis::use_data(Harpalyce_raxml_tree, overwrite = TRUE)
 
+
+#-------------------------------------------------------------------------------
+# Load the spreadsheet with GenBank accessions
+list.files("data-raw/Spreadsheet")
+GenBank_accessions <- readxl::read_xlsx("data-raw/Spreadsheet/GenBank_accessions_Randia_clade_RUBIACEAE.xlsx")
+
+# Adding dataset for tests
+usethis::use_data(GenBank_accessions, overwrite = TRUE)
 

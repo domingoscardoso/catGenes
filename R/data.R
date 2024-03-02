@@ -123,3 +123,69 @@ NULL
 #' @usage data(Vochysiaceae)
 
 NULL
+
+#' @name Harpalyce_bayes_tree
+#'
+#' @docType data
+#'
+#' @title Bayesian tree of the papilionoid legume genus Harpalyce
+#'
+#' @description A Bayesian majority rule consensus tree of the  papilionoid legume
+#' tribe Brongniartieae with a focus on the genus Harpalyce, based on analysis
+#' of combined nuclear (ITS, ETS) and plastid (matK, trnL intron) DNA sequence
+#' data.
+#'
+#' @format A ggtree phylo object as read by treeio's function \code{\link{read.beast}}.
+#'
+#' @usage data(Harpalyce_bayes_tree)
+
+NULL
+
+#' @name Harpalyce_parsimony_tree
+#'
+#' @docType data
+#'
+#' @title Parsimony tree of the papilionoid legume genus Harpalyce
+#'
+#' @description A boostrap consensus tree of the  papilionoid legume
+#' tribe Brongniartieae with a focus on the genus Harpalyce, based on parsimony
+#' analysis of combined nuclear (ITS, ETS) and plastid (matK, trnL intron) DNA
+#' sequence data.
+#'
+#' @format A ggtree phylo object as read by treeio's function \code{\link{read.beast}}.
+#'
+#' @usage data(Harpalyce_parsimony_tree)
+
+NULL
+
+#' @name Harpalyce_raxml_tree
+#'
+#' @docType data
+#'
+#' @title RAxML tree of the papilionoid legume genus Harpalyce
+#'
+#' @description A RAxML tree of the  papilionoid legume tribe Brongniartieae with
+#' a focus on the genus Harpalyce, based on maximum likelihood analysis of
+#' combined nuclear (ITS, ETS) and plastid (matK, trnL intron) DNA sequence data.
+#'
+#' @format A ggtree phylo object as read by treeio's function \code{\link{read.raxml}}.
+#'
+#' @usage data(Harpalyce_raxml_tree)
+
+NULL
+
+#' @name GenBank_accessions
+#'
+#' @docType data
+#'
+#' @title Dataframe with GenBank accessions numbers
+#'
+#' @description Dataframe with representative species of the Randia clade of
+#' Rubiaceae and associated voucher information and GenBank accessions numbers
+#' for the DNA rehions 'ETS', 'ITS', 'matK', 'petBpetD', 'trnTF', and 'Xdh'.
+#'
+#' @format Dataframe object.
+#'
+#' @usage data(GenBank_accessions)
+
+NULL

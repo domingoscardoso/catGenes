@@ -35,8 +35,8 @@ is set up in \code{TRUE}. The default is to create a directory named
 \strong{RESULTS_mineSeq} and the sequences will be saved within a subfolder named
 after the current date.}
 
-\item{filename}{Name of the output file to be saved. The default is to
-create a file entitled \strong{GenBanK_seqs}.}
+\item{filename}{Name of the output file to be saved. The default is to create
+a file entitled \strong{GenBanK_seqs}.}
 }
 \value{
 A list of DNA sequences made of vectors of class 'DNAbin', or of
