@@ -19,9 +19,7 @@ for each genes in separate columns named by the corresponding gene.}
 
 \item{gb.colnames}{A vector with column names within the \code{inputdf}
 dataframe corresponding to each gene, where the GenBank accession numbers are
-listed.
-
-A vector with column names in the 'inputdf' dataframe corresponding to each gene, identified by GenBank accession numbers.}
+listed.}
 
 \item{as.character}{a logical controlling whether to return the sequences as
 an object of class "DNAbin" (the default).}
