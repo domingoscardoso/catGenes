@@ -21,7 +21,7 @@ for each genes in separate columns named by the corresponding gene.}
 dataframe corresponding to each gene, where the GenBank accession numbers are
 listed.
 
-A vector with column names in the "inputdf" dataframe corresponding to each gene, identified by GenBank accession numbers.}
+A vector with column names in the 'inputdf' dataframe corresponding to each gene, identified by GenBank accession numbers.}
 
 \item{as.character}{a logical controlling whether to return the sequences as
 an object of class "DNAbin" (the default).}
@@ -41,7 +41,7 @@ after the current date.}
 create a file entitled \strong{GenBanK_seqs}.}
 }
 \value{
-A list of DNA sequences made of vectors of class "DNAbin", or of
+A list of DNA sequences made of vectors of class 'DNAbin', or of
 single characters (if as.character = TRUE) with two attributes (species and
 description).
 }

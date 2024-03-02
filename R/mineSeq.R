@@ -24,7 +24,7 @@
 #' dataframe corresponding to each gene, where the GenBank accession numbers are
 #' listed.
 #'
-#' A vector with column names in the "inputdf" dataframe corresponding to each gene, identified by GenBank accession numbers.
+#' A vector with column names in the 'inputdf' dataframe corresponding to each gene, identified by GenBank accession numbers.
 #'
 #' @param as.character a logical controlling whether to return the sequences as
 #' an object of class "DNAbin" (the default).
@@ -43,7 +43,7 @@
 #' @param filename Name of the output file to be saved. The default is to
 #' create a file entitled **GenBanK_seqs**.
 #'
-#' @return A list of DNA sequences made of vectors of class "DNAbin", or of
+#' @return A list of DNA sequences made of vectors of class 'DNAbin', or of
 #' single characters (if as.character = TRUE) with two attributes (species and
 #' description).
 #'
@@ -76,20 +76,21 @@ mineSeq <- function(inputdf = NULL,
                     filename = "GenBanK_seqs") {
 
   # Create folder to save mined GenBank seqs
-  filenames <- vector()
-  for (i in seq_along(gb.colnames)) {
-    if (!grepl(gb.colnames[i], filename)) {
-      filenames[i] <- paste0(filename, "_", gb.colnames[i])
+  if (save) {
+    filenames <- vector()
+    for (i in seq_along(gb.colnames)) {
+      if (!grepl(gb.colnames[i], filename)) {
+        filenames[i] <- paste0(filename, "_", gb.colnames[i])
+      }
+    }
+    foldername <- paste0(dir, "/", format(Sys.time(), "%d%b%Y"))
+    if (!dir.exists(dir)) {
+      dir.create(dir)
+    }
+    if (!dir.exists(foldername)) {
+      dir.create(foldername)
     }
   }
-  foldername <- paste0(dir, "/", format(Sys.time(), "%d%b%Y"))
-  if (!dir.exists(dir)) {
-    dir.create(dir)
-  }
-  if (!dir.exists(foldername)) {
-    dir.create(foldername)
-  }
-
   # Adjusting vouchers and species columns
   inputdf$Species <- gsub("[.]|(^\\s){1,}|(\\s$){1,}", "", inputdf$Species)
   inputdf$Species <- gsub("(\\s){1,}", "_", inputdf$Species)
