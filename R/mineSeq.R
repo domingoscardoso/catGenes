@@ -4,8 +4,7 @@
 #'
 #' @description An \code{\link{ape}}-based function to connect with the
 #' [GenBank](https://www.ncbi.nlm.nih.gov/genbank) database, read nucleotide
-#' sequences using accession numbers given as arguments, and write them in a
-#' fasta format file.
+#' sequences using accession numbers, and write them in a fasta format file.
 #'
 #' @usage
 #' mineSeq(inputdf = NULL,
@@ -111,7 +110,7 @@ mineSeq <- function(inputdf = NULL,
                                    species.names = T,
                                    as.character = as.character)
 
-    # attr(seqs[[i]] , "species")
+    # attr(seqs[[i]], "species")
     # attr(seqs[[i]], "description")
 
     # Renaming accessions from GenBank

@@ -2,6 +2,7 @@
 % Please edit documentation in R/catGenes-package.R
 \docType{package}
 \name{catGenes-package}
+\alias{catGenes}
 \alias{catGenes-package}
 \title{Tools for combining individual DNA alignments for multigene analysis in phylogenetics and phylogenomics}
 \description{
@@ -39,6 +40,13 @@ Date: \tab 2020-10-25\cr
 }
 \references{
 Cardoso, D., Cavalcante, Q. & Vilela, B. (2020). catGenes: a new R package for combining multiple DNA alignments for multigene analysis in phylogenetics and phylogenomics.
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/domingoscardoso/catGenes}
+}
+
 }
 \author{
 \strong{Domingos Cardoso}\cr
