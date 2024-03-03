@@ -24,7 +24,6 @@
 #'
 #' @name catGenes-package
 #' @aliases catGenes-package
-#' @docType _PACKAGE
 #' @title Tools for combining individual DNA alignments for multigene analysis in phylogenetics and phylogenomics
 #' @author \strong{Domingos Cardoso}\cr
 #' (email: \email{cardosobot@@gmail.com};
@@ -47,5 +46,7 @@
 #' @references Cardoso, D., Cavalcante, Q. & Vilela, B. (2020). catGenes: a new R package for combining multiple DNA alignments for multigene analysis in phylogenetics and phylogenomics.
 #'
 #' @import dplyr tidyr stringr R.utils rmarkdown ape shiny shinydashboard shinyjs tibble stats
+#'
+"_PACKAGE"
 
 NULL

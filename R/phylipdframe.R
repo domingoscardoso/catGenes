@@ -61,7 +61,7 @@
 phylipdframe <- function(x, file,
                          dropmisseq = TRUE) {
 
-  if (class(x) == "list") {
+  if (inherits(x, "list")) {
     for (i in 1:length(x)) {
       x[[i]] <- paste(x[[i]], collapse = "")
       x[[i]] <- toupper(x[[i]])

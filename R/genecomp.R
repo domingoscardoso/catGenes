@@ -20,7 +20,7 @@
   gene_2 <- twogenes[[2]]
 
 
-  if (class(gene_1) == "list") {
+  if (inherits(gene_1, "list")) {
     for (i in 1:length(gene_1)) {
       gene_1[[i]] <- paste(gene_1[[i]], collapse = "")
       gene_1[[i]] <- toupper(gene_1[[i]])
@@ -30,7 +30,7 @@
     gene_1 <- cbind(spp, seqs)
   }
 
-  if (class(gene_2) == "list") {
+  if (inherits(gene_2, "list")) {
 
     for (i in 1:length(gene_2)) {
       gene_2[[i]] <- paste(gene_2[[i]], collapse = "")
