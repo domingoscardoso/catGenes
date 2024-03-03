@@ -182,7 +182,8 @@ NULL
 #'
 #' @description Dataframe with representative species of the Randia clade of
 #' Rubiaceae and associated voucher information and GenBank accessions numbers
-#' for the DNA rehions 'ETS', 'ITS', 'matK', 'petBpetD', 'trnTF', and 'Xdh'.
+#' for the DNA regions 'ETS', 'ITS', 'matK', 'petBpetD', 'trnTF', and 'Xdh', as
+#' well as for some plastomes.
 #'
 #' @format Dataframe object.
 #'

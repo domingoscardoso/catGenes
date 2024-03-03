@@ -44,8 +44,8 @@ single characters (if as.character = TRUE) with two attributes (species and
 description).
 }
 \description{
-An \href{https://cran.r-project.org/web/packages/ape/index.html}{ape}
--based function to connect with the \href{https://www.ncbi.nlm.nih.gov/genbank}{GenBank}
+An \href{https://cran.r-project.org/web/packages/ape/index.html}{ape}-based
+function to connect with the \href{https://www.ncbi.nlm.nih.gov/genbank}{GenBank}
 database, read nucleotide sequences using accession numbers, and write them
 in a fasta format file.
 }

@@ -94,9 +94,9 @@ Portable Document Format (.pdf), "tiff" to save in Tag Image File Format
 One or a list of objects of class "ggtree" "gg" "ggplot".
 }
 \description{
-Function to plot a \href{https://bioconductor.org/packages/release/bioc/html/ggtree.html}{ggtree}
--based phylogenetic tree using with the the addition of node supports from
-different phylogenetic estimation methods.
+Function to plot a \href{https://bioconductor.org/packages/release/bioc/html/ggtree.html}{ggtree}-based
+phylogenetic tree using with the the addition of node supports from different
+phylogenetic estimation methods.
 }
 \examples{
 \dontrun{
