@@ -72,7 +72,7 @@ mineSeq <- function(inputdf = NULL,
                     save = TRUE,
                     dir = "RESULTS_mineSeq",
                     filename = "GenBanK_seqs") {
-  
+
   # Create folder to save mined GenBank seqs
   if (save) {
     filenames <- vector()
@@ -92,7 +92,7 @@ mineSeq <- function(inputdf = NULL,
   # Adjusting vouchers and species columns
   inputdf$Species <- gsub("[.]|(^\\s){1,}|(\\s$){1,}", "", inputdf$Species)
   inputdf$Species <- gsub("(\\s){1,}", "_", inputdf$Species)
-  
+
   tf <- is.na(inputdf$Voucher)
   if (any(tf)) {
     inputdf$Voucher[tf] <- "Unvouchered"
@@ -100,7 +100,7 @@ mineSeq <- function(inputdf = NULL,
   inputdf$Voucher <- gsub("\\s[(].*|[:].*", "", inputdf$Voucher)
   inputdf$Voucher <- gsub("s[.]n[.]", "SN", inputdf$Voucher)
   inputdf$Voucher <- gsub("[/]|\\s|[-]", "", inputdf$Voucher)
-  
+
   # Downloading seqs
   seqs <- list()
   for (i in seq_along(gb.colnames)) {
@@ -110,10 +110,10 @@ mineSeq <- function(inputdf = NULL,
     seqs[[i]] <- ape::read.GenBank(access.nb = na.omit(inputdf[[gb.colnames[i]]]),
                                    species.names = T,
                                    as.character = as.character)
-    
+
     # attr(seqs[[i]] , "species")
     # attr(seqs[[i]], "description")
-    
+
     # Renaming accessions from GenBank
     for (l in seq_along(names(seqs[[i]]))){
       acc <- inputdf[[gb.colnames[i]]] %in% names(seqs[[i]])[l]
@@ -121,25 +121,25 @@ mineSeq <- function(inputdf = NULL,
                                     inputdf$Voucher[acc], "_",
                                     names(seqs[[i]])[l])
     }
-    
+
     if (verbose) {
-      message(paste0("GenBanK sequences for '", gb.colnames[i], 
+      message(paste0("GenBanK sequences for '", gb.colnames[i],
                      "' fully downloaded!"))
     }
-    
+
     # Exporting DNA matrix in fasta format
     if (save) {
       if (verbose) {
-        message(paste0("GenBanK sequences for '", gb.colnames[i], 
+        message(paste0("GenBanK sequences for '", gb.colnames[i],
                        "' saved on disk."))
       }
       ape::write.dna(seqs[[i]], paste0(foldername, "/", filenames[i], ".fasta"),
                      format = "fasta")
     }
-    
+
   }
-  
+
   names(seqs) <- gb.colnames
-  
+
   return(seqs)
 }

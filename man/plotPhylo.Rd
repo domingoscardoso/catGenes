@@ -19,7 +19,7 @@ plotPhylo(tree = NULL,
           phylogram_side = FALSE,
           phylogram_supports = FALSE,
           phylogram_height = NULL,
-          save = TRUE,
+          save = FALSE,
           dpi = 600,
           dir = "RESULTS_edited_tree",
           filename = NULL,
@@ -105,15 +105,15 @@ data(Harpalyce_bayes_tree)
 data(Harpalyce_parsimony_tree)
 data(Harpalyce_raxml_tree)
 
-Harpalyce_clade <- c("Harpalyce_brasiliana_Cardoso2510", 
+Harpalyce_clade <- c("Harpalyce_brasiliana_Cardoso2510",
                      "Harpalyce_formosa_Hughes2109")
-outgroup_taxa <- c("Staminodianthus_duckei", 
-                   "Guianodendron_praeclarum", 
+outgroup_taxa <- c("Staminodianthus_duckei",
+                   "Guianodendron_praeclarum",
                    "Diplotropis_martiusii",
                    "Leptolobium_dasycarpum",
-                   "Leptolobium_panamense", 
-                   "Bowdichia_virgilioides", 
-                   "Clathrotropis_nitida", 
+                   "Leptolobium_panamense",
+                   "Bowdichia_virgilioides",
+                   "Clathrotropis_nitida",
                    "Dermatophyllum_secundiflorum")
 
 plotPhylo(tree = Harpalyce_bayes_tree,
