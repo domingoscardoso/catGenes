@@ -2,10 +2,11 @@
 #'
 #' @author Domingos Cardoso
 #'
-#' @description A function built on the \code{\link{genbankr}} package, designed 
-#' to establish a connection with the GenBank database. This function reads 
-#' plastome sequences using provided accession numbers, extracting and formatting 
-#' any specified targeted loci, and finally writing them in a fasta file format.
+#' @description A function built on the [genbankr](https://bioconductor.org/packages/release/bioc/html/genbankr.html)
+#' package, designed to establish a connection with the GenBank database. This
+#' function reads plastome sequences using provided accession numbers, extracting
+#' and formatting any specified targeted loci, and finally writing them in a
+#' fasta file format.
 #'
 #' @usage
 #' minePlastome(genbank = NULL,
@@ -16,29 +17,29 @@
 #'              verbose = TRUE,
 #'              dir = "RESULTS_minePlastome")
 #'
-#' @param genbank A vector comprising the GenBank accession numbers specifically 
+#' @param genbank A vector comprising the GenBank accession numbers specifically
 #' corresponding to the plastome sequence targeted for locus mining.
-#' 
-#' @param taxon A vector containing the taxon name linked to the plastome sequence. 
-#' In the absence of this information, the function will default to the existing 
+#'
+#' @param taxon A vector containing the taxon name linked to the plastome sequence.
+#' In the absence of this information, the function will default to the existing
 #' nomenclature linked to the plastome, as originally provided in GenBank.
-#' 
-#' @param voucher A vector containing relevant voucher information linked to the 
-#' plastome sequence. If this information is supplied, the function will promptly 
-#' append it immediately following the taxon name of the downloaded targeted 
+#'
+#' @param voucher A vector containing relevant voucher information linked to the
+#' plastome sequence. If this information is supplied, the function will promptly
+#' append it immediately following the taxon name of the downloaded targeted
 #' sequence.
-#' 
+#'
 #' @param CDS a logical controlling whether the targeted loci are protein coding
-#' genes, otherwise the function understands that entered gene names are e.g. 
+#' genes, otherwise the function understands that entered gene names are e.g.
 #' intron or intergenic spacer regions.
-#' 
+#'
 #' @param genes A vector of one or more gene names as annotated in GenBank.
-#' 
+#'
 #' @param verbose Logical, if \code{FALSE}, a message showing each step during
 #' the GenBank search will not be printed in the console in full.
 #'
 #' @param dir Pathway to the computer's directory, where the mined DNA sequences
-#' in a fasta format file will be saved. The default is to create a directory 
+#' in a fasta format file will be saved. The default is to create a directory
 #' named **RESULTS_minePlastome** and the sequences will be saved within a
 #' subfolder named after the current date.
 #'
@@ -50,7 +51,7 @@
 #' library(dplyr)
 #'
 #' data(GenBank_accessions)
-#' 
+#'
 #' GenBank_plastomes <- GenBank_accessions %>%
 #'   filter(!is.na(Plastome)) %>%
 #'   select(c("Species", "Voucher", "Plastome"))
@@ -76,7 +77,7 @@ minePlastome <- function(genbank = NULL,
                          genes = NULL,
                          verbose = TRUE,
                          dir = "RESULTS_minePlastome") {
-  
+
   # Create folder to save mined GenBank seqs from plastomes
   foldername <- paste0(dir, "/", format(Sys.time(), "%d%b%Y"))
   if (!dir.exists(dir)) {
@@ -85,7 +86,7 @@ minePlastome <- function(genbank = NULL,
   if (!dir.exists(foldername)) {
     dir.create(foldername)
   }
-  
+
   # Adjusting vouchers and species columns
   if (!is.null(taxon)) {
     taxon <- gsub("[.]|(^\\s){1,}|(\\s$){1,}", "", taxon)
@@ -100,25 +101,25 @@ minePlastome <- function(genbank = NULL,
     voucher <- gsub("s[.]n[.]", "SN", voucher)
     voucher <- gsub("[/]|\\s|[-]", "", voucher)
   }
-  
+
   list() -> plastomes_info -> plastomes_seq
   for (i in seq_along(genbank)) {
-    
+
     # Skipping error in for-loop
     #https://stackoverflow.com/questions/14748557/skipping-error-in-for-loop
     tryCatch({
-      
+
       gba <- genbankr::GBAccession(genbank[i])
-      
-      plastomes_info[[i]] <- genbankr::readGenBank(gba, partial = TRUE, 
+
+      plastomes_info[[i]] <- genbankr::readGenBank(gba, partial = TRUE,
                                                    verbose = verbose)
-      
+
       if (!is.null(plastomes_info[[i]])) {
-        
+
         plastomes_seq[[i]] <- genbankr::getSeq(plastomes_info[[i]])
-        
+
         for (j in seq_along(genes)) {
-          
+
           if (CDS) {
             all_genes <- plastomes_info[[i]]@cds@elementMetadata@listData[["gene"]]
             tf <- all_genes %in% genes[j]
@@ -142,49 +143,49 @@ minePlastome <- function(genbank = NULL,
               stop(paste0("You must provide a correct gene name,\n",
                           "which may be any of the following:\n\n",
                           paste0(all_genes, collapse = ", ")),"\n\n",
-                   "Find help also at DBOSLab-UFBA\n", 
+                   "Find help also at DBOSLab-UFBA\n",
                    "(Domingos Cardoso; cardosobot@gmail.com)")
             }
           }
-          
+
           # get specific range of seqs
           CD_seq <- substr(plastomes_seq[[i]], start, start+end)
-          
+
           taxon_temp <- gsub(" ", "_", names(plastomes_seq[[i]]))
           genbank_temp <- gsub("_", "", genbank[i])
           write(
-            paste0(">", 
-                   ifelse(is.null(taxon), taxon_temp, taxon[i]), 
+            paste0(">",
+                   ifelse(is.null(taxon), taxon_temp, taxon[i]),
                    "_",
                    ifelse(is.null(voucher), "", paste0(voucher[i], "_")),
-                   genbank_temp, "\n", 
+                   genbank_temp, "\n",
                    seq_revcompl(CD_seq)),
             paste0(foldername, "/", genes[j], "_from_plastome.fasta"),
             append = TRUE
           )
         }
         if (verbose) {
-          message("'", paste0(genes[j], "' of ", names(plastomes_seq[[i]]), 
+          message("'", paste0(genes[j], "' of ", names(plastomes_seq[[i]]),
                               " ", genbank_temp, " plastome retrieved!"))
         }
       }
-    }, error = function(e){cat(paste0("ERROR retrieving ", genbank[i], ":"), 
+    }, error = function(e){cat(paste0("ERROR retrieving ", genbank[i], ":"),
                                conditionMessage(e), "\n")})
   }
 }
 
 
 #-------------------------------------------------------------------------------
-# Secondary function to reverse and complement the DNA sequence originally 
+# Secondary function to reverse and complement the DNA sequence originally
 # retrieved from GenBank.
-# Adpated from the original function at: 
+# Adpated from the original function at:
 # https://medium.com/biosyntax/reverse-and-find-complement-sequence-in-r-baf33847aab1
 
 seq_revcompl <- function(seq) {
-  
+
   alphabets <- strsplit(seq, split = "")[[1]]
   seq <- rev(alphabets)
-  
+
   # Check if there's "T" in the sequence
   RNA <- Reduce(`|`, seq == "U")
   complvec <- sapply(seq, function(base) {

@@ -2,8 +2,9 @@
 #'
 #' @author Domingos Cardoso
 #'
-#' @description Function to plot a ggtree-based phylogenetic tree using with the
-#' the addition of node supports from different phylogenetic estimation methods.
+#' @description Function to plot a [ggtree](https://bioconductor.org/packages/release/bioc/html/ggtree.html)
+#' -based phylogenetic tree using with the the addition of node supports from
+#' different phylogenetic estimation methods.
 #'
 #' @usage
 #' plotPhylo(tree = NULL,

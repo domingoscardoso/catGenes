@@ -24,7 +24,7 @@
 #'
 #' @name catGenes-package
 #' @aliases catGenes-package
-#' @docType package
+#' @docType _PACKAGE
 #' @title Tools for combining individual DNA alignments for multigene analysis in phylogenetics and phylogenomics
 #' @author \strong{Domingos Cardoso}\cr
 #' (email: \email{cardosobot@@gmail.com};

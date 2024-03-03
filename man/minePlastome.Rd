@@ -43,10 +43,11 @@ subfolder named after the current date.}
 A fasta format file of DNA sequences saved on disk.
 }
 \description{
-A function built on the \code{\link{genbankr}} package, designed
-to establish a connection with the GenBank database. This function reads
-plastome sequences using provided accession numbers, extracting and formatting
-any specified targeted loci, and finally writing them in a fasta file format.
+A function built on the \href{https://bioconductor.org/packages/release/bioc/html/genbankr.html}{genbankr}
+package, designed to establish a connection with the GenBank database. This
+function reads plastome sequences using provided accession numbers, extracting
+and formatting any specified targeted loci, and finally writing them in a
+fasta file format.
 }
 \examples{
 \dontrun{
