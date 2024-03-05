@@ -18,7 +18,9 @@
 #'
 #' @param inputdf A dataframe object containing the taxon names in a 'Species'
 #' column, the voucher information in 'Voucher' column, and the GenBank accessions
-#' for each genes in separate columns named by the corresponding gene.
+#' for each genes in separate columns named by the corresponding gene. If the
+#' columns 'Species' and 'Voucher' are not provided in the dataframe, then the
+#' function with consider the taxonomy as originally available in GenBank.
 #'
 #' @param gb.colnames A vector with column names within the \code{inputdf}
 #' dataframe corresponding to each gene, where the GenBank accession numbers are
@@ -61,6 +63,7 @@
 #'}
 #'
 #' @importFrom ape read.GenBank write.dna
+#' @importFrom flora remove.authors
 #'
 #' @export
 #'
@@ -90,16 +93,21 @@ mineSeq <- function(inputdf = NULL,
     }
   }
   # Adjusting vouchers and species columns
-  inputdf$Species <- gsub("[.]|(^\\s){1,}|(\\s$){1,}", "", inputdf$Species)
-  inputdf$Species <- gsub("(\\s){1,}", "_", inputdf$Species)
-
-  tf <- is.na(inputdf$Voucher)
-  if (any(tf)) {
-    inputdf$Voucher[tf] <- "Unvouchered"
+  if ("Species" %in% names(inputdf)) {
+    inputdf$Species <- gsub("[.]|(^\\s){1,}|(\\s$){1,}", "", inputdf$Species)
+    inputdf$Species <- gsub("(\\s){1,}", "_", inputdf$Species)
+    inputdf$Species <- unlist(lapply(inputdf$Species, flora::remove.authors))
   }
-  inputdf$Voucher <- gsub("\\s[(].*|[:].*", "", inputdf$Voucher)
-  inputdf$Voucher <- gsub("s[.]n[.]", "SN", inputdf$Voucher)
-  inputdf$Voucher <- gsub("[/]|\\s|[-]", "", inputdf$Voucher)
+  if ("Voucher" %in% names(inputdf)) {
+    tf <- is.na(inputdf$Voucher)
+    if (any(tf)) {
+      inputdf$Voucher[tf] <- "Unvouchered"
+    }
+    inputdf$Voucher <- gsub("\\s[(].*|[:].*", "", inputdf$Voucher)
+    inputdf$Voucher <- gsub("s[.]n[.]", "SN", inputdf$Voucher)
+    inputdf$Voucher <- gsub("[/]|\\s|[-]", "", inputdf$Voucher)
+    inputdf$Voucher <- gsub(".*[.]\\s|.*[.]", "", inputdf$Voucher)
+  }
 
   # Downloading seqs
   seqs <- list()
@@ -115,11 +123,21 @@ mineSeq <- function(inputdf = NULL,
     # attr(seqs[[i]], "description")
 
     # Renaming accessions from GenBank
-    for (l in seq_along(names(seqs[[i]]))){
-      acc <- inputdf[[gb.colnames[i]]] %in% names(seqs[[i]])[l]
-      names(seqs[[i]])[l] <- paste0(inputdf$Species[acc], "_",
-                                    inputdf$Voucher[acc], "_",
-                                    names(seqs[[i]])[l])
+    if ("Species" %in% names(inputdf) &
+        "Voucher" %in% names(inputdf)) {
+      for (l in seq_along(names(seqs[[i]]))){
+        acc <- inputdf[[gb.colnames[i]]] %in% names(seqs[[i]])[l]
+        names(seqs[[i]])[l] <- paste0(inputdf$Species[acc], "_",
+                                      inputdf$Voucher[acc], "_",
+                                      names(seqs[[i]])[l])
+      }
+    } else {
+      for (l in seq_along(names(seqs[[i]]))){
+        acc <- inputdf[[gb.colnames[i]]] %in% names(seqs[[i]])[l]
+        names(seqs[[i]])[l] <- paste0(attr(seqs[[i]], "species")[l], "_",
+                                      names(seqs[[i]])[l])
+      }
+      names(seqs[[i]]) <- gsub("[.]", "", names(seqs[[i]]))
     }
 
     if (verbose) {

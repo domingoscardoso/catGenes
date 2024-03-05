@@ -15,7 +15,9 @@ mineSeq(inputdf = NULL,
 \arguments{
 \item{inputdf}{A dataframe object containing the taxon names in a 'Species'
 column, the voucher information in 'Voucher' column, and the GenBank accessions
-for each genes in separate columns named by the corresponding gene.}
+for each genes in separate columns named by the corresponding gene. If the
+columns 'Species' and 'Voucher' are not provided in the dataframe, then the
+function with consider the taxonomy as originally available in GenBank.}
 
 \item{gb.colnames}{A vector with column names within the \code{inputdf}
 dataframe corresponding to each gene, where the GenBank accession numbers are

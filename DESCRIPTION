@@ -8,7 +8,7 @@ Maintainer: Domingos Cardoso <cardosobot@gmail.com>
 URL: https://github.com/domingoscardoso/catGenes
 Language: en-US
 Depends:
-    R (>= 3.5.0), ape, ggtree
+    R (>= 3.5.0), ape, ggtree, genbankr
 Imports:
     dplyr,
     magrittr,
@@ -26,7 +26,7 @@ Imports:
     cowplot,
     phangorn,
     phytools,
-    genbankr
+    flora
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
