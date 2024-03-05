@@ -118,7 +118,6 @@ mineSeq <- function(inputdf = NULL,
     seqs[[i]] <- ape::read.GenBank(access.nb = na.omit(inputdf[[gb.colnames[i]]]),
                                    species.names = T,
                                    as.character = as.character)
-
     # attr(seqs[[i]], "species")
     # attr(seqs[[i]], "description")
 
@@ -127,14 +126,45 @@ mineSeq <- function(inputdf = NULL,
         "Voucher" %in% names(inputdf)) {
       for (l in seq_along(names(seqs[[i]]))){
         acc <- inputdf[[gb.colnames[i]]] %in% names(seqs[[i]])[l]
-        names(seqs[[i]])[l] <- paste0(inputdf$Species[acc], "_",
-                                      inputdf$Voucher[acc], "_",
-                                      names(seqs[[i]])[l])
+        if (!is.na(inputdf$Species[acc])) {
+          names(seqs[[i]])[l] <- paste0(inputdf$Species[acc], "_",
+                                        inputdf$Voucher[acc], "_",
+                                        names(seqs[[i]])[l])
+        } else {
+          names(seqs[[i]])[l] <- paste0(attr(seqs[[i]], "species")[l], "_",
+                                        inputdf$Voucher[acc], "_",
+                                        names(seqs[[i]])[l])
+        }
       }
-    } else {
+    }
+    if ("Species" %in% names(inputdf) &
+        !"Voucher" %in% names(inputdf)) {
+      for (l in seq_along(names(seqs[[i]]))){
+        acc <- inputdf[[gb.colnames[i]]] %in% names(seqs[[i]])[l]
+        if (!is.na(inputdf$Species[acc])) {
+          names(seqs[[i]])[l] <- paste0(inputdf$Species[acc], "_",
+                                        names(seqs[[i]])[l])
+        } else {
+          names(seqs[[i]])[l] <- paste0(attr(seqs[[i]], "species")[l], "_",
+                                        names(seqs[[i]])[l])
+        }
+      }
+    }
+    if (!"Species" %in% names(inputdf) &
+        !"Voucher" %in% names(inputdf)) {
       for (l in seq_along(names(seqs[[i]]))){
         acc <- inputdf[[gb.colnames[i]]] %in% names(seqs[[i]])[l]
         names(seqs[[i]])[l] <- paste0(attr(seqs[[i]], "species")[l], "_",
+                                      names(seqs[[i]])[l])
+      }
+      names(seqs[[i]]) <- gsub("[.]", "", names(seqs[[i]]))
+    }
+    if (!"Species" %in% names(inputdf) &
+        "Voucher" %in% names(inputdf)) {
+      for (l in seq_along(names(seqs[[i]]))){
+        acc <- inputdf[[gb.colnames[i]]] %in% names(seqs[[i]])[l]
+        names(seqs[[i]])[l] <- paste0(attr(seqs[[i]], "species")[l], "_",
+                                      inputdf$Voucher[acc], "_",
                                       names(seqs[[i]])[l])
       }
       names(seqs[[i]]) <- gsub("[.]", "", names(seqs[[i]]))
