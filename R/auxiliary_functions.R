@@ -151,6 +151,77 @@ equalnumb <- function(x) {
 
 #-------------------------------------------------------------------------------
 # Secondary function to reverse and complement the DNA sequence originally
+# Adjust names of taxon, voucher and genbank accessions
+# # Used inside mineSeq, minePlastome and mineMitochondrion functions
+
+.tax_voucher_adjust <- function (inputdf = NULL,
+                                 taxon = NULL,
+                                 voucher = NULL,
+                                 genbank = NULL) {
+
+  # Adjust names within mineSeq
+  if (!is.null(inputdf) &
+      is.null(taxon) &
+      is.null(voucher) &
+      is.null(genbank)) {
+
+    if ("Species" %in% names(inputdf)) {
+      inputdf$Species <- gsub("[.]|(^\\s){1,}|(\\s$){1,}", "", inputdf$Species)
+      inputdf$Species <- gsub("(\\s){1,}", "_", inputdf$Species)
+      inputdf$Species <- unlist(lapply(inputdf$Species, flora::remove.authors))
+    }
+    if ("Voucher" %in% names(inputdf)) {
+      tf <- is.na(inputdf$Voucher)
+      if (any(tf)) {
+        inputdf$Voucher[tf] <- "Unvouchered"
+      }
+      if (length(which(inputdf$Voucher %in% "Unvouchered")) == length(inputdf$Voucher)) {
+        inputdf <- inputdf %>% select(-c("Voucher"))
+      } else {
+        inputdf$Voucher <- gsub("\\s[(].*|[:].*", "", inputdf$Voucher)
+        inputdf$Voucher <- gsub("s[.]n[.]", "SN", inputdf$Voucher)
+        inputdf$Voucher <- gsub("[/]|\\s|[-]", "", inputdf$Voucher)
+        inputdf$Voucher <- gsub(".*[.]\\s|.*[.]", "", inputdf$Voucher)
+      }
+    }
+
+    # Clean white space across the gene columns
+    inputdf[, gb.colnames] <- apply(inputdf[, gb.colnames],
+                                    MARGIN = 2, FUN = function(x) gsub("\\s", "", x))
+
+    return(inputdf)
+  }
+
+  # Adjust names within minePlastome and mineMitochondrion
+  if (is.null(inputdf)) {
+    if (!is.null(taxon)) {
+      taxon <- gsub("[.]|(^\\s){1,}|(\\s$){1,}", "", taxon)
+      taxon <- gsub("(\\s){1,}", "_", taxon)
+      taxon <- unlist(lapply(taxon, flora::remove.authors))
+    }
+    if (!is.null(voucher)) {
+      tf <- is.na(voucher)
+      if (any(tf)) {
+        voucher[tf] <- "Unvouchered"
+      }
+      if (length(which(voucher %in% "Unvouchered")) == length(voucher)) {
+        voucher <- NA
+      } else {
+        voucher <- gsub("\\s[(].*|[:].*", "", voucher)
+        voucher <- gsub("s[.]n[.]", "SN", voucher)
+        voucher <- gsub("[/]|\\s|[-]", "", voucher)
+        voucher <- gsub(".*[.]\\s|.*[.]", "", voucher)
+      }
+    }
+    genbank <- gsub("\\s", "", genbank)
+
+    return(list(taxon, voucher, genbank))
+  }
+}
+
+
+#-------------------------------------------------------------------------------
+# Secondary function to reverse and complement the DNA sequence originally
 # retrieved from GenBank.
 # Adpated from the original function at:
 # https://medium.com/biosyntax/reverse-and-find-complement-sequence-in-r-baf33847aab1
@@ -466,7 +537,7 @@ seq_revcompl <- function(seq) {
       tempB <- list()
       for (i in seq_along(nbr[[j]])) {
         if (nbr[[j]][[i]] == 0) {
-          tempA[[i]] <- paste(nbr[[j]][[i]], paste(rep(" ", 8-nchar(nbr[[j]][[i]])), collapse = ""), collapse = "")
+          tempA[[i]] <- paste(1, paste(rep(" ", 8-nchar(nbr[[j]][[i]])), collapse = ""), collapse = "")
           tempB[[i]] <- paste(".", paste(rep(" ", 8-nchar(nbr[[j]][[1]])), collapse = ""), collapse = "")
         } else {
           tempA[[i]] <- paste(nbr[[j]][[i]], paste(rep(" ", 9-nchar(nbr[[j]][[i]])), collapse = ""), collapse = "")
@@ -536,7 +607,7 @@ seq_revcompl <- function(seq) {
     dotseq <- list()
     for (i in seq_along(nbr)) {
       if (nbr[[i]] == 0) {
-        nbrseq[[i]] <- paste(nbr[[i]], paste(rep(" ", 8-nchar(nbr[[i]])), collapse = ""), collapse = "")
+        nbrseq[[i]] <- paste(1, paste(rep(" ", 8-nchar(nbr[[i]])), collapse = ""), collapse = "")
         dotseq[[i]] <- paste(".", paste(rep(" ", 8-nchar(nbr[[1]])), collapse = ""), collapse = "")
       } else {
         nbrseq[[i]] <- paste(nbr[[i]], paste(rep(" ", 9-nchar(nbr[[i]])), collapse = ""), collapse = "")
@@ -567,4 +638,32 @@ seq_revcompl <- function(seq) {
   return(x)
 }
 
+#-------------------------------------------------------------------------------
+# Auxiliary function to replace terminal GAPs into missing character (?)
+# Used inside the function nexusdframe writeNexus
+
+.replace_terminal_gaps <- function (x) {
+  tf <- grepl("^-", x$sequence)
+  if (any(tf)) {
+    temp <- gsub("[[:upper:]].*", "", x$sequence[tf])
+    ll <- unlist(lapply(temp, function(y) length(unlist(strsplit(y, "")))))
+    for (i in seq_along(temp)) {
+      x$sequence[tf][i] <- gsub(paste0("^", temp[i]),
+                                paste0(rep("?", ll[i]), collapse = ""),
+                                x$sequence[tf][i])
+    }
+  }
+  tf <- grepl("-$", x$sequence)
+  if (any(tf)) {
+    temp <- gsub(".*[[:upper:]]", "", x$sequence[tf])
+    ll <- unlist(lapply(temp, function(y) length(unlist(strsplit(y, "")))))
+
+    for (i in seq_along(temp)) {
+      x$sequence[tf][i] <- gsub(paste0(temp[i], "$"),
+                                paste0(rep("?", ll[i]), collapse = ""),
+                                x$sequence[tf][i])
+    }
+  }
+  return(x)
+}
 

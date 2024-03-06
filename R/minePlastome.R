@@ -89,21 +89,13 @@ minePlastome <- function(genbank = NULL,
   }
 
   # Adjusting vouchers and species columns
-  if (!is.null(taxon)) {
-    taxon <- gsub("[.]|(^\\s){1,}|(\\s$){1,}", "", taxon)
-    taxon <- gsub("(\\s){1,}", "_", taxon)
-    taxon <- unlist(lapply(taxon, flora::remove.authors))
-  }
-  if (!is.null(voucher)) {
-    tf <- is.na(voucher)
-    if (any(tf)) {
-      voucher[tf] <- "Unvouchered"
-    }
-    voucher <- gsub("\\s[(].*|[:].*", "", voucher)
-    voucher <- gsub("s[.]n[.]", "SN", voucher)
-    voucher <- gsub("[/]|\\s|[-]", "", voucher)
-    voucher <- gsub(".*[.]\\s|.*[.]", "", voucher)
-  }
+  temp <- .tax_voucher_adjust(inputdf = NULL,
+                              taxon = taxon,
+                              voucher = voucher,
+                              genbank = genbank)
+  taxon = temp[[1]]
+  voucher = temp[[2]]
+  genbank = temp[[3]]
 
   list() -> plastomes_info -> plastomes_seq
   for (i in seq_along(genbank)) {

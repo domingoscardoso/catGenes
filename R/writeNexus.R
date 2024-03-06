@@ -151,7 +151,6 @@ writeNexus <- function(x, file,
 
   spp_labels <- lapply(datset_temp, function(x) x[[1]])
 
-
   # Check if there is any species with identifiers, then put in brackets when
   # they differ among sequences in each gene
   spp_get <- list()
@@ -283,7 +282,7 @@ writeNexus <- function(x, file,
   maxletrs_taxlabs <- max(unlist(maxletrs_taxlabs))
 
   # Pad a string inside a list of dataframes by adding numbers or names at any
-  # position in the specific column
+  # position in the specific column.
   f_b <- function(x, y) {
     for (i in 1:length(x$species)) {
       x$species[i] <- paste0(x$species[i], paste0(rep(" ", y - nchar(x$species[i])),
@@ -294,6 +293,8 @@ writeNexus <- function(x, file,
   datset <- lapply(datset, f_b,
                    y = maxletrs_taxlabs)
 
+  # Replace terminal GAPs into missing character (?)
+  datset <- lapply(datset, .replace_terminal_gaps)
 
   if (interleave) {
     cat("Combining genes as interleave...", "", sep = "\n")

@@ -64,6 +64,8 @@
 #'
 #' @importFrom ape read.GenBank write.dna
 #' @importFrom flora remove.authors
+#' @importFrom dplyr select
+#' @importFrom magrittr %>%
 #'
 #' @export
 #'
@@ -93,21 +95,7 @@ mineSeq <- function(inputdf = NULL,
     }
   }
   # Adjusting vouchers and species columns
-  if ("Species" %in% names(inputdf)) {
-    inputdf$Species <- gsub("[.]|(^\\s){1,}|(\\s$){1,}", "", inputdf$Species)
-    inputdf$Species <- gsub("(\\s){1,}", "_", inputdf$Species)
-    inputdf$Species <- unlist(lapply(inputdf$Species, flora::remove.authors))
-  }
-  if ("Voucher" %in% names(inputdf)) {
-    tf <- is.na(inputdf$Voucher)
-    if (any(tf)) {
-      inputdf$Voucher[tf] <- "Unvouchered"
-    }
-    inputdf$Voucher <- gsub("\\s[(].*|[:].*", "", inputdf$Voucher)
-    inputdf$Voucher <- gsub("s[.]n[.]", "SN", inputdf$Voucher)
-    inputdf$Voucher <- gsub("[/]|\\s|[-]", "", inputdf$Voucher)
-    inputdf$Voucher <- gsub(".*[.]\\s|.*[.]", "", inputdf$Voucher)
-  }
+  inputdf <- .tax_voucher_adjust(inputdf = inputdf)
 
   # Downloading seqs
   seqs <- list()

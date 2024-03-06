@@ -78,12 +78,12 @@ nexusdframe <- function(x, file,
   }
 
   ncolumns <- length(x)
-  if (ncolumns == 1){
+  if (ncolumns == 1) {
     stop("You must provide a two-column-sized data.frame containing the taxon names and DNA sequences
           Find help also at DBOSLab-UFBA (Domingos Cardoso; cardosobot@gmail.com)")
   }
 
-  if (names(x)[1] != "species" | names(x)[2] != "sequence"){
+  if (names(x)[1] != "species" | names(x)[2] != "sequence") {
     names(x) <- c("species", "sequence")
   }
 
@@ -92,26 +92,29 @@ nexusdframe <- function(x, file,
     missdata <- vector()
     missdataN <- vector()
     misstotal_temp <- list()
-    numbchar <- nchar(x[1,2])
+    numbchar <- nchar(x[1, 2])
     for (i in seq_along(x$sequence)) {
       missdata <- length(stringr::str_extract_all(x$sequence[i], "[?]", simplify = FALSE)[[1]])
       missdataN <- length(stringr::str_extract_all(x$sequence[i], "N", simplify = FALSE)[[1]])
       misstotal_temp[i] <- missdata + missdataN
     }
     # Dropping species with empty seqs
-    x <- x[!unlist(misstotal_temp) %in% numbchar,]
+    x <- x[!unlist(misstotal_temp) %in% numbchar, ]
   }
+
+  # Replace terminal GAPs into missing character (?)
+  x <- .replace_terminal_gaps(x)
 
   writtenby <- paste("[catGenes (DBOSLab-UFBA), ", date(), "]\n\n", sep = "")
   nexus <- paste("#NEXUS", "", sep="\n")
   begindata <- paste("BEGIN DATA;")
   dimname <- paste("DIMENSIONS")
   ntax <- paste0("NTAX=", length(rownames(x)))
-  numbchar <- paste0("NCHAR=", nchar(as.character(x[1,2])),";")
+  numbchar <- paste0("NCHAR=", nchar(as.character(x[1, 2])), ";")
   dimensions <- paste(dimname, ntax, numbchar, sep = " ")
   format <- paste("FORMAT DATATYPE=DNA GAP=- MISSING=?;")
   matrix <- paste("MATRIX", "", sep = "\n")
-  n <- nchar(x[1,2])
+  n <- nchar(x[1, 2])
 
   # Calculating the space between the taxon labels and corresponding DNA sequence
   vector.list1 <- vector("list")
@@ -146,7 +149,7 @@ nexusdframe <- function(x, file,
   dotseq <- vector()
   for (i in seq_along(nbr)) {
     if (nbr[i] == 0) {
-      nbrseq[i] <- paste(nbr[i], paste(rep(" ", 8-nchar(nbr[i])), collapse = ""), collapse = "")
+      nbrseq[i] <- paste(1, paste(rep(" ", 8-nchar(nbr[i])), collapse = ""), collapse = "")
       dotseq[i] <- paste(".", paste(rep(" ", 8-nchar(nbr[1])), collapse = ""), collapse = "")
     } else {
       nbrseq[i] <- paste(nbr[i], paste(rep(" ", 9-nchar(nbr[i])), collapse = ""), collapse = "")
@@ -156,7 +159,6 @@ nexusdframe <- function(x, file,
 
   x[1, ] <- paste0(x[1, ], paste0(paste(nbrseq, collapse = ""), "]"))
   x[2, ] <- paste0(x[2, ], paste0(paste(dotseq, collapse = ""), "]"))
-
 
   colnames(x) <- paste(nexus,
                        writtenby,
@@ -169,7 +171,7 @@ nexusdframe <- function(x, file,
   zz <- file(file, "w")
   write.table(x, zz,
               append = FALSE, quote = FALSE, sep = " ",
-              eol = "\n", na = "NA", dec = ".", row.names=FALSE,
+              eol = "\n", na = "NA", dec = ".", row.names = FALSE,
               col.names = TRUE)
   close(zz)
 }
