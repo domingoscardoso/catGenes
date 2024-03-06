@@ -638,6 +638,7 @@ seq_revcompl <- function(seq) {
   return(x)
 }
 
+
 #-------------------------------------------------------------------------------
 # Auxiliary function to replace terminal GAPs into missing character (?)
 # Used inside the function nexusdframe writeNexus
@@ -666,4 +667,3 @@ seq_revcompl <- function(seq) {
   }
   return(x)
 }
-
