@@ -157,7 +157,8 @@ equalnumb <- function(x) {
 .tax_voucher_adjust <- function (inputdf = NULL,
                                  taxon = NULL,
                                  voucher = NULL,
-                                 genbank = NULL) {
+                                 genbank = NULL,
+                                 gb.colnames = NULL) {
 
   # Adjust names within mineSeq
   if (!is.null(inputdf) &

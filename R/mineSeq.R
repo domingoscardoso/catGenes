@@ -95,7 +95,8 @@ mineSeq <- function(inputdf = NULL,
     }
   }
   # Adjusting vouchers and species columns
-  inputdf <- .tax_voucher_adjust(inputdf = inputdf)
+  inputdf <- .tax_voucher_adjust(inputdf = inputdf,
+                                 gb.colnames = gb.colnames)
 
   # Downloading seqs
   seqs <- list()
