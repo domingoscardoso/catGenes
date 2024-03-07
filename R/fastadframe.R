@@ -8,13 +8,14 @@
 #' writing each gene dataset from within the resulting list of compared gene datasets,
 #' after running the concatenating functions \code{\link{catfullGenes}} and
 #' \code{\link{catmultGenes}}. The function is also useful for saving into FASTA
-#' format the origiginal list-formatted NEXUS object as read by \code{\link{read.nexus.data}},
+#' format the original list-formatted NEXUS object as read by \code{\link{read.nexus.data}},
 #' after making specific changes in such original individual alignment (e.g. corrections
 #' of species names).
 #'
 #' @usage
 #' fastadframe(x, file,
-#'             dropmisseq = TRUE)
+#'             dropmisseq = TRUE,
+#'             endgaps.to.miss = TRUE)
 #'
 #' @param x The object to be written, any two-column-sized \code{data.frame} where
 #' the first column contains the taxon names and the second column the DNA sequence.
@@ -31,6 +32,9 @@
 #' you might find useful to keep dropmisseq = \code{TRUE} so as to save each
 #' individual DNA alignment by also removing species that fully miss the sequence
 #' data.
+#'
+#' @param endgaps.to.miss Logical, if \code{FALSE} the function will not replace
+#' terminal GAPs into missing character (?).
 #'
 #' @seealso \code{\link{catfullGenes}}
 #' @seealso \code{\link{catmultGenes}}
@@ -60,7 +64,8 @@
 #' @export
 
 fastadframe <- function(x, file,
-                        dropmisseq = TRUE) {
+                        dropmisseq = TRUE,
+                        endgaps.to.miss = TRUE) {
 
   if (inherits(x, "list")) {
     for (i in 1:length(x)) {
@@ -99,6 +104,11 @@ fastadframe <- function(x, file,
     }
     # Dropping species with empty seqs
     x <- x[!unlist(misstotal_temp) %in% numbchar,]
+  }
+
+  # Replace terminal GAPs into missing character (?)
+  if (endgaps.to.miss) {
+    x <- .replace_terminal_gaps(x)
   }
 
   greater_than_sign <- rep(">", times = length(row.names(x)))

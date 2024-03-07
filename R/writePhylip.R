@@ -23,16 +23,16 @@
 #' @param file Either a character string naming a file or a \code{\link{connection}}
 #'  open for writing.
 #'
+#' @param genomics Logical, if \code{TRUE}, it will be helpful in phylogenomics
+#' where all provided species identifiers (e.g. collector number and GenBank
+#' acession numbers) will always be kept in the resultant concatenated dataset.
+#'
 #' @param catalignments Logical, if \code{FALSE} will not write the concatednated
 #' matrix of DNA alinments. Better to keep it always as \code{TRUE}.
 #'
 #' @param partitionfile Logical, if \code{FALSE} will not write the associated
 #' text-formatted partition file for the RAxML concatenated phylogenetic analysis
 #' using a mixed/partitioned model.
-#'
-#' @param genomics Logical, if \code{TRUE}, it will be helpful in phylogenomics
-#' where all provided species identifiers (e.g. collector number and GenBank
-#' acession numbers) will always be kept in the resultant concatenated dataset.
 #'
 #' @seealso \code{\link{catfullGenes}}
 #' @seealso \code{\link{catmultGenes}}

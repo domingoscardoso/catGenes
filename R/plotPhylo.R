@@ -18,7 +18,9 @@
 #'           replace_taxa = NULL,
 #'           prune_taxa = NULL,
 #'           size_tiplab = NULL,
+#'           xlimtree = NULL,
 #'           gene_labels = NULL,
+#'           ylimgene = NULL,
 #'           phylogram_side = FALSE,
 #'           phylogram_supports = FALSE,
 #'           phylogram_height = NULL,
@@ -34,7 +36,8 @@
 #'
 #' @param add_parsi_tree A parsimony-based phylo object.
 #'
-#' @param highlight_clade A vector of two tip labels to highlight their clade.
+#' @param highlight_clade A vector of two tip labels to highlight their clade or
+#' a list of multiple vectors with two tip labels each to highlight their clades.
 #'
 #' @param fill_gradient Any color to highlight an specific clade in the tree.
 #'
@@ -61,8 +64,12 @@
 #'
 #' @param size_tiplab the size of tip labels; defaults to 2.
 #'
+#' @param xlimtree Set x axis limits specially for tree panel.
+#'
 #' @param gene_labels A title for the tree; usually a name of an specific gene
 #' (or set of genes) from which the tree was reconstructed.
+#'
+#' @param ylimgene Set y axis limits for gene labels.
 #'
 #' @param phylogram_side if \code{TRUE}, a small phylogram with branch lengths
 #' will be plotted on the upper left.
@@ -154,7 +161,9 @@ plotPhylo <- function(tree = NULL,
                       replace_taxa = NULL,
                       prune_taxa = NULL,
                       size_tiplab = NULL,
+                      xlimtree = NULL,
                       gene_labels = NULL,
+                      ylimgene = NULL,
                       phylogram_side = FALSE,
                       phylogram_supports = FALSE,
                       phylogram_height = NULL,
@@ -248,8 +257,12 @@ plotPhylo <- function(tree = NULL,
   }
 
   if (!is.null(highlight_clade)) {
-    tree@phylo$tip.label <- gsub("_", " ", tree@phylo$tip.label)
-    highlight_clade <- gsub("_", " ", highlight_clade)
+    if (inherits(highlight_clade, "character")) {
+      highlight_clade <- list(highlight_clade)
+    }
+    for (i in seq_along(highlight_clade)) {
+      highlight_clade[[i]] <- gsub("_", " ", highlight_clade[[i]])
+    }
   }
 
   if (!is.null(gene_labels)) {
@@ -265,18 +278,28 @@ plotPhylo <- function(tree = NULL,
   #-----------------------------------------------------------------------------
   # Plotting the figure
 
+  tree@phylo$tip.label <- gsub("_", " ", tree@phylo$tip.label)
+
   if (is.null(size_tiplab)) size_tiplab = 2
 
   tree_plot <- ggtree(tree, branch.length = "none", layout = "rectangular",
-                      ladderize = TRUE, size = 0.5) +
-    xlim_tree(20)
+                      ladderize = TRUE, size = 0.5)
+
+  if (is.null(xlimtree)) {
+    xlimtree <- max(tree_plot$data$x)+5
+  }
+
+  tree_plot <- tree_plot +
+    xlim_tree(xlimtree)
 
   if (!is.null(highlight_clade)) {
-    tree_plot <- tree_plot +
-      geom_hilight(node = ggtree::MRCA(tree, highlight_clade),
-                   fill = fill_gradient, gradient = TRUE,
-                   gradient.direction = "tr", alpha = 0.8) +
-      geom_tree(layout="rectangular")
+    for (i in seq_along(highlight_clade)) {
+      tree_plot <- tree_plot +
+        geom_hilight(node = ggtree::MRCA(tree, highlight_clade[[i]]),
+                     fill = fill_gradient[i], gradient = TRUE,
+                     gradient.direction = "tr", alpha = 0.8) +
+        geom_tree(layout="rectangular")
+    }
   }
 
   if (!is.null(highlight_taxa) & is.null(understate_taxa)) {
@@ -338,7 +361,9 @@ plotPhylo <- function(tree = NULL,
 
   }
 
-  ymax_gene_labels <- (max(tree_plot$data$y)-(max(tree_plot$data$y)*25/100))-15
+  if (is.null(ylimgene)) {
+    ylimgene <- (max(tree_plot$data$y)-(max(tree_plot$data$y)*25/100))-10
+  }
 
   if (!any(intree@data$prob > 1)) {
     tree_plot <- tree_plot +
@@ -366,7 +391,7 @@ plotPhylo <- function(tree = NULL,
 
   tree_plot <- tree_plot +
     # Add gene labels
-    annotate(geom = "text", x = 1, y = ymax_gene_labels, label = gene_labels,
+    annotate(geom = "text", x = 1, y = ylimgene, label = gene_labels,
              color = "gray60", size = 15, fontface = "italic")
 
   # Create phylogram
@@ -382,12 +407,14 @@ plotPhylo <- function(tree = NULL,
                      fontsize = 3, linesize = 0.5, offset = 1)
 
     if (!is.null(highlight_clade)) {
-      phylogram <- phylogram +
-        geom_hilight(node=ggtree::MRCA(tree, highlight_clade),
-                     fill = fill_gradient, gradient = TRUE,
-                     gradient.direction = "tr", alpha = 0.8,
-                     size = 0.1) +
-        geom_tree(layout="rectangular", size = 0.1)
+      for (i in seq_along(highlight_clade)) {
+        phylogram <- phylogram +
+          geom_hilight(node = ggtree::MRCA(tree, highlight_clade[[i]]),
+                       fill = fill_gradient[i], gradient = TRUE,
+                       gradient.direction = "tr", alpha = 0.8,
+                       size = 0.1) +
+          geom_tree(layout="rectangular", size = 0.1)
+      }
     }
 
     if (phylogram_supports) {
@@ -555,7 +582,7 @@ plotPhylo <- function(tree = NULL,
 
       temp <- list()
       for (l in seq_along(desc)) {
-        tt <-  desc[[l]] %in% data_tree$descendants[tf][i][[1]]
+        tt <- desc[[l]] %in% data_tree$descendants[tf][i][[1]]
 
         if (length(which(tt == TRUE)) == length(tt) &
             length(tt) == length(data_tree$descendants[tf][i][[1]]))
@@ -596,9 +623,7 @@ plotPhylo <- function(tree = NULL,
   }
   tree@data$prob[tf] <- data_tree$prob[tf]
 
-
   return(tree)
-
 }
 
 
@@ -630,5 +655,4 @@ plotPhylo <- function(tree = NULL,
                        dpi = dpi,
                        bg = "white")
   }
-
 }

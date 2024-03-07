@@ -15,7 +15,9 @@ plotPhylo(tree = NULL,
           replace_taxa = NULL,
           prune_taxa = NULL,
           size_tiplab = NULL,
+          xlimtree = NULL,
           gene_labels = NULL,
+          ylimgene = NULL,
           phylogram_side = FALSE,
           phylogram_supports = FALSE,
           phylogram_height = NULL,
@@ -32,7 +34,8 @@ plotPhylo(tree = NULL,
 
 \item{add_parsi_tree}{A parsimony-based phylo object.}
 
-\item{highlight_clade}{A vector of two tip labels to highlight their clade.}
+\item{highlight_clade}{A vector of two tip labels to highlight their clade or
+a list of multiple vectors with two tip labels each to highlight their clades.}
 
 \item{fill_gradient}{Any color to highlight an specific clade in the tree.}
 
@@ -59,8 +62,12 @@ the corresponding alternative name.}
 
 \item{size_tiplab}{the size of tip labels; defaults to 2.}
 
+\item{xlimtree}{Set x axis limits specially for tree panel.}
+
 \item{gene_labels}{A title for the tree; usually a name of an specific gene
 (or set of genes) from which the tree was reconstructed.}
+
+\item{ylimgene}{Set y axis limits for gene labels.}
 
 \item{phylogram_side}{if \code{TRUE}, a small phylogram with branch lengths
 will be plotted on the upper left.}

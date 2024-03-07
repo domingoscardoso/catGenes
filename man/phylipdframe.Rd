@@ -5,7 +5,8 @@
 \title{Writes a PHYLIP-formatted DNA alignment from a dataframe-formatted DNA alignment}
 \usage{
 phylipdframe(x, file,
-             dropmisseq = TRUE)
+             dropmisseq = TRUE,
+             endgaps.to.miss = TRUE)
 }
 \arguments{
 \item{x}{The object to be written, any two-column-sized \code{data.frame} where
@@ -23,6 +24,9 @@ with empty DNA sequence. After running the concatenating function
 you might find useful to keep dropmisseq = \code{TRUE} so as to save each
 individual DNA alignment by also removing species that fully miss the sequence
 data.}
+
+\item{endgaps.to.miss}{Logical, if \code{FALSE} the function will not replace
+terminal GAPs into missing character (?).}
 }
 \description{
 Writes \code{data.frame} formatted DNA alignment or \code{list}
@@ -31,7 +35,7 @@ formatted NEXUS file as originally imported with \code{\link{ape}}'s function
 writing each gene dataset from within the resulting list of compared gene datasets,
 after running the concatenating functions \code{\link{catfullGenes}} and
 \code{\link{catmultGenes}}. The function is also useful for saving into PHYLIP
-format the origiginal list-formatted NEXUS object as read by \code{\link{read.nexus.data}},
+format the original list-formatted NEXUS object as read by \code{\link{read.nexus.data}},
 after making specific changes in such original individual alignment (e.g. corrections
 of species names).
 }

@@ -9,7 +9,8 @@ writeNexus(x,
            file,
            genomics = FALSE,
            interleave = TRUE,
-           bayesblock = TRUE)
+           bayesblock = TRUE,
+           endgaps.to.miss = TRUE)
 }
 \arguments{
 \item{x}{The object to be written, a list of equally-sized dataframes containing
@@ -33,6 +34,9 @@ within the complete matrix.}
 \item{bayesblock}{Logical, if \code{FALSE} will not create a preliminary Mr.Bayes
 command block including the charsets showing the number of characters of each
 individual gene partition.}
+
+\item{endgaps.to.miss}{Logical, if \code{FALSE} the function will not replace
+terminal GAPs into missing character (?).}
 }
 \description{
 Writes a final concatenated (non-interleaved) or combined (interleaved)
