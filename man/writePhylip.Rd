@@ -29,6 +29,9 @@ matrix of DNA alinments. Better to keep it always as \code{TRUE}.}
 \item{partitionfile}{Logical, if \code{FALSE} will not write the associated
 text-formatted partition file for the RAxML concatenated phylogenetic analysis
 using a mixed/partitioned model.}
+
+\item{endgaps.to.miss}{Logical, if \code{FALSE} the function will not replace
+terminal GAPs into missing character (?).}
 }
 \description{
 From the resulting list of equally-sized dataframes containing the

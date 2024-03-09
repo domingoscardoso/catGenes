@@ -167,7 +167,8 @@ equalnumb <- function(x) {
       is.null(genbank)) {
 
     if ("Species" %in% names(inputdf)) {
-      inputdf$Species <- gsub("[.]|(^\\s){1,}|(\\s$){1,}", "", inputdf$Species)
+      inputdf$Species <- gsub("[.]|^(\\s){1,}|(\\s){1,}$", "", inputdf$Species)
+      inputdf$Species <- gsub("(\\s){2,}", " ", inputdf$Species)
       inputdf$Species <- gsub("(\\s){1,}", "_", inputdf$Species)
       inputdf$Species <- unlist(lapply(inputdf$Species, flora::remove.authors))
     }
@@ -196,7 +197,8 @@ equalnumb <- function(x) {
   # Adjust names within minePlastome and mineMitochondrion
   if (is.null(inputdf)) {
     if (!is.null(taxon)) {
-      taxon <- gsub("[.]|(^\\s){1,}|(\\s$){1,}", "", taxon)
+      taxon <- gsub("[.]|^(\\s){1,}|(\\s){1,}$", "", taxon)
+      taxon <- gsub("(\\s){2,}", " ", taxon)
       taxon <- gsub("(\\s){1,}", "_", taxon)
       taxon <- unlist(lapply(taxon, flora::remove.authors))
     }
@@ -641,30 +643,37 @@ seq_revcompl <- function(seq) {
 
 
 #-------------------------------------------------------------------------------
-# Auxiliary function to replace terminal GAPs into missing character (?)
-# Used inside the function nexusdframe writeNexus
+# Auxiliary functions to replace terminal GAPs into missing character (?)
+# Used inside the functions nexusdframe writeNexus
 
 .replace_terminal_gaps <- function (x) {
   tf <- grepl("^-", x$sequence)
   if (any(tf)) {
-    temp <- gsub("[[:upper:]].*", "", x$sequence[tf])
-    ll <- unlist(lapply(temp, function(y) length(unlist(strsplit(y, "")))))
-    for (i in seq_along(temp)) {
-      x$sequence[tf][i] <- gsub(paste0("^", temp[i]),
-                                paste0(rep("?", ll[i]), collapse = ""),
-                                x$sequence[tf][i])
-    }
+    x <- .replace(x, tf, "[[:upper:]].*|[[:lower:]].*", position = "start")
   }
   tf <- grepl("-$", x$sequence)
   if (any(tf)) {
-    temp <- gsub(".*[[:upper:]]", "", x$sequence[tf])
-    ll <- unlist(lapply(temp, function(y) length(unlist(strsplit(y, "")))))
+    x <- .replace(x, tf, ".*[[:upper:]]|.*[[:lower:]]", position = "end")
+  }
+  return(x)
+}
 
+.replace <- function (x, tf, gsubpattern, position) {
+  temp <- gsub(gsubpattern, "", x$sequence[tf])
+  ll <- unlist(lapply(temp, function(x) length(unlist(strsplit(x, "")))))
+  replacement = unlist(lapply(ll, function(x) paste0(rep("?", x), collapse = "")))
+  if (position == "start") {
+    temp = paste0("^", temp)
     for (i in seq_along(temp)) {
-      x$sequence[tf][i] <- gsub(paste0(temp[i], "$"),
-                                paste0(rep("?", ll[i]), collapse = ""),
-                                x$sequence[tf][i])
+      x$sequence[tf][i] <- sub("^-+", replacement[i], x$sequence[tf][i])
+    }
+  }
+  if (position == "end") {
+    temp = paste0(temp, "$")
+    for (i in seq_along(temp)) {
+      x$sequence[tf][i] <- sub("[^[:alpha:]]+$", replacement[i], x$sequence[tf][i])
     }
   }
   return(x)
 }
+

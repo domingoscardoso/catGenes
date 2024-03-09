@@ -8,76 +8,104 @@
 #'
 #' @usage
 #' plotPhylo(tree = NULL,
-#'           add_raxml_tree = NULL,
-#'           add_parsi_tree = NULL,
-#'           highlight_clade = NULL,
-#'           fill_gradient = NULL,
-#'           highlight_taxa = NULL,
-#'           highlight_color = NULL,
-#'           understate_taxa = NULL,
-#'           replace_taxa = NULL,
-#'           prune_taxa = NULL,
-#'           size_tiplab = NULL,
-#'           xlimtree = NULL,
-#'           gene_labels = NULL,
-#'           ylimgene = NULL,
-#'           phylogram_side = FALSE,
-#'           phylogram_supports = FALSE,
-#'           phylogram_height = NULL,
+#'           layout = "rectangular",
+#'           branch.width = 0.5,
+#'           branch.supports = TRUE,
+#'           add.raxml.tree = NULL,
+#'           add.parsi.tree = NULL,
+#'           highlight.clade = NULL,
+#'           fill.gradient = NULL,
+#'           show.tip.label = TRUE,
+#'           size.tip.label = 2,
+#'           fontface.tip.label = "italic",
+#'           highlight.taxa = NULL,
+#'           highlight.color = NULL,
+#'           understate.taxa = NULL,
+#'           replace.taxa = NULL,
+#'           prune.taxa = NULL,
+#'           xlim.tree = NULL,
+#'           gene.label = NULL,
+#'           ylim.gene.label = NULL,
+#'           phylogram.side = FALSE,
+#'           phylogram.supports = FALSE,
+#'           phylogram.height = NULL,
 #'           save = FALSE,
 #'           dpi = 600,
 #'           dir = "RESULTS_edited_tree",
 #'           filename = NULL,
-#'           format = "pdf")
+#'           format = "pdf",
+#'           ...)
 #'
 #' @param tree A phylo object.
 #'
-#' @param add_raxml_tree A RaxML-based phylo object.
+#' @param layout One of 'rectangular', 'dendrogram', 'slanted', 'ellipse',
+#' 'roundrect', 'fan', 'circular', 'inward_circular', 'radial', 'equal_angle',
+#' 'daylight' or 'ape'
 #'
-#' @param add_parsi_tree A parsimony-based phylo object.
+#' @param branch.width A numeric vector giving the width of the branches of
+#' the plotted phylogeny. These are taken to be in the same order than the
+#' component \code{edge} of \code{phylo}. If fewer widths are given than the
+#' length of edge, then these are recycled. Defaults to 0.5.
 #'
-#' @param highlight_clade A vector of two tip labels to highlight their clade or
+#' @param branch.supports A logical indicating whether to show the node supports
+#' below the branches of the phylogeny. Defaults to TRUE, i.e. the statistical
+#' supports are shown.
+#'
+#' @param add.raxml.tree A RaxML-based phylo object.
+#'
+#' @param add.parsi.tree A parsimony-based phylo object.
+#'
+#' @param highlight.clade A vector of two tip labels to highlight their clade or
 #' a list of multiple vectors with two tip labels each to highlight their clades.
 #'
-#' @param fill_gradient Any color to highlight an specific clade in the tree.
+#' @param fill.gradient One or more colors to highlight specific clades in the
+#' tree.
 #'
-#' @param highlight_taxa Define a vector with specific tip labels or the name of
+#' @param show.tip.label A logical indicating whether to show the tip labels on
+#' the phylogeny. Defaults to TRUE, i.e. the labels are shown.
+#'
+#' @param size.tip.label The size of tip labels; defaults to 2.
+#'
+#' @param fontface.tip.label The font face of text, defaults to 3 (italic), others
+#' are 1 (plain), 2 (bold), 4 (bold.italic).
+#'
+#' @param highlight.taxa Define a vector with specific tip labels or the name of
 #' any taxa (species or genus name) present in the tree to highlight them with
 #' an specific color; defaults to "black".
 #'
-#' @param highlight_color Color to highlight specific tip labels in the tree.
+#' @param highlight.color Color to highlight specific tip labels in the tree.
 #'
-#' @param understate_taxa Define a vector with specific tip labels or the name of
+#' @param understate.taxa Define a vector with specific tip labels or the name of
 #' any taxa (species or genus name) present in the tree to understate them with
 #' a gray color. All other tips will be in black, unless you have set the
-#' the arguments \code{highlight_taxa} \code{highlight_color} that define taxa
+#' the arguments \code{highlight.taxa} \code{highlight.color} that define taxa
 #' to be highlight with an specific color.
 #'
-#' @param replace_taxa A vector of tip labels to be substituted with specific
+#' @param replace.taxa A vector of tip labels to be substituted with specific
 #' alternative names. This is provided in the form of, for instance,
 #' c("Harpalyce_formosa" = "Harpalyce_riparia",
 #' "Harpalyce_cf_brasiliana" = "Harpalyce_magnibracteata"),
 #' where the initial name represents the current tip label to be exchanged with
 #' the corresponding alternative name.
 #'
-#' @param prune_taxa A vector with specific tip labels to be dropped from the tree.
+#' @param prune.taxa A vector with specific tip labels to be dropped from the tree.
 #'
-#' @param size_tiplab the size of tip labels; defaults to 2.
+#' @param xlim.tree Set x axis limits specially for tree panel.
 #'
-#' @param xlimtree Set x axis limits specially for tree panel.
-#'
-#' @param gene_labels A title for the tree; usually a name of an specific gene
+#' @param gene.label A title for the tree; usually a name of an specific gene
 #' (or set of genes) from which the tree was reconstructed.
 #'
-#' @param ylimgene Set y axis limits for gene labels.
+#' @param size.gene.label The size of gene text labels; defaults to 12.
 #'
-#' @param phylogram_side if \code{TRUE}, a small phylogram with branch lengths
+#' @param ylim.gene.label Set y axis limits for gene labels.
+#'
+#' @param phylogram.side If \code{TRUE}, a small phylogram with branch lengths
 #' will be plotted on the upper left.
 #'
-#' @param phylogram_supports if \code{TRUE}, the side phylogram will include the
+#' @param phylogram.supports If \code{TRUE}, the side phylogram will include the
 #' same symbols of node support as those plotted in the main edited tree.
 #'
-#' @param phylogram_height A number to adjust the size of the side phylogram.
+#' @param phylogram.height A number to adjust the size of the side phylogram.
 #'
 #' @param save Logical, if \code{TRUE}, the edited tree will be saved on disk.
 #'
@@ -94,10 +122,12 @@
 #' create a file entitled **tree**.
 #'
 #' @param format A character vector related to the file format of the global
-#' map to be saved. The default is "jpg" to save the output in Joint
-#' Photographic Experts Group (.jpg), but you can also choose "pdf" to save in
-#' Portable Document Format (.pdf), "tiff" to save in Tag Image File Format
+#' map to be saved. The default is 'jpg' to save the output in Joint
+#' Photographic Experts Group (.jpg), but you can also choose 'pdf' to save in
+#' Portable Document Format (.pdf), 'tiff' to save in Tag Image File Format
 #' (.tiff) or "png" to save in Portable Network Graphics (.png).
+#'
+#' @param ... Further arguments to be passed to \code{ggtree}.
 #'
 #' @return One or a list of objects of class "ggtree" "gg" "ggplot".
 #'
@@ -121,16 +151,23 @@
 #'                    "Dermatophyllum_secundiflorum")
 #'
 #' plotPhylo(tree = Harpalyce_bayes_tree,
-#'           add_raxml_tree = Harpalyce_raxml_tree,
-#'           add_parsi_tree = Harpalyce_parsimony_tree,
-#'           highlight_clade = Harpalyce_clade,
-#'           fill_gradient = "#D53E4F",
-#'           understate_taxa = outgroup_taxa,
-#'           size_tiplab = 4,
-#'           gene_labels = c("ITS/5.8S", "ETS", "matK", "trnL intron"),
-#'           phylogram_side = TRUE,
-#'           phylogram_supports = TRUE,
-#'           phylogram_height = 25,
+#'           layout = "rectangular",
+#'           branch.width = 0.5,
+#'           branch.supports = TRUE,
+#'           add.raxml.tree = Harpalyce_raxml_tree,
+#'           add.parsi.tree = Harpalyce_parsimony_tree,
+#'           highlight.clade = Harpalyce_clade,
+#'           fill.gradient = "#D53E4F",
+#'           show.tip.label = TRUE,
+#'           size.tip.label = 4,
+#'           fontface.tip.label = "italic",
+#'           understate.taxa = outgroup_taxa,
+#'           gene.label = c("ITS/5.8S", "ETS", "matK", "trnL intron"),
+#'           size.gene.label = 12,
+#'           ylim.gene.label = NULL,
+#'           phylogram.side = TRUE,
+#'           phylogram.supports = TRUE,
+#'           phylogram.height = 25,
 #'           save = TRUE,
 #'           dir = "results_edited_phylogeny",
 #'           filename = "Harpalyce_edited_tree",
@@ -151,27 +188,34 @@
 #'
 
 plotPhylo <- function(tree = NULL,
-                      add_raxml_tree = NULL,
-                      add_parsi_tree = NULL,
-                      highlight_clade = NULL,
-                      fill_gradient = NULL,
-                      highlight_taxa = NULL,
-                      highlight_color = NULL,
-                      understate_taxa = NULL,
-                      replace_taxa = NULL,
-                      prune_taxa = NULL,
-                      size_tiplab = NULL,
-                      xlimtree = NULL,
-                      gene_labels = NULL,
-                      ylimgene = NULL,
-                      phylogram_side = FALSE,
-                      phylogram_supports = FALSE,
-                      phylogram_height = NULL,
+                      layout = "rectangular",
+                      branch.width = 0.5,
+                      branch.supports = TRUE,
+                      add.raxml.tree = NULL,
+                      add.parsi.tree = NULL,
+                      highlight.clade = NULL,
+                      fill.gradient = NULL,
+                      show.tip.label = TRUE,
+                      size.tip.label = 2,
+                      fontface.tip.label = "italic",
+                      highlight.taxa = NULL,
+                      highlight.color = NULL,
+                      understate.taxa = NULL,
+                      replace.taxa = NULL,
+                      prune.taxa = NULL,
+                      xlim.tree = NULL,
+                      gene.label = NULL,
+                      size.gene.label = 12,
+                      ylim.gene.label = NULL,
+                      phylogram.side = FALSE,
+                      phylogram.supports = FALSE,
+                      phylogram.height = NULL,
                       save = FALSE,
                       dpi = 600,
                       dir = "RESULTS_edited_tree",
                       filename = NULL,
-                      format = "pdf") {
+                      format = "pdf",
+                      ...) {
 
   #-----------------------------------------------------------------------------
   # Create a new directory to save the plot
@@ -180,7 +224,7 @@ plotPhylo <- function(tree = NULL,
   if (save) {
     if (is.null(filename)) {
       filename <- paste0("tree_",
-                         gsub("[/]|[.]", "", paste0(gene_labels, collapse = "_")))
+                         gsub("[/]|[.]", "", paste0(gene.label, collapse = "_")))
     }
 
     foldername <- paste0(dir, "/", format(Sys.time(), "%d%b%Y"))
@@ -200,8 +244,8 @@ plotPhylo <- function(tree = NULL,
 
   intree <- tree
 
-  if (!is.null(prune_taxa)) {
-    tree <- treeio::drop.tip(tree, prune_taxa)
+  if (!is.null(prune.taxa)) {
+    tree <- treeio::drop.tip(tree, prune.taxa)
   }
 
   #-----------------------------------------------------------------------------
@@ -215,60 +259,64 @@ plotPhylo <- function(tree = NULL,
 
   #-----------------------------------------------------------------------------
 
-  if (!is.null(add_raxml_tree)) {
-    raxml_tree <- add_raxml_tree
+  if (!is.null(add.raxml.tree)) {
+    raxml_tree <- add.raxml.tree
   } else {
     raxml_tree <- NULL
   }
-  if (!is.null(add_parsi_tree)) {
-    parsi_tree <- add_parsi_tree
+  if (!is.null(add.parsi.tree)) {
+    parsi_tree <- add.parsi.tree
   } else {
     parsi_tree <- NULL
   }
 
-  if (!is.null(add_raxml_tree) |
-      !is.null(add_parsi_tree)) {
-    # Add support values from different phylogenetic estimation methods
-    tree <- .phyloSupports(tree, raxml_tree, parsi_tree)
-  }
-
-  # Update specific tip names
-  if (!is.null(replace_taxa)) {
-    for (i in seq_along(replace_taxa)) {
-      tree@phylo$tip.label <- gsub(names(replace_taxa)[i],
-                                   replace_taxa[i], tree@phylo$tip.label)
+  if (branch.supports) {
+    if (!is.null(add.raxml.tree) |
+        !is.null(add.parsi.tree)) {
+      # Add support values from different phylogenetic estimation methods
+      tree <- .phyloSupports(tree, raxml_tree, parsi_tree)
     }
   }
 
-  # Color highlight specific tips
-  if (!is.null(highlight_taxa)) {
-    nodes <- grep(paste0(highlight_taxa, collapse = "|"), tree@phylo$tip.label)
-    tree@data$highlight <- NA
-    tree@data$highlight[tree@data$node %in% nodes] <- "highlight_color"
-    tree@data$highlight[is.na(tree@data$highlight)] <- "default_color"
-  }
-
-  # Understate the color of specific tips
-  if (!is.null(understate_taxa)) {
-    nodes <- grep(paste0(understate_taxa, collapse = "|"), tree@phylo$tip.label)
-    tree@data$understate <- NA
-    tree@data$understate[tree@data$node %in% nodes] <- "understated_color"
-    tree@data$understate[is.na(tree@data$understate)] <- "default_color"
-  }
-
-  if (!is.null(highlight_clade)) {
-    if (inherits(highlight_clade, "character")) {
-      highlight_clade <- list(highlight_clade)
+  if (show.tip.label) {
+    # Update specific tip names
+    if (!is.null(replace.taxa)) {
+      for (i in seq_along(replace.taxa)) {
+        tree@phylo$tip.label <- gsub(names(replace.taxa)[i],
+                                     replace.taxa[i], tree@phylo$tip.label)
+      }
     }
-    for (i in seq_along(highlight_clade)) {
-      highlight_clade[[i]] <- gsub("_", " ", highlight_clade[[i]])
+
+    # Color highlight specific tips
+    if (!is.null(highlight.taxa)) {
+      nodes <- grep(paste0(highlight.taxa, collapse = "|"), tree@phylo$tip.label)
+      tree@data$highlight <- NA
+      tree@data$highlight[tree@data$node %in% nodes] <- "highlight_color"
+      tree@data$highlight[is.na(tree@data$highlight)] <- "default_color"
+    }
+
+    # Understate the color of specific tips
+    if (!is.null(understate.taxa)) {
+      nodes <- grep(paste0(understate.taxa, collapse = "|"), tree@phylo$tip.label)
+      tree@data$understate <- NA
+      tree@data$understate[tree@data$node %in% nodes] <- "understated_color"
+      tree@data$understate[is.na(tree@data$understate)] <- "default_color"
     }
   }
 
-  if (!is.null(gene_labels)) {
-    gene_labels <- paste0(gene_labels, "\n", collapse = "")
+  if (!is.null(highlight.clade)) {
+    if (inherits(highlight.clade, "character")) {
+      highlight.clade <- list(highlight.clade)
+    }
+    for (i in seq_along(highlight.clade)) {
+      highlight.clade[[i]] <- gsub("_", " ", highlight.clade[[i]])
+    }
+  }
+
+  if (!is.null(gene.label)) {
+    gene.label <- paste0(gene.label, "\n", collapse = "")
   } else {
-    gene_labels <- ""
+    gene.label <- ""
   }
 
   if (!any(names(tree@data) %in% "prob")) {
@@ -280,89 +328,95 @@ plotPhylo <- function(tree = NULL,
 
   tree@phylo$tip.label <- gsub("_", " ", tree@phylo$tip.label)
 
-  if (is.null(size_tiplab)) size_tiplab = 2
+  tree_plot <- ggtree(tree, branch.length = "none", layout = layout,
+                      ladderize = TRUE, size = branch.width, ...)
 
-  tree_plot <- ggtree(tree, branch.length = "none", layout = "rectangular",
-                      ladderize = TRUE, size = 0.5)
-
-  if (is.null(xlimtree)) {
-    xlimtree <- max(tree_plot$data$x)+5
+  if (is.null(xlim.tree)) {
+    xlim.tree <- max(tree_plot$data$x)+5
   }
 
   tree_plot <- tree_plot +
-    xlim_tree(xlimtree)
+    xlim_tree(xlim.tree)
 
-  if (!is.null(highlight_clade)) {
-    for (i in seq_along(highlight_clade)) {
+  if (!is.null(highlight.clade)) {
+    for (i in seq_along(highlight.clade)) {
       tree_plot <- tree_plot +
-        geom_hilight(node = ggtree::MRCA(tree, highlight_clade[[i]]),
-                     fill = fill_gradient[i], gradient = TRUE,
+        geom_hilight(node = ggtree::MRCA(tree, highlight.clade[[i]]),
+                     fill = fill.gradient[i], gradient = TRUE,
                      gradient.direction = "tr", alpha = 0.8) +
-        geom_tree(layout="rectangular")
+        geom_tree(layout = layout, size = branch.width)
     }
   }
 
-  if (!is.null(highlight_taxa) & is.null(understate_taxa)) {
-    tree_plot <- tree_plot +
-      geom_tiplab(offset = 0.02, size = size_tiplab, fontface = "italic", aes(color=highlight),
-                  show.legend = FALSE) +
-      scale_colour_manual(values = c("black", highlight_color))
-  }
+  if (show.tip.label) {
+    if (!is.null(highlight.taxa) & is.null(understate.taxa)) {
+      tree_plot <- tree_plot +
+        geom_tiplab(offset = 0.02, size = size.tip.label,
+                    fontface = fontface.tip.label, aes(color=highlight),
+                    show.legend = FALSE, ...) +
+        scale_colour_manual(values = c("black", highlight.color))
+    }
 
-  if (!is.null(understate_taxa) & is.null(highlight_taxa)) {
-    tree_plot <- tree_plot +
-      geom_tiplab(offset = 0.02, size = size_tiplab, fontface = "italic", aes(color=understate),
-                  show.legend = FALSE) +
-      scale_colour_manual(values = c("black", "gray60"))
-  }
+    if (!is.null(understate.taxa) & is.null(highlight.taxa)) {
+      tree_plot <- tree_plot +
+        geom_tiplab(offset = 0.02, size = size.tip.label,
+                    fontface = fontface.tip.label, aes(color=understate),
+                    show.legend = FALSE) +
+        scale_colour_manual(values = c("black", "gray60"))
+    }
 
-  if (!is.null(understate_taxa) & !is.null(highlight_taxa)) {
-    tf <- tree_plot$data$understate %in% "understated_color"
-    tree_plot$data$highlight[tf] <- "understated_color"
-    tree_plot <- tree_plot +
-      geom_tiplab(offset = 0.02, size = size_tiplab, fontface = "italic", aes(color=highlight),
-                  show.legend = FALSE) +
-      scale_colour_manual(values = c("black", highlight_color, "gray60"))
-  }
+    if (!is.null(understate.taxa) & !is.null(highlight.taxa)) {
+      tf <- tree_plot$data$understate %in% "understated_color"
+      tree_plot$data$highlight[tf] <- "understated_color"
+      tree_plot <- tree_plot +
+        geom_tiplab(offset = 0.02, size = size.tip.label,
+                    fontface = fontface.tip.label, aes(color=highlight),
+                    show.legend = FALSE) +
+        scale_colour_manual(values = c("black", highlight.color, "gray60"))
+    }
 
-  if (is.null(understate_taxa) & is.null(highlight_taxa)) {
-    tree_plot <- tree_plot +
-      geom_tiplab(offset = 0.02, size = size_tiplab, fontface = "italic",
-                  show.legend = FALSE)
+    if (is.null(understate.taxa) & is.null(highlight.taxa)) {
+      tree_plot <- tree_plot +
+        geom_tiplab(offset = 0.02, size = size.tip.label,
+                    fontface = fontface.tip.label,
+                    show.legend = FALSE)
+    }
   }
 
   # Add support values below branches
-  if (!is.null(add_raxml_tree) |
-      !is.null(add_parsi_tree)) {
-    if (!any(intree@data$prob > 1)) {
-      tree_plot <- tree_plot +
-        geom_text2(aes(subset = !isTip & gsub("[/].*", "", prob) >= 0.7,
-                       label = prob),
-                   size = 3, color = "gray40", hjust = 1.1, vjust = 1.5)
-    } else {
-      tree_plot <- tree_plot +
-        geom_text2(aes(subset = !isTip & gsub("[/].*", "", prob) >= 70,
-                       label = prob),
-                   size = 3, color = "gray40", hjust = 1.1, vjust = 1.5)
-    }
+  if (branch.supports) {
+    if (!is.null(add.raxml.tree) |
+        !is.null(add.parsi.tree)) {
+      if (!any(intree@data$prob > 1)) {
+        tree_plot <- tree_plot +
+          geom_text2(aes(subset = !isTip & gsub("[/].*", "", prob) >= 0.7,
+                         label = prob),
+                     size = 3, color = "gray40", hjust = 1.1, vjust = 1.5)
+      } else {
+        tree_plot <- tree_plot +
+          geom_text2(aes(subset = !isTip & gsub("[/].*", "", prob) >= 70,
+                         label = prob),
+                     size = 3, color = "gray40", hjust = 1.1, vjust = 1.5)
+      }
 
-  } else {
-    if (!any(intree@data$prob > 1)) {
-      tree_plot <- tree_plot +
-        geom_text2(aes(subset = !isTip & prob>=0.7 & prob<1,
-                       label = stringr::str_extract(prob, "[[:digit:]][.][[:digit:]][[:digit:]]")),
-                   size = 3, color = "gray40", hjust = 1.5, vjust = 1.5)
     } else {
-      tree_plot <- tree_plot +
-        geom_text2(aes(subset = !isTip & prob>=70 & prob<100,
-                       label = prob),
-                   size = 3, color = "gray40", hjust = 1.5, vjust = 1.5)
-    }
+      if (!any(intree@data$prob > 1)) {
+        tree_plot <- tree_plot +
+          geom_text2(aes(subset = !isTip & prob>=0.7 & prob<1,
+                         label = stringr::str_extract(prob, "[[:digit:]][.][[:digit:]][[:digit:]]")),
+                     size = 3, color = "gray40", hjust = 1.5, vjust = 1.5)
+      } else {
+        tree_plot <- tree_plot +
+          geom_text2(aes(subset = !isTip & prob>=70 & prob<100,
+                         label = prob),
+                     size = 3, color = "gray40", hjust = 1.5, vjust = 1.5)
+      }
 
+    }
   }
 
-  if (is.null(ylimgene)) {
-    ylimgene <- (max(tree_plot$data$y)-(max(tree_plot$data$y)*25/100))-10
+  if (is.null(ylim.gene.label)) {
+    ylim.gene.label <- (max(tree_plot$data$y)-(max(tree_plot$data$y)*25/100))-10
   }
 
   if (!any(intree@data$prob > 1)) {
@@ -389,45 +443,47 @@ plotPhylo <- function(tree = NULL,
                   fill = "#009e73", alpha = 0.8, stroke = 0.05)
   }
 
+  if (!is.null(gene.label)) {
   tree_plot <- tree_plot +
     # Add gene labels
-    annotate(geom = "text", x = 1, y = ylimgene, label = gene_labels,
-             color = "gray60", size = 15, fontface = "italic")
+    annotate(geom = "text", x = 1, y = ylim.gene.label, label = gene.label,
+             color = "gray60", size = size.gene.label, fontface = "italic")
+  }
 
   # Create phylogram
-  if (phylogram_side) {
-    phylogram <- ggtree(tree, layout = "rectangular", ladderize=TRUE, size = 0.1) +
+  if (phylogram.side & layout != "circular") {
+    phylogram <- ggtree(tree, layout = layout, ladderize=TRUE, size = 0.1) +
       theme(
-        panel.background = element_rect(fill = 'transparent', color = NA),
-        plot.background = element_rect(fill = 'transparent', color = NA),
+        panel.background = element_rect(fill = "transparent", color = NA),
+        plot.background = element_rect(fill = "transparent", color = NA),
       )
 
     phylogram <- phylogram +
       geom_treescale(x = 0, y = max(phylogram$data$y)/1.1, color = "gray60",
                      fontsize = 3, linesize = 0.5, offset = 1)
 
-    if (!is.null(highlight_clade)) {
-      for (i in seq_along(highlight_clade)) {
+    if (!is.null(highlight.clade)) {
+      for (i in seq_along(highlight.clade)) {
         phylogram <- phylogram +
-          geom_hilight(node = ggtree::MRCA(tree, highlight_clade[[i]]),
-                       fill = fill_gradient[i], gradient = TRUE,
+          geom_hilight(node = ggtree::MRCA(tree, highlight.clade[[i]]),
+                       fill = fill.gradient[i], gradient = TRUE,
                        gradient.direction = "tr", alpha = 0.8,
                        size = 0.1) +
-          geom_tree(layout="rectangular", size = 0.1)
+          geom_tree(layout = layout, size = 0.1)
       }
     }
 
-    if (phylogram_supports) {
+    if (phylogram.supports) {
       if (!any(intree@data$prob > 1)) {
         phylogram <- phylogram +
           geom_point2(aes(subset = prob>=1 & isTip == FALSE), size = 1.5, shape = 22,
-                      fill = "black", alpha=0.8, stroke = 0.05) +
+                      fill = "black", alpha = 0.8, stroke = 0.05) +
           geom_point2(aes(subset = prob>=0.9 & prob<1), size = 1.5, shape = 22,
                       fill = "#0072b2", alpha=0.8, stroke = 0.05) +
           geom_point2(aes(subset = prob>=0.8 & prob<0.9), size = 1.5, shape = 22,
                       fill = "#e69f00", alpha=0.8, stroke = 0.05) +
           geom_point2(aes(subset = prob>=0.7 & prob<0.8), size = 1.5, shape = 22,
-                      fill = "#009e73", alpha=0.8, stroke = 0.05)
+                      fill = "#009e73", alpha = 0.8, stroke = 0.05)
       } else {
         phylogram <- phylogram +
           geom_point2(aes(subset = prob>=100 & isTip == FALSE), size = 1.5, shape = 22,
@@ -441,14 +497,14 @@ plotPhylo <- function(tree = NULL,
       }
     }
 
-    if (is.null(phylogram_height)) phylogram_height = 25
+    if (is.null(phylogram.height)) phylogram.height = max(tree_plot$data$y)*30/100
 
     fulltree <- tree_plot + ggplot2::annotation_custom(
       ggplot2::ggplotGrob(phylogram),
       xmin = -1,
-      xmax = max(tree_plot$data$x) - (max(tree_plot$data$x)*70/100),
-      ymin = max(tree_plot$data$y) - (max(tree_plot$data$y)*phylogram_height/100),
-      ymax = max(tree_plot$data$y) - (max(tree_plot$data$y)*1/100))
+      xmax = max(tree_plot$data$x)-(max(tree_plot$data$x)*70/100),
+      ymin = max(tree_plot$data$y)-(max(tree_plot$data$y)*phylogram.height/100),
+      ymax = max(tree_plot$data$y)-(max(tree_plot$data$y)*1/100))
 
   } else {
     fulltree <- tree_plot
@@ -462,7 +518,6 @@ plotPhylo <- function(tree = NULL,
                base_height = max(tree_plot$data$y)*15/100,
                base_width = max(tree_plot$data$x))
   }
-
 
   return(fulltree)
 }

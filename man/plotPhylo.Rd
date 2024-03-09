@@ -5,77 +5,105 @@
 \title{Plot ggtree-based phylogenetic tree}
 \usage{
 plotPhylo(tree = NULL,
-          add_raxml_tree = NULL,
-          add_parsi_tree = NULL,
-          highlight_clade = NULL,
-          fill_gradient = NULL,
-          highlight_taxa = NULL,
-          highlight_color = NULL,
-          understate_taxa = NULL,
-          replace_taxa = NULL,
-          prune_taxa = NULL,
-          size_tiplab = NULL,
-          xlimtree = NULL,
-          gene_labels = NULL,
-          ylimgene = NULL,
-          phylogram_side = FALSE,
-          phylogram_supports = FALSE,
-          phylogram_height = NULL,
+          layout = "rectangular",
+          branch.width = 0.5,
+          branch.supports = TRUE,
+          add.raxml.tree = NULL,
+          add.parsi.tree = NULL,
+          highlight.clade = NULL,
+          fill.gradient = NULL,
+          show.tip.label = TRUE,
+          size.tip.label = 2,
+          fontface.tip.label = "italic",
+          highlight.taxa = NULL,
+          highlight.color = NULL,
+          understate.taxa = NULL,
+          replace.taxa = NULL,
+          prune.taxa = NULL,
+          xlim.tree = NULL,
+          gene.label = NULL,
+          ylim.gene.label = NULL,
+          phylogram.side = FALSE,
+          phylogram.supports = FALSE,
+          phylogram.height = NULL,
           save = FALSE,
           dpi = 600,
           dir = "RESULTS_edited_tree",
           filename = NULL,
-          format = "pdf")
+          format = "pdf",
+          ...)
 }
 \arguments{
 \item{tree}{A phylo object.}
 
-\item{add_raxml_tree}{A RaxML-based phylo object.}
+\item{layout}{One of 'rectangular', 'dendrogram', 'slanted', 'ellipse',
+'roundrect', 'fan', 'circular', 'inward_circular', 'radial', 'equal_angle',
+'daylight' or 'ape'}
 
-\item{add_parsi_tree}{A parsimony-based phylo object.}
+\item{branch.width}{A numeric vector giving the width of the branches of
+the plotted phylogeny. These are taken to be in the same order than the
+component \code{edge} of \code{phylo}. If fewer widths are given than the
+length of edge, then these are recycled. Defaults to 0.5.}
 
-\item{highlight_clade}{A vector of two tip labels to highlight their clade or
+\item{branch.supports}{A logical indicating whether to show the node supports
+below the branches of the phylogeny. Defaults to TRUE, i.e. the statistical
+supports are shown.}
+
+\item{add.raxml.tree}{A RaxML-based phylo object.}
+
+\item{add.parsi.tree}{A parsimony-based phylo object.}
+
+\item{highlight.clade}{A vector of two tip labels to highlight their clade or
 a list of multiple vectors with two tip labels each to highlight their clades.}
 
-\item{fill_gradient}{Any color to highlight an specific clade in the tree.}
+\item{fill.gradient}{One or more colors to highlight specific clades in the
+tree.}
 
-\item{highlight_taxa}{Define a vector with specific tip labels or the name of
+\item{show.tip.label}{A logical indicating whether to show the tip labels on
+the phylogeny. Defaults to TRUE, i.e. the labels are shown.}
+
+\item{size.tip.label}{The size of tip labels; defaults to 2.}
+
+\item{fontface.tip.label}{The font face of text, defaults to 3 (italic), others
+are 1 (plain), 2 (bold), 4 (bold.italic).}
+
+\item{highlight.taxa}{Define a vector with specific tip labels or the name of
 any taxa (species or genus name) present in the tree to highlight them with
 an specific color; defaults to "black".}
 
-\item{highlight_color}{Color to highlight specific tip labels in the tree.}
+\item{highlight.color}{Color to highlight specific tip labels in the tree.}
 
-\item{understate_taxa}{Define a vector with specific tip labels or the name of
+\item{understate.taxa}{Define a vector with specific tip labels or the name of
 any taxa (species or genus name) present in the tree to understate them with
 a gray color. All other tips will be in black, unless you have set the
-the arguments \code{highlight_taxa} \code{highlight_color} that define taxa
+the arguments \code{highlight.taxa} \code{highlight.color} that define taxa
 to be highlight with an specific color.}
 
-\item{replace_taxa}{A vector of tip labels to be substituted with specific
+\item{replace.taxa}{A vector of tip labels to be substituted with specific
 alternative names. This is provided in the form of, for instance,
 c("Harpalyce_formosa" = "Harpalyce_riparia",
 "Harpalyce_cf_brasiliana" = "Harpalyce_magnibracteata"),
 where the initial name represents the current tip label to be exchanged with
 the corresponding alternative name.}
 
-\item{prune_taxa}{A vector with specific tip labels to be dropped from the tree.}
+\item{prune.taxa}{A vector with specific tip labels to be dropped from the tree.}
 
-\item{size_tiplab}{the size of tip labels; defaults to 2.}
+\item{xlim.tree}{Set x axis limits specially for tree panel.}
 
-\item{xlimtree}{Set x axis limits specially for tree panel.}
-
-\item{gene_labels}{A title for the tree; usually a name of an specific gene
+\item{gene.label}{A title for the tree; usually a name of an specific gene
 (or set of genes) from which the tree was reconstructed.}
 
-\item{ylimgene}{Set y axis limits for gene labels.}
+\item{size.gene.label}{The size of gene text labels; defaults to 12.}
 
-\item{phylogram_side}{if \code{TRUE}, a small phylogram with branch lengths
+\item{ylim.gene.label}{Set y axis limits for gene labels.}
+
+\item{phylogram.side}{If \code{TRUE}, a small phylogram with branch lengths
 will be plotted on the upper left.}
 
-\item{phylogram_supports}{if \code{TRUE}, the side phylogram will include the
+\item{phylogram.supports}{If \code{TRUE}, the side phylogram will include the
 same symbols of node support as those plotted in the main edited tree.}
 
-\item{phylogram_height}{A number to adjust the size of the side phylogram.}
+\item{phylogram.height}{A number to adjust the size of the side phylogram.}
 
 \item{save}{Logical, if \code{TRUE}, the edited tree will be saved on disk.}
 
@@ -92,10 +120,12 @@ will be saved within a subfolder named after the current date.}
 create a file entitled \strong{tree}.}
 
 \item{format}{A character vector related to the file format of the global
-map to be saved. The default is "jpg" to save the output in Joint
-Photographic Experts Group (.jpg), but you can also choose "pdf" to save in
-Portable Document Format (.pdf), "tiff" to save in Tag Image File Format
+map to be saved. The default is 'jpg' to save the output in Joint
+Photographic Experts Group (.jpg), but you can also choose 'pdf' to save in
+Portable Document Format (.pdf), 'tiff' to save in Tag Image File Format
 (.tiff) or "png" to save in Portable Network Graphics (.png).}
+
+\item{...}{Further arguments to be passed to \code{ggtree}.}
 }
 \value{
 One or a list of objects of class "ggtree" "gg" "ggplot".
@@ -125,16 +155,23 @@ outgroup_taxa <- c("Staminodianthus_duckei",
                    "Dermatophyllum_secundiflorum")
 
 plotPhylo(tree = Harpalyce_bayes_tree,
-          add_raxml_tree = Harpalyce_raxml_tree,
-          add_parsi_tree = Harpalyce_parsimony_tree,
-          highlight_clade = Harpalyce_clade,
-          fill_gradient = "#D53E4F",
-          understate_taxa = outgroup_taxa,
-          size_tiplab = 4,
-          gene_labels = c("ITS/5.8S", "ETS", "matK", "trnL intron"),
-          phylogram_side = TRUE,
-          phylogram_supports = TRUE,
-          phylogram_height = 25,
+          layout = "rectangular",
+          branch.width = 0.5,
+          branch.supports = TRUE,
+          add.raxml.tree = Harpalyce_raxml_tree,
+          add.parsi.tree = Harpalyce_parsimony_tree,
+          highlight.clade = Harpalyce_clade,
+          fill.gradient = "#D53E4F",
+          show.tip.label = TRUE,
+          size.tip.label = 4,
+          fontface.tip.label = "italic",
+          understate.taxa = outgroup_taxa,
+          gene.label = c("ITS/5.8S", "ETS", "matK", "trnL intron"),
+          size.gene.label = 12,
+          ylim.gene.label = NULL,
+          phylogram.side = TRUE,
+          phylogram.supports = TRUE,
+          phylogram.height = 25,
           save = TRUE,
           dir = "results_edited_phylogeny",
           filename = "Harpalyce_edited_tree",

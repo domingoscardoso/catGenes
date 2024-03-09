@@ -34,6 +34,9 @@
 #' text-formatted partition file for the RAxML concatenated phylogenetic analysis
 #' using a mixed/partitioned model.
 #'
+#' @param endgaps.to.miss Logical, if \code{FALSE} the function will not replace
+#' terminal GAPs into missing character (?).
+#'
 #' @seealso \code{\link{catfullGenes}}
 #' @seealso \code{\link{catmultGenes}}
 #'
@@ -64,7 +67,8 @@
 writePhylip <- function(x, file,
                         genomics = FALSE,
                         catalignments = TRUE,
-                        partitionfile = TRUE) {
+                        partitionfile = TRUE,
+                        endgaps.to.miss = TRUE) {
 
   datset <- .namedlist(x)
 
@@ -107,7 +111,6 @@ writePhylip <- function(x, file,
   cat("Your phylip-formatted concantenated dataset will have the following DIMENSIONS:", "", sep = "\n")
   cat(paste(ntax, "TAXA"), sep = "\n")
   cat(paste(nchartotal, "CHARACTERS"), sep = "\n")
-
 
   # Finding identifiers that differ among the sequences and across genes
   datset_temp <- datset
@@ -271,7 +274,6 @@ writePhylip <- function(x, file,
   maxletrs_taxlabs <- lapply(letrs_taxlabs, function(x) max(x)+5) # Just increase this last number if we want to add more space
   maxletrs_taxlabs <- max(unlist(maxletrs_taxlabs))
 
-
   # We can also pad a string inside a list of dataframes by adding numbers or names at any position in the specific column
   f_b <- function(x, y) {
     for (i in 1:length(x$species)) {
@@ -282,6 +284,11 @@ writePhylip <- function(x, file,
   }
   datset <- lapply(datset, f_b,
                    y = maxletrs_taxlabs)
+
+  # Replace terminal GAPs into missing character (?)
+  if (endgaps.to.miss) {
+    datset <- lapply(datset, .replace_terminal_gaps)
+  }
 
   # Uniting the two columns inside just the first dataframe
   datset[[1]] <- tidyr::unite(datset[[1]], "sequences", colnames(datset[[1]]), sep = " ")
