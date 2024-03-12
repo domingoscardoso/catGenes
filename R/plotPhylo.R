@@ -215,7 +215,7 @@ plotPhylo <- function(tree = NULL,
                       highlight.clade = NULL,
                       fill.gradient = NULL,
                       show.tip.label = TRUE,
-                      size.tip.label = 2,
+                      size.tip.label = 4,
                       fontface.tip.label = "italic",
                       fancy.tip.label = FALSE,
                       abbrev.tip.label = FALSE,
@@ -365,11 +365,19 @@ plotPhylo <- function(tree = NULL,
                                   highlight.color = highlight.color,
                                   understate.taxa = understate.taxa,
                                   abbrev.tip.label = abbrev.tip.label)
-
-      tree_plot <- tree_plot %<+% tipdata +
-        ggtext::geom_richtext(data = ggtree::td_filter(isTip),
-                              aes(label = lab), fill = NA, label.color = NA,
-                              hjust = 0, nudge_x = -0.001)
+      if (layout == "circular") {
+        tree_plot <- tree_plot %<+% tipdata +
+          ggtext::geom_richtext(data = ggtree::td_filter(isTip),
+                                aes(angle = angle, label = lab),
+                                fill = NA, label.color = NA,
+                                hjust = 0, nudge_x = -0.001)
+      } else {
+        tree_plot <- tree_plot %<+% tipdata +
+          ggtext::geom_richtext(data = ggtree::td_filter(isTip),
+                                aes(label = lab),
+                                fill = NA, label.color = NA,
+                                hjust = 0, nudge_x = -0.001)
+      }
 
     } else if (is.null(understate.taxa) & is.null(highlight.taxa)) {
       # No color highlight for tip labels
@@ -385,12 +393,11 @@ plotPhylo <- function(tree = NULL,
                                 highlight.color = highlight.color)
       cols <- c("black", highlight.color)
 
-      tree_plot <- tree_plot %<+% tipdata +
-        geom_tiplab(offset = 0.02, size = 3,
-                    fontface = fontface.tip.label, aes(color = tocolor),
-                    show.legend = FALSE, ...) +
-        scale_colour_manual(values = cols,
-                            breaks = cols, guide = "none")
+      tree_plot <- .plot_with_tiplabels(tree_plot, layout, tipdata,
+                                        size.tip.label,
+                                        fontface.tip.label,
+                                        cols,
+                                        ...)
 
     } else if (is.null(highlight.taxa) & !is.null(understate.taxa)) {
       # Color understate specific tip labels
@@ -398,12 +405,11 @@ plotPhylo <- function(tree = NULL,
                                 understate.taxa = understate.taxa)
       cols <- c("black", "gray60")
 
-      tree_plot <- tree_plot %<+% tipdata +
-        geom_tiplab(offset = 0.02, size = 3,
-                    fontface = fontface.tip.label, aes(color = tocolor),
-                    show.legend = FALSE, ...) +
-        scale_colour_manual(values = cols,
-                            breaks = cols, guide = "none")
+      tree_plot <- .plot_with_tiplabels(tree_plot, layout, tipdata,
+                                        size.tip.label,
+                                        fontface.tip.label,
+                                        cols,
+                                        ...)
 
     } else if (!is.null(highlight.taxa) & !is.null(understate.taxa)) {
       # Color highlight and understate specific tip labels
@@ -413,12 +419,11 @@ plotPhylo <- function(tree = NULL,
                                 understate.taxa = understate.taxa)
       cols <- c("black", highlight.color, "gray60")
 
-      tree_plot <- tree_plot %<+% tipdata +
-        geom_tiplab(offset = 0.02, size = 3,
-                    fontface = fontface.tip.label, aes(color = tocolor),
-                    show.legend = FALSE, ...) +
-        scale_colour_manual(values = cols,
-                            breaks = cols, guide = "none")
+      tree_plot <- .plot_with_tiplabels(tree_plot, layout, tipdata,
+                                        size.tip.label,
+                                        fontface.tip.label,
+                                        cols,
+                                        ...)
     }
   }
 
@@ -817,6 +822,36 @@ plotPhylo <- function(tree = NULL,
   }
 
   return(tipdata)
+}
+
+
+#-------------------------------------------------------------------------------
+# Auxiliary function to plot tree with size and colors of tip labels
+.plot_with_tiplabels <- function(tree_plot,
+                                 layout,
+                                 tipdata,
+                                 size.tip.label,
+                                 fontface.tip.label,
+                                 cols,
+                                 ...) {
+
+  if (layout == "circular") {
+    tree_plot <- tree_plot %<+% tipdata +
+      geom_tiplab(offset = 0.02, size = size.tip.label,
+                  fontface = fontface.tip.label,
+                  aes(angle = angle, color = tocolor),
+                  show.legend = FALSE, ...) +
+      scale_colour_manual(values = cols,
+                          breaks = cols, guide = "none")
+  } else {
+    tree_plot <- tree_plot %<+% tipdata +
+      geom_tiplab(offset = 0.02, size = 3,
+                  fontface = fontface.tip.label, aes(color = tocolor),
+                  show.legend = FALSE, ...) +
+      scale_colour_manual(values = cols,
+                          breaks = cols, guide = "none")
+  }
+  return(tree_plot)
 }
 
 
