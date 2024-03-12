@@ -827,7 +827,7 @@ plotPhylo <- function(tree = NULL,
                               highlight.taxa = NULL,
                               highlight.color = NULL,
                               understate.taxa = NULL,
-                              abbrev.tip.label = NULL) {
+                              abbrev.tip.label = FALSE) {
 
   tiplabels <- tree_plot$data$label[tree_plot$data$isTip]
 
@@ -856,7 +856,7 @@ plotPhylo <- function(tree = NULL,
 
   if (abbrev.tip.label) {
     temp <- abbrevGen(tiplabels = df$genus)
-    df$genus <- temp$abbrev_tiplabels
+    df$genus <- temp$abbreviation
   }
 
   if ("doubtID" %in% names(df)) {
