@@ -1,9 +1,9 @@
 Type: Package
 Package: catGenes
-Title: Concatenating multiple DNA alignments made easy
-Version: 0.1.0
-Author: Domingos Cardoso, Quezia Cavalcante, and Bruno Vilela
-Description: The catGenes package is intended to help researchers in phylogenetics and phylogenomics to build a fully concatenated or combined (non-interleaved) dataset by automatically comparing individual DNA alignments.
+Title: Concatenating multiple DNA alignments and other phylogenetic features
+Version: 1.0
+Author: Domingos Cardoso and Quezia Cavalcante
+Description: The catGenes package is intended to help researchers in phylogenetics and phylogenomics to build a fully concatenated or combined (non-interleaved) dataset by automatically comparing individual DNA alignments. Other features also involve mining DNA sequences or targeted loci from plastomes and mitochondrial genomes from GenBank, as well as plotting phylogenetic figures.
 Maintainer: Domingos Cardoso <cardosobot@gmail.com>
 URL: https://github.com/domingoscardoso/catGenes
 Language: en-US
@@ -22,11 +22,13 @@ Imports:
     tibble,
     stats,
     treeio,
+    ggtext,
     ggplot2,
     cowplot,
     phangorn,
     phytools,
-    flora
+    flora,
+    glue
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

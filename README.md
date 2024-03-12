@@ -4,7 +4,6 @@
 # catGenes
 
 <!-- badges: start -->
-
 <!-- badges: end -->
 
 The *catGenes* package is intended to help researchers in phylogenetics
@@ -43,28 +42,37 @@ following:
 
 #### *1. When the DNA alignments have just a single sequence per species*
 
-The species/sequences may be simply named as **Genus\_species**, just
+The species/sequences may be simply named as **Genus_species**, just
 like the example below. The generic name could even be abbreviated but
-always keeping separated from the specific epithet like **G\_species**.
+always keeping separated from the specific epithet like **G_species**.
 Note that the sequences may also be labeled by including “cf” or “aff”
 between the genus and specific epithet, but they must be separated by an
 underscore.
 
-![Example with no identifiers in the
-sequences](vignettes/labelling_no_identifiers.png)
+<figure>
+<img src="vignettes/labelling_no_identifiers.png"
+alt="Example with no identifiers in the sequences" />
+<figcaption aria-hidden="true">Example with no identifiers in the
+sequences</figcaption>
+</figure>
 
 The species/sequences may also be named as
-**Genus\_species\_everythingelse** or **G\_species\_everythingelse**,
-that is, the scientific name is separated by the accession identifier
+**Genus_species_everythingelse** or **G_species_everythingelse**, that
+is, the scientific name is separated by the accession identifier
 (e.g. collector surname and associated collection number). The
 “everything else” means that the sequence here may have as many
 identifiers as desired, provided that at least the scientific name is
 consistently formatted. For example, in addition to format the sequences
 just like in the example below, note that you could also format like
-**Vatairea\_fusca\_Cardoso2939\_JX152598**.
+**Vatairea_fusca_Cardoso2939_JX152598**.
 
-![Example with identifiers in the
-sequences](vignettes/labelling_with_identifiers_no_duplicated_species.png)
+<figure>
+<img
+src="vignettes/labelling_with_identifiers_no_duplicated_species.png"
+alt="Example with identifiers in the sequences" />
+<figcaption aria-hidden="true">Example with identifiers in the
+sequences</figcaption>
+</figure>
 
 In brief, no matter the input DNA alignments have or not an associated
 identifier, the species/sequences should be consistently named, either
@@ -79,31 +87,40 @@ i.e. the species is represented by multiple sequences generated from
 different individuals. In this case, the concatenation will consider
 both the consistently-formatted scientific names and their associated
 unique identifiers. Then, the sequences/species must be formatted as
-**Genus\_species\_identifier\_everythingelse** or
-**G\_species\_identifier\_everythingelse**, as exemplified below:
+**Genus_species_identifier_everythingelse** or
+**G_species_identifier_everythingelse**, as exemplified below:
 
-![Example when species are duplicated with multiple
-accessions](vignettes/labelling_with_identifiers_and_duplicated_species.png)
+<figure>
+<img
+src="vignettes/labelling_with_identifiers_and_duplicated_species.png"
+alt="Example when species are duplicated with multiple accessions" />
+<figcaption aria-hidden="true">Example when species are duplicated with
+multiple accessions</figcaption>
+</figure>
 
 #### *3. Formatting labels for accessions identified just at genus level or fully identified with infraspecific taxa*
 
 The accessions/sequences not fully identified or just at genus level
-should be simply named as **Genus\_sp**, or **Genus\_sp1** and
-**Genus\_sp2**, or **Genus\_spA** and **Genus\_spB**, just like the
-example below. The generic name could even be abbreviated but always
-keeping separated from the “sp” and always without full period like
-**G\_sp** or **G\_sp1** or **G\_spA**. It is also possible to run any of
-the concatenating *catGenes* functions even when when accesions are
-fully identified with infraspecific taxa. Following the same general
+should be simply named as **Genus_sp**, or **Genus_sp1** and
+**Genus_sp2**, or **Genus_spA** and **Genus_spB**, just like the example
+below. The generic name could even be abbreviated but always keeping
+separated from the “sp” and always without full period like **G_sp** or
+**G_sp1** or **G_spA**. It is also possible to run any of the
+concatenating *catGenes* functions even when when accesions are fully
+identified with infraspecific taxa. Following the same general
 formatting scheme for accessions idenfitied at species level, just add
 the infraspecific taxa after the specific epithet such as
-**Genus\_species\_variety\_identifier\_everythingelse** or
-**Genus\_species\_subspecies\_identifier\_everythingelse**, but do not
+**Genus_species_variety_identifier_everythingelse** or
+**Genus_species_subspecies_identifier_everythingelse**, but do not
 mention wheather they are “var” or “subsp”. See also some examples
 below:
 
-![Example with other label
-formatting](vignettes/other_label_fformatting.png)
+<figure>
+<img src="vignettes/other_label_fformatting.png"
+alt="Example with other label formatting" />
+<figcaption aria-hidden="true">Example with other label
+formatting</figcaption>
+</figure>
 
 ### *Naming the individual DNA alignment files*
 
@@ -163,10 +180,10 @@ names(Vataireoids) <- gsub("[.].*", "", names(Vataireoids))
 ```
 
 If the input individual DNA alignments have any identifier associated to
-the gene names, like **Vataireoids\_ITS.nex**,
-**Vataireoids\_matK.nex**, **Vataireoids\_trnDT.nex**, etc., then you
-can load all such files by either importing each DNA alignment
-separately or by adjusting the abovementioned *for* loop as follows:
+the gene names, like **Vataireoids_ITS.nex**, **Vataireoids_matK.nex**,
+**Vataireoids_trnDT.nex**, etc., then you can load all such files by
+either importing each DNA alignment separately or by adjusting the
+abovementioned *for* loop as follows:
 
 ``` r
 library(catGenes)
@@ -297,12 +314,18 @@ writeNexus(catdf,
 See below a screenshot of the beggining of the NEXUS-formatted
 concatenated matrix:
 
-![catGenes Shiny app](vignettes/concatenatedmatrix1.png)
+<figure>
+<img src="vignettes/concatenatedmatrix1.png" alt="catGenes Shiny app" />
+<figcaption aria-hidden="true">catGenes Shiny app</figcaption>
+</figure>
 
 See below a screenshot of the end of the NEXUS-formatted concatenated
 matrix, showing the charset of each partition:
 
-![catGenes Shiny app](vignettes/concatenatedmatrix2.png)
+<figure>
+<img src="vignettes/concatenatedmatrix2.png" alt="catGenes Shiny app" />
+<figcaption aria-hidden="true">catGenes Shiny app</figcaption>
+</figure>
 
 ### *How the function writeNexus handles differing identifers when concatenating DNA alignments by keeping all original identifiers*
 
@@ -314,9 +337,17 @@ next two screenshots below, note that the function **writeNexus** will
 handle the with differing identifers across partitions by keeping them
 as comments inside brackets.
 
-![Concatenated genomic dataset](vignettes/catGenes_with_taxlabels1.png)
+<figure>
+<img src="vignettes/catGenes_with_taxlabels1.png"
+alt="Concatenated genomic dataset" />
+<figcaption aria-hidden="true">Concatenated genomic dataset</figcaption>
+</figure>
 
-![Concatenated genomic dataset](vignettes/catGenes_with_taxlabels2.png)
+<figure>
+<img src="vignettes/catGenes_with_taxlabels2.png"
+alt="Concatenated genomic dataset" />
+<figcaption aria-hidden="true">Concatenated genomic dataset</figcaption>
+</figure>
 
 ### *Writing the concatenated matrix in PHYLIP format*
 
@@ -349,13 +380,20 @@ writePhylip(catdf,
 
 See below a screenshot of the PHYLIP-formatted concatenated matrix:
 
-![catGenes Shiny app](vignettes/concatenatedmatrix3.png)
+<figure>
+<img src="vignettes/concatenatedmatrix3.png" alt="catGenes Shiny app" />
+<figcaption aria-hidden="true">catGenes Shiny app</figcaption>
+</figure>
 
 See below a screenshot of the partition file to be uploaded in CIPRES
 for a RAxML concatenated phylogenetic analysis using a mixed/partitioned
 model:
 
-![catGenes Shiny app](vignettes/concatenatedmatrix3_partitition.png)
+<figure>
+<img src="vignettes/concatenatedmatrix3_partitition.png"
+alt="catGenes Shiny app" />
+<figcaption aria-hidden="true">catGenes Shiny app</figcaption>
+</figure>
 
 ### *Removing duplicated accessions of the same species in DNA alignments*
 
@@ -368,12 +406,18 @@ concatenated dataset with the function **writeNexus**, for example, it
 is possible to run the function **dropSeq** so as to remove the
 duplicated accessions of the same species.
 
-![Concatenated genomic dataset](vignettes/dropseq1.png)
+<figure>
+<img src="vignettes/dropseq1.png" alt="Concatenated genomic dataset" />
+<figcaption aria-hidden="true">Concatenated genomic dataset</figcaption>
+</figure>
 
 Note below that the function **dropSeq** removed all multiple accessions
 of the same species from the previous concatenated dataset:
 
-![Concatenated genomic dataset](vignettes/dropseq2.png)
+<figure>
+<img src="vignettes/dropseq2.png" alt="Concatenated genomic dataset" />
+<figcaption aria-hidden="true">Concatenated genomic dataset</figcaption>
+</figure>
 
 ### *Performance of catGenes with large, genomic datasets*
 
@@ -389,11 +433,23 @@ the Neotropics. The original data retrieved from
 kindly permitted by [Deise Gonçalves](http://www.deisegoncalves.com/) to
 be used as example genomic data of the *catGenes* package.
 
-![Concatenated genomic dataset](vignettes/Vochysiaceae1.png)
+<figure>
+<img src="vignettes/Vochysiaceae1.png"
+alt="Concatenated genomic dataset" />
+<figcaption aria-hidden="true">Concatenated genomic dataset</figcaption>
+</figure>
 
-![Concatenated genomic dataset](vignettes/Vochysiaceae2.png)
+<figure>
+<img src="vignettes/Vochysiaceae2.png"
+alt="Concatenated genomic dataset" />
+<figcaption aria-hidden="true">Concatenated genomic dataset</figcaption>
+</figure>
 
-![Concatenated genomic dataset](vignettes/Vochysiaceae3.png)
+<figure>
+<img src="vignettes/Vochysiaceae3.png"
+alt="Concatenated genomic dataset" />
+<figcaption aria-hidden="true">Concatenated genomic dataset</figcaption>
+</figure>
 
 ## Documentation
 
@@ -414,15 +470,26 @@ Below some screenshots of the *catGenes* application that will open
 automatically in the default internet browser, or the viewer if running
 from [RStudio](https://rstudio.com/).
 
-![catGenes Shiny app](vignettes/shiny1.png)
+<figure>
+<img src="vignettes/shiny1.png" alt="catGenes Shiny app" />
+<figcaption aria-hidden="true">catGenes Shiny app</figcaption>
+</figure>
 
-![catGenes Shiny app](vignettes/shiny2.png)
+<figure>
+<img src="vignettes/shiny2.png" alt="catGenes Shiny app" />
+<figcaption aria-hidden="true">catGenes Shiny app</figcaption>
+</figure>
 
-![catGenes Shiny app; donwload button](vignettes/shiny3.png)
+<figure>
+<img src="vignettes/shiny3.png"
+alt="catGenes Shiny app; donwload button" />
+<figcaption aria-hidden="true">catGenes Shiny app; donwload
+button</figcaption>
+</figure>
 
 ## Citation
 
-Cardoso, D., Cavalcante, Q. & Vilela, B. (2020). catGenes: a new R
-package for combining multiple DNA alignments for multigene analysis in
+Cardoso, D. & Cavalcante, Q. (2024). catGenes: a new R package for
+combining multiple DNA alignments for multigene analysis in
 phylogenetics and phylogenomics.
 <https://github.com/domingoscardoso/catGenes>

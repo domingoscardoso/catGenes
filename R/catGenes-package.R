@@ -1,6 +1,9 @@
 #' The catGenes package is under development and is intended to help researchers
 #' in phylogenetics and phylogenomics to build a fully concatenated or combined
 #' (non-interleaved) dataset by automatically comparing individual DNA alignments.
+#' Other features also involve mining DNA sequences or targeted loci from
+#' plastomes and mitochondrial genomes from GenBank, as well as plotting
+#' phylogenetic figures.
 #'
 #' The package's main functions \code{\link{catfullGenes}} and \code{\link{catmultGenes}}
 #' compare at least two individual DNA alignments with differing (or equal) number
@@ -23,16 +26,18 @@
 #' package's page on github (\url{http://www.github.com/domingoscardoso/catGenes}).
 #'
 #' @name catGenes-package
+#'
 #' @aliases catGenes-package
-#' @title Tools for combining individual DNA alignments for multigene analysis in phylogenetics and phylogenomics
+#'
+#' @title Tools for combining individual DNA alignments for multigene analysis in
+#' phylogenetics and phylogenomics, and other phylogenetic features
+#'
 #' @author \strong{Domingos Cardoso}\cr
 #' (email: \email{cardosobot@@gmail.com};
 #' Website: \url{https://biologia.ufba.br/domingos-benicio-oliveira-silva-cardoso})
+#'
 #' @author \strong{Quezia Cavalcante}\cr
 #' (email: \email{queziacs@@yahoo.com.br})
-#' @author \strong{Bruno Vilela}\cr
-#' (email: \email{brunovilelasilva@@hotmail.com};
-#' Website: \url{http://bvilela.weebly.com/})
 #'
 #' @keywords package
 #'
@@ -43,9 +48,11 @@
 #' Date: \tab 2020-10-25\cr
 #' }
 #'
-#' @references Cardoso, D., Cavalcante, Q. & Vilela, B. (2020). catGenes: a new R package for combining multiple DNA alignments for multigene analysis in phylogenetics and phylogenomics.
+#' @references Cardoso, D. & Cavalcante, Q. (2024). catGenes: a new R package for
+#' combining multiple DNA alignments for multigene analysis in phylogenetics and
+#' phylogenomics.
 #'
-#' @import dplyr tidyr stringr R.utils rmarkdown ape shiny shinydashboard shinyjs tibble stats
+#' @import dplyr magrittr tidyr stringr R.utils rmarkdown ape shiny shinydashboard shinyjs tibble stats genbankr ggtree ggtext ggplot2 cowplot phangorn phytools flora glue
 #'
 "_PACKAGE"
 

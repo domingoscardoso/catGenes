@@ -238,4 +238,4 @@ Below some screenshots of the _catGenes_ application that will open automaticall
 
 
 ## Citation
-Cardoso, D., Cavalcante, Q. & Vilela, B. (2020). catGenes: a new R package for combining multiple DNA alignments for multigene analysis in phylogenetics and phylogenomics. https://github.com/domingoscardoso/catGenes
+Cardoso, D. & Cavalcante, Q. (2024). catGenes: a new R package for combining multiple DNA alignments for multigene analysis in phylogenetics and phylogenomics. https://github.com/domingoscardoso/catGenes

@@ -4,11 +4,15 @@
 \name{catGenes-package}
 \alias{catGenes}
 \alias{catGenes-package}
-\title{Tools for combining individual DNA alignments for multigene analysis in phylogenetics and phylogenomics}
+\title{Tools for combining individual DNA alignments for multigene analysis in
+phylogenetics and phylogenomics, and other phylogenetic features}
 \description{
 The catGenes package is under development and is intended to help researchers
 in phylogenetics and phylogenomics to build a fully concatenated or combined
 (non-interleaved) dataset by automatically comparing individual DNA alignments.
+Other features also involve mining DNA sequences or targeted loci from
+plastomes and mitochondrial genomes from GenBank, as well as plotting
+phylogenetic figures.
 }
 \details{
 The package's main functions \code{\link{catfullGenes}} and \code{\link{catmultGenes}}
@@ -39,7 +43,9 @@ Date: \tab 2020-10-25\cr
 }
 }
 \references{
-Cardoso, D., Cavalcante, Q. & Vilela, B. (2020). catGenes: a new R package for combining multiple DNA alignments for multigene analysis in phylogenetics and phylogenomics.
+Cardoso, D. & Cavalcante, Q. (2024). catGenes: a new R package for
+combining multiple DNA alignments for multigene analysis in phylogenetics and
+phylogenomics.
 }
 \seealso{
 Useful links:
@@ -55,9 +61,5 @@ Website: \url{https://biologia.ufba.br/domingos-benicio-oliveira-silva-cardoso})
 
 \strong{Quezia Cavalcante}\cr
 (email: \email{queziacs@yahoo.com.br})
-
-\strong{Bruno Vilela}\cr
-(email: \email{brunovilelasilva@hotmail.com};
-Website: \url{http://bvilela.weebly.com/})
 }
 \keyword{package}

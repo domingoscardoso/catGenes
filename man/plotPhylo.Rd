@@ -15,12 +15,15 @@ plotPhylo(tree = NULL,
           show.tip.label = TRUE,
           size.tip.label = 2,
           fontface.tip.label = "italic",
+          fancy.tip.label = FALSE,
+          abbrev.tip.label = FALSE,
           highlight.taxa = NULL,
           highlight.color = NULL,
           understate.taxa = NULL,
           replace.taxa = NULL,
           prune.taxa = NULL,
           xlim.tree = NULL,
+          hexpand = NULL,
           gene.label = NULL,
           ylim.gene.label = NULL,
           phylogram.side = FALSE,
@@ -67,11 +70,20 @@ the phylogeny. Defaults to TRUE, i.e. the labels are shown.}
 \item{fontface.tip.label}{The font face of text, defaults to 3 (italic), others
 are 1 (plain), 2 (bold), 4 (bold.italic).}
 
+\item{fancy.tip.label}{A logical indicating whether to display tip labels with
+distinct formatting for the taxon name and associated voucher or GenBank
+accession number. Defaults to FALSE, maintaining the labels in the default
+format specified by \code{fontface.tip.label}.}
+
+\item{abbrev.tip.label}{A logical indicating whether to show the tip labels
+on the phylogeny. Defaults to FALSE, i.e. the labels are not abbreviated.}
+
 \item{highlight.taxa}{Define a vector with specific tip labels or the name of
 any taxa (species or genus name) present in the tree to highlight them with
-an specific color; defaults to "black".}
+specific colors; defaults to "black".}
 
-\item{highlight.color}{Color to highlight specific tip labels in the tree.}
+\item{highlight.color}{Color vector to highlight specific tip labels in the
+tree.}
 
 \item{understate.taxa}{Define a vector with specific tip labels or the name of
 any taxa (species or genus name) present in the tree to understate them with
@@ -89,6 +101,8 @@ the corresponding alternative name.}
 \item{prune.taxa}{A vector with specific tip labels to be dropped from the tree.}
 
 \item{xlim.tree}{Set x axis limits specially for tree panel.}
+
+\item{hexpand}{Expand x axis limits by ratio of x axis range.}
 
 \item{gene.label}{A title for the tree; usually a name of an specific gene
 (or set of genes) from which the tree was reconstructed.}
@@ -117,7 +131,9 @@ default is to create a directory named \strong{RESULTS_edited_tree} and the tree
 will be saved within a subfolder named after the current date.}
 
 \item{filename}{Name of the output file to be saved. The default is to
-create a file entitled \strong{tree}.}
+create a file entitled \strong{edited_tree} and the specified \code{layout}. In the
+case of using the default layout, the saved file will be named
+\strong{edited_tree_rectangular}}
 
 \item{format}{A character vector related to the file format of the global
 map to be saved. The default is 'jpg' to save the output in Joint

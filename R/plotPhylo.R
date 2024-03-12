@@ -18,12 +18,15 @@
 #'           show.tip.label = TRUE,
 #'           size.tip.label = 2,
 #'           fontface.tip.label = "italic",
+#'           fancy.tip.label = FALSE,
+#'           abbrev.tip.label = FALSE,
 #'           highlight.taxa = NULL,
 #'           highlight.color = NULL,
 #'           understate.taxa = NULL,
 #'           replace.taxa = NULL,
 #'           prune.taxa = NULL,
 #'           xlim.tree = NULL,
+#'           hexpand = NULL,
 #'           gene.label = NULL,
 #'           ylim.gene.label = NULL,
 #'           phylogram.side = FALSE,
@@ -69,11 +72,20 @@
 #' @param fontface.tip.label The font face of text, defaults to 3 (italic), others
 #' are 1 (plain), 2 (bold), 4 (bold.italic).
 #'
+#' @param fancy.tip.label A logical indicating whether to display tip labels with
+#' distinct formatting for the taxon name and associated voucher or GenBank
+#' accession number. Defaults to FALSE, maintaining the labels in the default
+#' format specified by \code{fontface.tip.label}.
+#'
+#' @param abbrev.tip.label A logical indicating whether to show the tip labels
+#' on the phylogeny. Defaults to FALSE, i.e. the labels are not abbreviated.
+#'
 #' @param highlight.taxa Define a vector with specific tip labels or the name of
 #' any taxa (species or genus name) present in the tree to highlight them with
-#' an specific color; defaults to "black".
+#' specific colors; defaults to "black".
 #'
-#' @param highlight.color Color to highlight specific tip labels in the tree.
+#' @param highlight.color Color vector to highlight specific tip labels in the
+#' tree.
 #'
 #' @param understate.taxa Define a vector with specific tip labels or the name of
 #' any taxa (species or genus name) present in the tree to understate them with
@@ -91,6 +103,8 @@
 #' @param prune.taxa A vector with specific tip labels to be dropped from the tree.
 #'
 #' @param xlim.tree Set x axis limits specially for tree panel.
+#'
+#' @param hexpand Expand x axis limits by ratio of x axis range.
 #'
 #' @param gene.label A title for the tree; usually a name of an specific gene
 #' (or set of genes) from which the tree was reconstructed.
@@ -119,7 +133,9 @@
 #' will be saved within a subfolder named after the current date.
 #'
 #' @param filename Name of the output file to be saved. The default is to
-#' create a file entitled **tree**.
+#' create a file entitled **edited_tree** and the specified \code{layout}. In the
+#' case of using the default layout, the saved file will be named
+#' **edited_tree_rectangular**
 #'
 #' @param format A character vector related to the file format of the global
 #' map to be saved. The default is 'jpg' to save the output in Joint
@@ -174,7 +190,8 @@
 #'           format = "pdf")
 #'}
 #'
-#' @importFrom ggtree ggtree MRCA geom_tiplab geom_hilight xlim_tree geom_text2 geom_point2 geom_treescale geom_tree
+#' @importFrom ggtree ggtree MRCA geom_tiplab geom_hilight xlim_tree geom_text2 geom_point2 geom_treescale geom_tree hexpand td_filter
+#' @importFrom ggtext geom_richtext
 #' @importFrom treeio isTip
 #' @importFrom ggplot2 annotate annotation_custom aes scale_colour_manual ggplotGrob element_rect theme
 #' @importFrom cowplot save_plot
@@ -183,6 +200,8 @@
 #' @importFrom ape Ntip
 #' @importFrom tibble tibble
 #' @importFrom stringr str_extract
+#' @importFrom dplyr mutate
+#' @importFrom glue glue
 #'
 #' @export
 #'
@@ -198,12 +217,15 @@ plotPhylo <- function(tree = NULL,
                       show.tip.label = TRUE,
                       size.tip.label = 2,
                       fontface.tip.label = "italic",
+                      fancy.tip.label = FALSE,
+                      abbrev.tip.label = FALSE,
                       highlight.taxa = NULL,
                       highlight.color = NULL,
                       understate.taxa = NULL,
                       replace.taxa = NULL,
                       prune.taxa = NULL,
                       xlim.tree = NULL,
+                      hexpand = NULL,
                       gene.label = NULL,
                       size.gene.label = 12,
                       ylim.gene.label = NULL,
@@ -223,8 +245,7 @@ plotPhylo <- function(tree = NULL,
 
   if (save) {
     if (is.null(filename)) {
-      filename <- paste0("tree_",
-                         gsub("[/]|[.]", "", paste0(gene.label, collapse = "_")))
+      filename <- paste0("edited_tree_", layout)
     }
 
     foldername <- paste0(dir, "/", format(Sys.time(), "%d%b%Y"))
@@ -270,7 +291,7 @@ plotPhylo <- function(tree = NULL,
     parsi_tree <- NULL
   }
 
-  if (branch.supports) {
+  if (branch.supports & layout != "circular") {
     if (!is.null(add.raxml.tree) |
         !is.null(add.parsi.tree)) {
       # Add support values from different phylogenetic estimation methods
@@ -286,37 +307,6 @@ plotPhylo <- function(tree = NULL,
                                      replace.taxa[i], tree@phylo$tip.label)
       }
     }
-
-    # Color highlight specific tips
-    if (!is.null(highlight.taxa)) {
-      nodes <- grep(paste0(highlight.taxa, collapse = "|"), tree@phylo$tip.label)
-      tree@data$highlight <- NA
-      tree@data$highlight[tree@data$node %in% nodes] <- "highlight_color"
-      tree@data$highlight[is.na(tree@data$highlight)] <- "default_color"
-    }
-
-    # Understate the color of specific tips
-    if (!is.null(understate.taxa)) {
-      nodes <- grep(paste0(understate.taxa, collapse = "|"), tree@phylo$tip.label)
-      tree@data$understate <- NA
-      tree@data$understate[tree@data$node %in% nodes] <- "understated_color"
-      tree@data$understate[is.na(tree@data$understate)] <- "default_color"
-    }
-  }
-
-  if (!is.null(highlight.clade)) {
-    if (inherits(highlight.clade, "character")) {
-      highlight.clade <- list(highlight.clade)
-    }
-    for (i in seq_along(highlight.clade)) {
-      highlight.clade[[i]] <- gsub("_", " ", highlight.clade[[i]])
-    }
-  }
-
-  if (!is.null(gene.label)) {
-    gene.label <- paste0(gene.label, "\n", collapse = "")
-  } else {
-    gene.label <- ""
   }
 
   if (!any(names(tree@data) %in% "prob")) {
@@ -328,6 +318,8 @@ plotPhylo <- function(tree = NULL,
 
   tree@phylo$tip.label <- gsub("_", " ", tree@phylo$tip.label)
 
+  tiplabels <- tree@phylo$tip.label
+
   tree_plot <- ggtree(tree, branch.length = "none", layout = layout,
                       ladderize = TRUE, size = branch.width, ...)
 
@@ -338,8 +330,20 @@ plotPhylo <- function(tree = NULL,
   tree_plot <- tree_plot +
     xlim_tree(xlim.tree)
 
+  if (!is.null(hexpand)) {
+    tree_plot <- tree_plot +
+      ggtree::hexpand(hexpand)
+  }
+
+  # Highlight clades
   if (!is.null(highlight.clade)) {
+    if (inherits(highlight.clade, "character")) {
+      highlight.clade <- list(highlight.clade)
+    }
     for (i in seq_along(highlight.clade)) {
+
+      highlight.clade[[i]] <- gsub("_", " ", highlight.clade[[i]])
+
       tree_plot <- tree_plot +
         geom_hilight(node = ggtree::MRCA(tree, highlight.clade[[i]]),
                      fill = fill.gradient[i], gradient = TRUE,
@@ -348,106 +352,158 @@ plotPhylo <- function(tree = NULL,
     }
   }
 
+  # Add and or change tip labels
   if (show.tip.label) {
-    if (!is.null(highlight.taxa) & is.null(understate.taxa)) {
-      tree_plot <- tree_plot +
-        geom_tiplab(offset = 0.02, size = size.tip.label,
-                    fontface = fontface.tip.label, aes(color=highlight),
-                    show.legend = FALSE, ...) +
-        scale_colour_manual(values = c("black", highlight.color))
-    }
 
-    if (!is.null(understate.taxa) & is.null(highlight.taxa)) {
-      tree_plot <- tree_plot +
-        geom_tiplab(offset = 0.02, size = size.tip.label,
-                    fontface = fontface.tip.label, aes(color=understate),
-                    show.legend = FALSE) +
-        scale_colour_manual(values = c("black", "gray60"))
-    }
+    # Color highlight specific tips
+    if (fancy.tip.label) {
+      # No color highlight specific tip labels and use different sizes for taxa
+      # and associated voucher information
+      tipdata <- .fancy.tiplabels(tree_plot = tree_plot,
+                                  size.tip.label = size.tip.label,
+                                  highlight.taxa = highlight.taxa,
+                                  highlight.color = highlight.color,
+                                  understate.taxa = understate.taxa,
+                                  abbrev.tip.label = abbrev.tip.label)
 
-    if (!is.null(understate.taxa) & !is.null(highlight.taxa)) {
-      tf <- tree_plot$data$understate %in% "understated_color"
-      tree_plot$data$highlight[tf] <- "understated_color"
-      tree_plot <- tree_plot +
-        geom_tiplab(offset = 0.02, size = size.tip.label,
-                    fontface = fontface.tip.label, aes(color=highlight),
-                    show.legend = FALSE) +
-        scale_colour_manual(values = c("black", highlight.color, "gray60"))
-    }
+      tree_plot <- tree_plot %<+% tipdata +
+        ggtext::geom_richtext(data = ggtree::td_filter(isTip),
+                              aes(label = lab), fill = NA, label.color = NA,
+                              hjust = 0, nudge_x = -0.001)
 
-    if (is.null(understate.taxa) & is.null(highlight.taxa)) {
+    } else if (is.null(understate.taxa) & is.null(highlight.taxa)) {
+      # No color highlight for tip labels
       tree_plot <- tree_plot +
         geom_tiplab(offset = 0.02, size = size.tip.label,
                     fontface = fontface.tip.label,
-                    show.legend = FALSE)
+                    show.legend = FALSE, ...)
+
+    } else if (!is.null(highlight.taxa) & is.null(understate.taxa)) {
+      # Color highlight only specific tip labels
+      tipdata <- .col.tiplabels(tiplabels = tiplabels,
+                                highlight.taxa = highlight.taxa,
+                                highlight.color = highlight.color)
+      cols <- c("black", highlight.color)
+
+      tree_plot <- tree_plot %<+% tipdata +
+        geom_tiplab(offset = 0.02, size = 3,
+                    fontface = fontface.tip.label, aes(color = tocolor),
+                    show.legend = FALSE, ...) +
+        scale_colour_manual(values = cols,
+                            breaks = cols, guide = "none")
+
+    } else if (is.null(highlight.taxa) & !is.null(understate.taxa)) {
+      # Color understate specific tip labels
+      tipdata <- .col.tiplabels(tiplabels = tiplabels,
+                                understate.taxa = understate.taxa)
+      cols <- c("black", "gray60")
+
+      tree_plot <- tree_plot %<+% tipdata +
+        geom_tiplab(offset = 0.02, size = 3,
+                    fontface = fontface.tip.label, aes(color = tocolor),
+                    show.legend = FALSE, ...) +
+        scale_colour_manual(values = cols,
+                            breaks = cols, guide = "none")
+
+    } else if (!is.null(highlight.taxa) & !is.null(understate.taxa)) {
+      # Color highlight and understate specific tip labels
+      tipdata <- .col.tiplabels(tiplabels = tiplabels,
+                                highlight.taxa = highlight.taxa,
+                                highlight.color = highlight.color,
+                                understate.taxa = understate.taxa)
+      cols <- c("black", highlight.color, "gray60")
+
+      tree_plot <- tree_plot %<+% tipdata +
+        geom_tiplab(offset = 0.02, size = 3,
+                    fontface = fontface.tip.label, aes(color = tocolor),
+                    show.legend = FALSE, ...) +
+        scale_colour_manual(values = cols,
+                            breaks = cols, guide = "none")
     }
   }
 
   # Add support values below branches
   if (branch.supports) {
-    if (!is.null(add.raxml.tree) |
-        !is.null(add.parsi.tree)) {
-      if (!any(intree@data$prob > 1)) {
-        tree_plot <- tree_plot +
-          geom_text2(aes(subset = !isTip & gsub("[/].*", "", prob) >= 0.7,
-                         label = prob),
-                     size = 3, color = "gray40", hjust = 1.1, vjust = 1.5)
-      } else {
-        tree_plot <- tree_plot +
-          geom_text2(aes(subset = !isTip & gsub("[/].*", "", prob) >= 70,
-                         label = prob),
-                     size = 3, color = "gray40", hjust = 1.1, vjust = 1.5)
-      }
 
-    } else {
-      if (!any(intree@data$prob > 1)) {
-        tree_plot <- tree_plot +
-          geom_text2(aes(subset = !isTip & prob>=0.7 & prob<1,
-                         label = stringr::str_extract(prob, "[[:digit:]][.][[:digit:]][[:digit:]]")),
-                     size = 3, color = "gray40", hjust = 1.5, vjust = 1.5)
-      } else {
-        tree_plot <- tree_plot +
-          geom_text2(aes(subset = !isTip & prob>=70 & prob<100,
-                         label = prob),
-                     size = 3, color = "gray40", hjust = 1.5, vjust = 1.5)
-      }
+    # Add supports as numbers on the phylogeny
+    if (layout != "circular") {
+      if (!is.null(add.raxml.tree) |
+          !is.null(add.parsi.tree)) {
+        if (!any(intree@data$prob > 1)) {
+          tree_plot <- tree_plot +
+            geom_text2(aes(subset = !isTip & gsub("[/].*", "", prob) >= 0.7,
+                           label = prob),
+                       size = 3, color = "gray40", hjust = 1.1, vjust = 1.5)
+        } else {
+          tree_plot <- tree_plot +
+            geom_text2(aes(subset = !isTip & gsub("[/].*", "", prob) >= 70,
+                           label = prob),
+                       size = 3, color = "gray40", hjust = 1.1, vjust = 1.5)
+        }
 
+      } else {
+        if (!any(intree@data$prob > 1)) {
+          tree_plot <- tree_plot +
+            geom_text2(aes(subset = !isTip & prob>=0.7 & prob<1,
+                           label = stringr::str_extract(prob, "[[:digit:]][.][[:digit:]][[:digit:]]")),
+                       size = 3, color = "gray40", hjust = 1.5, vjust = 1.5)
+        } else {
+          tree_plot <- tree_plot +
+            geom_text2(aes(subset = !isTip & prob>=70 & prob<100,
+                           label = prob),
+                       size = 3, color = "gray40", hjust = 1.5, vjust = 1.5)
+        }
+      }
     }
+
+    # Add supports as symbols on the phylogeny
+    if (!any(intree@data$prob > 1)) {
+      tree_plot <- tree_plot +
+        # Add point when support for node is greater than 0.95 pp
+        geom_point2(aes(subset = prob>=1 & isTip == FALSE), size = 3,
+                    shape = ifelse(layout != "circular", 22, 21),
+                    fill = "black", alpha = 0.8, stroke = 0.05) +
+        geom_point2(aes(subset = prob>=0.9 & prob<1), size = 3,
+                    shape = ifelse(layout != "circular", 22, 21),
+                    fill = "#0072b2", alpha = 0.8, stroke = 0.05) +
+        geom_point2(aes(subset = prob>=0.8 & prob<0.9), size = 3,
+                    shape = ifelse(layout != "circular", 22, 21),
+                    fill = "#e69f00", alpha = 0.8, stroke = 0.05) +
+        geom_point2(aes(subset = prob>=0.7 & prob<0.8), size = 3,
+                    shape = ifelse(layout != "circular", 22, 21),
+                    fill = "#009e73", alpha = 0.8, stroke = 0.05)
+    } else {
+      tree_plot <- tree_plot +
+        # Add point when support for node is greater than 0.95 pp
+        geom_point2(aes(subset = prob>=100 & isTip == FALSE), size = 3,
+                    shape = ifelse(layout != "circular", 22, 21),
+                    fill = "black", alpha = 0.8, stroke = 0.05) +
+        geom_point2(aes(subset = prob>=90 & prob<100), size = 3,
+                    shape = ifelse(layout != "circular", 22, 21),
+                    fill = "#0072b2", alpha = 0.8, stroke = 0.05) +
+        geom_point2(aes(subset = prob>=80 & prob<90), size = 3,
+                    shape = ifelse(layout != "circular", 22, 21),
+                    fill = "#e69f00", alpha = 0.8, stroke = 0.05) +
+        geom_point2(aes(subset = prob>=70 & prob<80), size = 3,
+                    shape = ifelse(layout != "circular", 22, 21),
+                    fill = "#009e73", alpha = 0.8, stroke = 0.05)
+    }
+
   }
 
-  if (is.null(ylim.gene.label)) {
-    ylim.gene.label <- (max(tree_plot$data$y)-(max(tree_plot$data$y)*25/100))-10
-  }
+  # Add gene labels
+  if (!is.null(gene.label) & layout != "circular") {
 
-  if (!any(intree@data$prob > 1)) {
+    gene.label <- paste0(gene.label, "\n", collapse = "")
+
+    # Control for position of gene labels
+    if (is.null(ylim.gene.label)) {
+      ylim.gene.label <- (max(tree_plot$data$y)-(max(tree_plot$data$y)*25/100))-10
+    }
+
     tree_plot <- tree_plot +
-      # Add point when support for node is greater than 0.95 posterior probability)
-      geom_point2(aes(subset = prob>=1 & isTip == FALSE), size = 3, shape = 22,
-                  fill = "black", alpha = 0.8, stroke = 0.05) +
-      geom_point2(aes(subset = prob>=0.9 & prob<1), size = 3, shape = 22,
-                  fill = "#0072b2", alpha = 0.8, stroke = 0.05) +
-      geom_point2(aes(subset = prob>=0.8 & prob<0.9), size = 3, shape = 22,
-                  fill = "#e69f00", alpha = 0.8, stroke = 0.05) +
-      geom_point2(aes(subset = prob>=0.7 & prob<0.8), size = 3, shape = 22,
-                  fill = "#009e73", alpha = 0.8, stroke = 0.05)
-  } else {
-    tree_plot <- tree_plot +
-      # Add point when support for node is greater than 0.95 posterior probability)
-      geom_point2(aes(subset = prob>=100 & isTip == FALSE), size = 3, shape = 22,
-                  fill = "black", alpha = 0.8, stroke = 0.05) +
-      geom_point2(aes(subset = prob>=90 & prob<100), size = 3, shape = 22,
-                  fill = "#0072b2", alpha = 0.8, stroke = 0.05) +
-      geom_point2(aes(subset = prob>=80 & prob<90), size = 3, shape = 22,
-                  fill = "#e69f00", alpha = 0.8, stroke = 0.05) +
-      geom_point2(aes(subset = prob>=70 & prob<80), size = 3, shape = 22,
-                  fill = "#009e73", alpha = 0.8, stroke = 0.05)
-  }
-
-  if (!is.null(gene.label)) {
-  tree_plot <- tree_plot +
-    # Add gene labels
-    annotate(geom = "text", x = 1, y = ylim.gene.label, label = gene.label,
-             color = "gray60", size = size.gene.label, fontface = "italic")
+      annotate(geom = "text", x = 1, y = ylim.gene.label, label = gene.label,
+               color = "gray60", size = size.gene.label, fontface = "italic")
   }
 
   # Create phylogram
@@ -473,6 +529,7 @@ plotPhylo <- function(tree = NULL,
       }
     }
 
+    # Add supports as symbols on the phylogram
     if (phylogram.supports) {
       if (!any(intree@data$prob > 1)) {
         phylogram <- phylogram +
@@ -499,6 +556,11 @@ plotPhylo <- function(tree = NULL,
 
     if (is.null(phylogram.height)) phylogram.height = max(tree_plot$data$y)*30/100
 
+    if (abbrev.tip.label & fancy.tip.label == FALSE) {
+      temp <- abbrevGen(tiplabels = fulltree$data$label[fulltree$data$isTip])
+      fulltree$data$label[fulltree$data$isTip] <- temp$abbrev_tiplabels
+    }
+
     fulltree <- tree_plot + ggplot2::annotation_custom(
       ggplot2::ggplotGrob(phylogram),
       xmin = -1,
@@ -508,6 +570,10 @@ plotPhylo <- function(tree = NULL,
 
   } else {
     fulltree <- tree_plot
+    if (abbrev.tip.label) {
+      temp <- abbrevGen(tiplabels = fulltree$data$label[fulltree$data$isTip])
+      fulltree$data$label[fulltree$data$isTip] <- temp$abbrev_tiplabels
+    }
   }
 
   if (save) {
@@ -711,3 +777,144 @@ plotPhylo <- function(tree = NULL,
                        bg = "white")
   }
 }
+
+
+#-------------------------------------------------------------------------------
+# Auxiliary function to get color highlights for different tip labels
+.col.tiplabels <- function(tiplabels = NULL,
+                           highlight.taxa = NULL,
+                           highlight.color = NULL,
+                           understate.taxa = NULL) {
+
+  if (!is.null(highlight.taxa)) {
+    highlight.taxa <- gsub("_", " ", highlight.taxa)
+    tf <- lapply(highlight.taxa, function(x) grepl(paste0(x, collapse = "|"),
+                                                   tiplabels))
+    tipdata_high <- data.frame(tiplabels = tiplabels,
+                               tocolor = NA)
+    for (i in seq_along(tf)) {
+      tipdata_high$tocolor[tf[[i]]] <- highlight.color[i]
+    }
+    tipdata_high$tocolor[is.na(tipdata_high$tocolor)] <- "black"
+  }
+
+  if (!is.null(understate.taxa)) {
+    understate.taxa <- gsub("_", " ", understate.taxa)
+    tf <- grepl(paste0(understate.taxa, collapse = "|"), tiplabels)
+    tipdata_under <- data.frame(tiplabels = tiplabels,
+                                tocolor = NA)
+    tipdata_under$tocolor[tf] <- "gray60"
+    tipdata_under$tocolor[is.na(tipdata_under$tocolor)] <- "black"
+  }
+
+  if (!is.null(highlight.taxa) & is.null(understate.taxa)) {
+    tipdata <- tipdata_high
+  } else if (is.null(highlight.taxa) & !is.null(understate.taxa)) {
+    tipdata <- tipdata_under
+  } else if (!is.null(highlight.taxa) & !is.null(understate.taxa)) {
+    tipdata_high$tocolor[tf] <- "gray60"
+    tipdata <- tipdata_high
+  }
+
+  return(tipdata)
+}
+
+
+#-------------------------------------------------------------------------------
+# Auxiliary function to plot tip labels in Markdown or HTML format
+.fancy.tiplabels <- function (tree_plot = NULL,
+                              size.tip.label = NULL,
+                              highlight.taxa = NULL,
+                              highlight.color = NULL,
+                              understate.taxa = NULL,
+                              abbrev.tip.label = NULL) {
+
+  tiplabels <- tree_plot$data$label[tree_plot$data$isTip]
+
+  df <- splitTips(tiplabels = tiplabels)
+
+  df$size <- paste0(size.tip.label, "pt")
+  df$sizevoucher <- paste0(size.tip.label*(85/100), "pt")
+  df$color <- "black"
+
+  if (!is.null(highlight.taxa) & is.null(understate.taxa)) {
+  tipcols <- .col.tiplabels(tiplabels = tiplabels,
+                            highlight.taxa = highlight.taxa,
+                            highlight.color = highlight.color)
+  df$color <- tipcols$tocolor
+  } else if (is.null(highlight.taxa) & !is.null(understate.taxa)) {
+    tipcols <- .col.tiplabels(tiplabels = tiplabels,
+                              understate.taxa = understate.taxa)
+    df$color <- tipcols$tocolor
+  } else if (!is.null(highlight.taxa) & !is.null(understate.taxa)) {
+    tipcols <- .col.tiplabels(tiplabels = tiplabels,
+                              highlight.taxa = highlight.taxa,
+                              highlight.color = highlight.color,
+                              understate.taxa = understate.taxa)
+    df$color <- tipcols$tocolor
+  }
+
+  if (abbrev.tip.label) {
+    temp <- abbrevGen(tiplabels = df$genus)
+    df$genus <- temp$abbrev_tiplabels
+  }
+
+  if ("doubtID" %in% names(df)) {
+    df$doubtID <- gsub("aff", "aff.", df$doubtID)
+    df$doubtID <- gsub("cf", "cf.", df$doubtID)
+  }
+  tf <- df$species %in% "sp" | grepl("^sp[[:upper:]]$|^sp[[:digit:]]", df$species)
+  if (any(tf)) {
+    df$species[tf] <- gsub("^sp", "sp.", df$species[tf])
+  }
+
+  # https://yulab-smu.top/treedata-book/faq.html
+
+  ntaxa <- names(df)[names(df) %in% c("genus", "doubtID", "species", "infrasp")]
+  nvouc <- names(df)[names(df) %in% c("voucher", "genbank")]
+
+  # Example of the Markdown or HTML to format text
+  # glue("<i style='font-size:15pt'>**{genus} {species}**</i> <span style='font-size:10pt'>{voucher}</span>")
+
+  ntaxa <- paste0("{", ntaxa, "}", collapse = " ")
+  nvouc <- paste0("{", nvouc, "}", collapse = " ")
+  ntaxa <- paste0("<span style='color:{color}'> <i style='font-size:{size}'>**",
+                  ntaxa,
+                  "**</i> <span", collapse = "")
+  nvouc <- paste0("style='font-size:{sizevoucher}'>",
+                  nvouc,
+                  "</span> </span>", collapse = "")
+
+  exp <- paste(ntaxa, nvouc)
+
+  df2 <- dplyr::mutate(df,
+                       lab = glue::glue(exp))
+
+  df2$lab <- gsub("\\sNA\\s", " ", df2$lab)
+  df2$lab <- gsub("[>]NA\\s", ">", df2$lab)
+  df2$lab <- gsub(" NA[*][*]", "**", df2$lab)
+  df2$lab <- gsub("\\sNA[<]", "<", df2$lab)
+
+  tf <- grepl("[>]NA[<]", df2$lab)
+  if (any(tf)) {
+    df2$lab[tf] <- gsub("\\s[<]span\\s.*", "", df2$lab[tf])
+  }
+
+  return(df2)
+}
+
+# Another way to plot multiple fonts but without multiple sizes
+# exp <- ifelse(!n %in% c("voucher", "accession"),
+#               paste0("bolditalic({", n, "})"),
+#               paste0("{", n, "}"))
+# exp <- paste0(exp, collapse = "~")
+# d2 <- dplyr::mutate(d,
+#                     lab = glue::glue("bolditalic({species})~{accession}"))
+# d2 <- dplyr::mutate(d,
+#                     lab = glue::glue(exp))
+# d2$lab <- gsub("[~]bolditalic[(]NA[)]|[~]NA$", "", d2$lab)
+
+# p <- ggtree(Harpalyce_bayes_tree) %<+% d2 +
+#   geom_tiplab(aes(label=lab), parse=T) +
+#   hexpand(1)
+
