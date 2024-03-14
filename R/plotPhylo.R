@@ -370,13 +370,13 @@ plotPhylo <- function(tree = NULL,
           ggtext::geom_richtext(data = ggtree::td_filter(isTip),
                                 aes(angle = angle, label = lab),
                                 fill = NA, label.color = NA,
-                                hjust = 0, nudge_x = -0.001)
+                                hjust = 0, nudge_x = -0.08)
       } else {
         tree_plot <- tree_plot %<+% tipdata +
           ggtext::geom_richtext(data = ggtree::td_filter(isTip),
                                 aes(label = lab),
                                 fill = NA, label.color = NA,
-                                hjust = 0, nudge_x = -0.001)
+                                hjust = 0, nudge_x = -0.08)
       }
 
     } else if (is.null(understate.taxa) & is.null(highlight.taxa)) {
