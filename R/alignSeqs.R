@@ -16,7 +16,7 @@
 #'           format = "NEXUS",
 #'           verbose = TRUE,
 #'           dir = "RESULTS_alignSeqs",
-#'           filename = "aligned_seqs")
+#'           filename = NULL)
 #'
 #' @param filepath Path to the directory where the FASTA-formatted DNA alignments
 #' are stored.
@@ -71,8 +71,7 @@
 #'           gapOpening = "default",
 #'           format = "NEXUS",
 #'           verbose = TRUE,
-#'           dir = "RESULTS_alignSeqs",
-#'           filename = "aligned_seqs")
+#'           dir = "RESULTS_alignSeqs")
 #'}
 #'
 #' @importFrom Biostrings readDNAStringSet

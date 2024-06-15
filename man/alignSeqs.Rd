@@ -10,7 +10,7 @@ alignSeqs(filepath = GenBank_accessions,
           format = "NEXUS",
           verbose = TRUE,
           dir = "RESULTS_alignSeqs",
-          filename = "aligned_seqs")
+          filename = NULL)
 }
 \arguments{
 \item{filepath}{Path to the directory where the FASTA-formatted DNA alignments
@@ -70,8 +70,7 @@ alignSeqs(filepath = folder_name_mined_seqs,
           gapOpening = "default",
           format = "NEXUS",
           verbose = TRUE,
-          dir = "RESULTS_alignSeqs",
-          filename = "aligned_seqs")
+          dir = "RESULTS_alignSeqs")
 }
 
 }
