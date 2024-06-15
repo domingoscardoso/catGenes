@@ -38,12 +38,10 @@
 #' @param verbose Logical, if \code{FALSE}, a message showing each step during
 #' the GenBank search will not be printed in the console in full.
 #'
-#' @param dir Pathway to the computer's directory, where the mined DNA sequences
+#' @param dir The path to the directory where the mined DNA sequences
 #' in a fasta format file will be saved. The default is to create a directory
 #' named **RESULTS_minePlastome** and the sequences will be saved within a
 #' subfolder named after the current date.
-#'
-#' @return A fasta format file of DNA sequences saved on disk.
 #'
 #' @examples
 #' \dontrun{

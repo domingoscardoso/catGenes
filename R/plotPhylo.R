@@ -127,10 +127,10 @@
 #' resolution in the format of dots per inch in the output file. Default is to
 #' create an output with 600 dpi.
 #'
-#' @param dir Pathway to the computer's directory, where the edited tree file will
-#' be saved provided that the argument \code{save} is set up in \code{TRUE}. The
-#' default is to create a directory named **RESULTS_edited_tree** and the tree
-#' will be saved within a subfolder named after the current date.
+#' @param dir The path to the directory where the edited tree file will be saved
+#' provided that the argument \code{save} is set up in \code{TRUE}. The default
+#' is to create a directory named **RESULTS_edited_tree** and the tree will be
+#' saved within a subfolder named after the current date.
 #'
 #' @param filename Name of the output file to be saved. The default is to
 #' create a file entitled **edited_tree** and the specified \code{layout}. In the

@@ -24,16 +24,16 @@ available in GenBank.}
 dataframe corresponding to each gene, where the GenBank accession numbers are
 listed.}
 
-\item{as.character}{a logical controlling whether to return the sequences as
+\item{as.character}{A logical controlling whether to return the sequences as
 an object of class "DNAbin" (the default).}
 
 \item{verbose}{Logical, if \code{FALSE}, a message showing each step during
 the GenBank search will not be printed in the console in full.}
 
-\item{save}{Logical, if \code{TRUE}, the edited tree will be saved on disk.}
+\item{save}{Logical, if \code{TRUE}, the mined sequences will be saved on disk.}
 
-\item{dir}{Pathway to the computer's directory, where the mined DNA sequences
-in a fasta format file will be saved provided that the argument \code{save}
+\item{dir}{The path to the directory where the mined DNA sequences in a
+fasta format file will be saved provided that the argument \code{save}
 is set up in \code{TRUE}. The default is to create a directory named
 \strong{RESULTS_mineSeq} and the sequences will be saved within a subfolder named
 after the current date.}
