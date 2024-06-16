@@ -90,13 +90,30 @@ alignSeqs <- function(filepath = NULL,
 
   fasta_files <- list.files(filepath)
 
+  if (length(fasta_files) == 0) {
+    stop(paste0("There is no DNA alignment in the directory.\n",
+                "Make sure you have provided a correct filepath.\n\n"),
+         "Find help also at DBOSLab-UFBA\n",
+         "(Domingos Cardoso; cardosobot@gmail.com)")
+  }
+
+  temp <- readLines(paste0(filepath, "/", fasta_files[1]))
+  if (strsplit(temp[1], '')[[1]][1] != ">") {
+    stop(paste0("reading FASTA file... ",
+                fasta_files[1], ":\n",
+                '">"', " expected at beginning of line 1.\n\n"),
+                "Make sure input DNA sequences are in FASTA format.\n\n",
+                "Find help also at DBOSLab-UFBA\n",
+                "(Domingos Cardoso; cardosobot@gmail.com)")
+  }
+
   if (!is.null(filename)) {
     name_files <- filename
   } else {
     name_files <- gsub(".*_|[.]fasta", "", fasta_files)
   }
 
-  # Create folder to save the aligned DNA sequences
+  # Create folder to save the aligned DNA sequences ####
   foldername <- paste0(dir, "/", format(Sys.time(), "%d%b%Y"))
   if (!dir.exists(dir)) {
     dir.create(dir)
@@ -105,7 +122,7 @@ alignSeqs <- function(filepath = NULL,
     dir.create(foldername)
   }
 
-  # Align all DNA matrices automatically and save them in the directory
+  # Align all DNA matrices automatically and save them in the directory ####
   for (i in seq_along(fasta_files)) {
 
     mySequences <- suppressWarnings(Biostrings::readDNAStringSet(paste0(filepath,

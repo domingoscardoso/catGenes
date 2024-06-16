@@ -70,7 +70,7 @@ dropSeq <- function(...,
 
   datset <- .namedlist(...)
 
-  # Removing sequences for a dataset already passed through the catmultGenes
+  # Removing sequences for a dataset already passed through the catmultGenes ####
   if (names(datset[[1]][[1]])[1] == "species" &
       names(datset[[1]][[1]])[2] == "sequence") {
 
@@ -94,7 +94,7 @@ dropSeq <- function(...,
                            aff = aff,
                            infraspp = infraspp)
 
-      # Adjusting species labels when they have cf. or aff.
+      # Adjusting species labels when they have cf. or aff. ####
       # Adjusting species names with infraspecific taxa
       datset_temp <- .adjustnames(datset_temp,
                                   cf = cf,
@@ -103,7 +103,7 @@ dropSeq <- function(...,
     }
 
 
-    # Keeping the species column in just the first dataset.
+    # Keeping the species column in just the first dataset ####
     for (i in 2:numberdatset) {
       datset_temp[[i]] <- data.frame(sequences=datset_temp[[i]][,2])
     }
@@ -120,7 +120,7 @@ dropSeq <- function(...,
 
     datset_temp <- cbind(ex_species, ex_datset)
 
-    # Get number of missing data "N" and "?" in each sequence.
+    # Get number of missing data "N" and "?" in each sequence ####
     missdata <- vector()
     missdataN <- vector()
     misstotal <- vector()
@@ -129,7 +129,7 @@ dropSeq <- function(...,
       missdataN[i] <- length(stringr::str_extract_all(datset_temp$sequence[i], "N", simplify = FALSE)[[1]])
       misstotal[i] <- missdata[i] + missdataN[i]
     }
-    # Adding the total number of missing char in each sequence into a newly
+    # Adding the total number of missing char in each sequence into a newly ####
     # created column in both the temp dataset and each individual gene dataset.
     datset_temp <- tibble::add_column(datset_temp, missites = misstotal, .after = "species")
     for (i in seq_along(datset)) {
@@ -152,8 +152,10 @@ dropSeq <- function(...,
       datset_orig[[i]] <- tibble::add_column(datset_orig[[i]], species_temp = datset_tempB$species, .after = "species")
     }
 
-    # For each duplicated species with seqs that have the same length, keep just one of them.
-    # Do this for both the temp gene dataset and then in a loop for each individual gene dataset.
+    # For each duplicated species with seqs that have the same length, ####
+    # keep just one of them.
+    # Do this for both the temp gene dataset and then in a loop for each
+    # individual gene dataset.
     datset_temp <- datset_temp[duplicated(datset_temp[,c("species_temp","missites")],
                                           fromLast = FALSE) == FALSE,]
     multispp <- c(duplicated(datset_temp[,"species_temp"], fromLast = TRUE) |
@@ -165,12 +167,12 @@ dropSeq <- function(...,
                                             fromLast = FALSE) == FALSE,]
       datset[[i]][["duplicate"]] <- multispp
       datset_orig[[i]] <- datset_orig[[i]][duplicated(datset_orig[[i]][,c("species_temp","missites")],
-                                            fromLast = FALSE) == FALSE,]
+                                                      fromLast = FALSE) == FALSE,]
       datset_orig[[i]][["duplicate"]] <- multispp
     }
 
-    # Removing the smaller seqs in duplicated species, from both the temp dataset and
-    # each of the individual gene dataset
+    # Removing the smaller seqs in duplicated species, from both the temp ####
+    # dataset and each of the individual gene dataset.
     for (i in unique(datset_temp$species_temp)) {
       tokeep <- vector()
       tokeep <- datset_temp$species_temp == i & datset_temp$missites == min(datset_temp$missites[datset_temp$species_temp == i])
@@ -226,8 +228,8 @@ dropSeq <- function(...,
     }
 
 
-    ############################################################################
-    # Replacing missing seqs in any gene
+    #___________________________________________________________________________
+    # Replacing missing sequences in any gene ####
     missdata <- list()
     for (j in seq_along(datset)){
       for (i in seq_along(datset[[j]][["sequence"]])){
@@ -244,7 +246,7 @@ dropSeq <- function(...,
       datset_orig[[j]] <- tibble::add_column(datset_orig[[j]], missites = unlist(missdata), .after = "species")
     }
 
-    # Droping smaller duplicated seqs and empty seqs
+    # Droping smaller duplicated seqs and empty sequences ####
     for (i in seq_along(datset_orig)) {
       multispp <- list()
       multispp[[i]] <- c(duplicated(datset_orig[[i]][,"species"], fromLast = TRUE) |
@@ -254,11 +256,11 @@ dropSeq <- function(...,
       datset_orig[[i]] <- tibble::add_column(datset_orig[[i]], species_temp = datset_orig[[i]][,"species"], .after = "species")
     }
 
-    # Arranging by species name each dataframe inside the list
+    # Arranging by species name each dataframe inside the list ####
     datset_orig <- lapply(datset_orig, function(x) x[order(x$species),])
 
 
-    ## Deleting duplicated accessions
+    # Deleting duplicated accessions ####
     for (i in seq_along(datset_orig)) {
       multispp <- vector()
       datset_orig[[i]] <- datset_orig[[i]][duplicated(datset_orig[[i]][,c("species_temp","missites")],
@@ -286,7 +288,7 @@ dropSeq <- function(...,
       datset_orig[[j]] <- datset_orig[[j]] %>% filter(duplicate == FALSE)
     }
 
-    # Inserting the missing seqs
+    # Inserting the missing sequences ####
     misseqs <- list()
     seqs <- list()
     misspp <- list()
@@ -323,16 +325,18 @@ dropSeq <- function(...,
 
   } else {
 
-    # Droping duplicated sequences for one or a list of DNA alignments with difering
-    # number of sequences. This code below will work despite having run the function catmultGenes
+    # Droping duplicated sequences for one or a list of DNA alignments ####
+    # with differing number of sequences.
+    # This code below will work despite having run the function catmultGenes
 
     numberdatset <- length(datset)
 
     if (numberdatset == 0) {
-      stop("You must provide at least ONE gene dataset in the following format:
-         datset=gene1, gene2, gene3... or a list of genes in a single vector
-         Find help also at DBOSLab-UFBA
-         (Domingos Cardoso; cardosobot@gmail.com)")
+      stop("You must provide at least ONE gene dataset in the following format:\n",
+           "datset = gene1, gene2, gene3...\n",
+           "or a list of genes in a single vector.\n\n",
+           "Find help also at DBOSLab-UFBA\n",
+           "(Domingos Cardoso; cardosobot@gmail.com)")
     }
 
     if (numberdatset == 1 & !any(lapply(datset[[1]], class) == "list")) {
@@ -349,7 +353,7 @@ dropSeq <- function(...,
       names(datset) <- temp_name
 
     } else {
-      # Tranforming the original matrix as read by ape into list of dataframes
+      # Transforming the original matrix as read by ape into list of dataframes ####
       datset <- datset[[1]]
 
       cf <- lapply(datset, function(x) grepl("_cf_", names(x)))
@@ -365,7 +369,7 @@ dropSeq <- function(...,
                              aff = aff,
                              infraspp = infraspp)
 
-        # Adjusting species labels when they have cf or aff
+        # Adjusting species labels when they have cf. or aff. ####
         # Adjusting species names with infraspecific taxa
         datset <- .adjustnames(datset,
                                cf = cf,
@@ -386,7 +390,7 @@ dropSeq <- function(...,
         datset[[j]] <- list(datset[[j]])
 
       }
-      # Extracting the dataframes inside a list of list
+      # Extracting the dataframes inside a list of list ####
       datset_temp <- list()
       for (i in seq_along(datset)) {
         datset_temp[[i]] <- datset[[i]][[1]]
@@ -395,7 +399,7 @@ dropSeq <- function(...,
       names(datset) <- temp_name
     }
 
-    # Get number of missing data "N" and "?" in each sequence
+    # Get number of missing data "N" and "?" in each sequence ####
     missdata <- list()
     missdataN <- list()
     #misstotal <- list()
@@ -406,12 +410,13 @@ dropSeq <- function(...,
         missdataN[i] <- length(stringr::str_extract_all(datset[[j]][["sequence"]][i], "N", simplify = FALSE)[[1]])
         misstotal_temp[i] <- missdata[[i]] + missdataN[[i]]
       }
-      # Adding the total number of missing char in each sequence into a newly created column
+      # Adding the total number of missing char in each sequence into ####
+      # a newly created column.
       # misstotal[[j]] <- unlist(misstotal_temp)
       datset[[j]] <- tibble::add_column(datset[[j]], missites = unlist(misstotal_temp), .after = "species")
     }
 
-    # Applying the function shortaxlabels to each dataframe inside the list
+    # Applying the function shortaxlabels to each dataframe inside the list ####
     datset_temp <- lapply(datset, .shortaxlabels)
 
     for (i in seq_along(datset)) {
@@ -423,22 +428,26 @@ dropSeq <- function(...,
       datset[[i]] <- tibble::add_column(datset[[i]], species_temp = datset_temp[[i]][,"species"], .after = "species")
     }
 
-    # Arranging by species name each dataframe inside the list
+    # Arranging by species name each dataframe inside the list ####
     datset <- lapply(datset, function(x) x[order(x$species),])
     #datset <- lapply(datset, function(x) dplyr::arrange(x, x[,1]))
 
 
-    ## Deleting duplicate accessions when there is only one gene dataset
+    # Deleting duplicate accessions when there is only one gene dataset ####
     # Get first how many sequences are there in each dataset
     nseqs <- as.vector(sapply(datset, nrow))
     if (length(datset) == 1 | length(datset) > 1 & !equalnumb(nseqs)) {
-
-      cat("For each species duplicated with multiple accessions...", sep = "\n")
-      cat("Smaller sequences (with more missing data) were dropped.", sep = "\n")
-
+      if (verbose) {
+        message("For each species duplicated with multiple accessions...\n",
+                "Smaller sequences (with more missing data) were dropped.\n")
+      }
       if (length(datset) > 1 & !equalnumb(nseqs)) {
-        cat("NOTE: You have entered more than one DNA alignment, each with differing number of sequences or taxa!", sep = "\n")
-        cat("Consider running the concatenating function catmultGenes first, before using dropSeq", sep = "\n")
+        if (verbose) {
+          message("NOTE: You have entered more than one DNA alignment,\n",
+                  "each with differing number of sequences or taxa!\n",
+                  "Consider running the concatenating function catmultGenes first,\n",
+                  "before using dropSeq.\n")
+        }
       }
 
       for (i in seq_along(datset)) {
@@ -462,7 +471,7 @@ dropSeq <- function(...,
     }
 
     if (any(unlist(cf))|any(unlist(aff))|any(unlist(infraspp))) {
-      # Putting back the names under cf. and aff.
+      # Putting back the names under cf. and aff. ####
       # Adjusting names with infraspecific taxa
       datset <- .namesback(datset,
                            cf = cf,

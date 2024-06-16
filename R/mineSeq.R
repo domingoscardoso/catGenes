@@ -29,7 +29,7 @@
 #'
 #' @param as.character A logical controlling whether to return the sequences as
 #' an object of class "DNAbin" (the default).
-
+#'
 #' @param verbose Logical, if \code{FALSE}, a message showing each step during
 #' the GenBank search will not be printed in the console in full.
 #'

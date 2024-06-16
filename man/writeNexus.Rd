@@ -10,7 +10,8 @@ writeNexus(x,
            genomics = FALSE,
            interleave = TRUE,
            bayesblock = TRUE,
-           endgaps.to.miss = TRUE)
+           endgaps.to.miss = TRUE,
+           verbose = TRUE)
 }
 \arguments{
 \item{x}{The object to be written, a list of equally-sized dataframes containing
@@ -37,6 +38,9 @@ individual gene partition.}
 
 \item{endgaps.to.miss}{Logical, if \code{FALSE} the function will not replace
 terminal GAPs into missing character (?).}
+
+\item{verbose}{Logical, if \code{FALSE}, a message showing each step during
+writing of the NEXUS file will not be printed in the console in full.}
 }
 \description{
 Writes a final concatenated (non-interleaved) or combined (interleaved)

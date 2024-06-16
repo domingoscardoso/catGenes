@@ -2,8 +2,8 @@
 # Author: Domingos Cardoso
 
 
-#-------------------------------------------------------------------------------
-# Auxiliary function to create a named list of the input individual genes
+#_______________________________________________________________________________
+# Auxiliary function to create a named list of the input individual genes ####
 # Used inside the functions catfullGenes, catmultGenes, writeNexus, and writePhylip
 
 .namedlist <- function(...) {
@@ -12,9 +12,10 @@
 }
 
 
-#-------------------------------------------------------------------------------
-# Auxiliary function to delete all identifiers of the DNA sequence (e.g. collector
-# and GenBank numbers) so as to maintain just the scientific names
+#_______________________________________________________________________________
+# Auxiliary function to delete all identifiers of the DNA sequence  ####
+# (e.g. collector and GenBank numbers) so as to maintain just the scientific
+# names.
 # Used inside the function catfullGenes
 
 .shortaxlabels <- function(x) {
@@ -26,9 +27,10 @@
 }
 
 
-#-------------------------------------------------------------------------------
-# Auxiliary function to delete all extra identifiers of the DNA sequence (e.g. GenBank numbers)
-# so as to maintain just the scientific names and associated collector number
+#_______________________________________________________________________________
+# Auxiliary function to delete all extra identifiers of the DNA sequence ####
+# (e.g. GenBank numbers) so as to maintain just the scientific names and
+# associated collector number.
 # Used inside the function catmultGenes
 
 .shortaxlabelsmult <- function(x) {
@@ -40,8 +42,8 @@
 }
 
 
-#-------------------------------------------------------------------------------
-# Auxiliary function to obtain the intersection of a list of vectors
+#_______________________________________________________________________________
+# Auxiliary function to obtain the intersection of a list of vectors ####
 # Used inside the function delGaps
 
 .intersectAll <- function(...) {
@@ -61,9 +63,9 @@
 }
 
 
-#-------------------------------------------------------------------------------
-# Auxiliary function for returning TRUE if all values are equal and FALSE if it
-# contains different values.
+#_______________________________________________________________________________
+# Auxiliary function for returning TRUE if all values are equal and FALSE ####
+# if it contains different values.
 # Used inside the function dropSeq
 
 equalnumb <- function(x) {
@@ -75,8 +77,8 @@ equalnumb <- function(x) {
 }
 
 
-#-------------------------------------------------------------------------------
-# Auxiliary function to adjust names with cf., aff, or infraspecific taxa
+#_______________________________________________________________________________
+# Auxiliary function to adjust names with cf., aff, or infraspecific taxa ####
 # Used inside catmultGenes, catfullGenes and dropSeq functions
 
 .adjustnames <- function(datset,
@@ -149,10 +151,10 @@ equalnumb <- function(x) {
 }
 
 
-#-------------------------------------------------------------------------------
-# Secondary function to reverse and complement the DNA sequence originally
+#_______________________________________________________________________________
+# Secondary function to reverse and complement the DNA sequence originally ####
 # Adjust names of taxon, voucher and genbank accessions
-# # Used inside mineSeq, minePlastome and mineMitochondrion functions
+# Used inside mineSeq, minePlastome and mineMitochondrion functions
 
 .tax_voucher_adjust <- function (inputdf = NULL,
                                  taxon = NULL,
@@ -223,8 +225,8 @@ equalnumb <- function(x) {
 }
 
 
-#-------------------------------------------------------------------------------
-# Secondary function to reverse and complement the DNA sequence originally
+#_______________________________________________________________________________
+# Secondary function to reverse and complement the DNA sequence originally ####
 # retrieved from GenBank.
 # Adpated from the original function at:
 # https://medium.com/biosyntax/reverse-and-find-complement-sequence-in-r-baf33847aab1
@@ -251,8 +253,8 @@ seq_revcompl <- function(seq) {
 }
 
 
-#-------------------------------------------------------------------------------
-# Auxiliary function to adjust names with cf., aff, or infraspecific taxa
+#_______________________________________________________________________________
+# Auxiliary function to adjust names with cf., aff, or infraspecific taxa ####
 # Used inside catmultGenes and dropSeq functions
 
 .namesback <- function(datset,
@@ -373,8 +375,9 @@ seq_revcompl <- function(seq) {
 }
 
 
-#-------------------------------------------------------------------------------
-# Auxiliary function to get original names with cf., aff., or infraspecific taxa
+#_______________________________________________________________________________
+# Auxiliary function to get original names with cf., aff. ####
+# or infraspecific taxa.
 # Used inside catmultGenes, catfullGenes and dropSeq functions
 
 .namesTorename <- function(datset,
@@ -477,11 +480,11 @@ seq_revcompl <- function(seq) {
 }
 
 
-#-------------------------------------------------------------------------------
-# Auxiliary function to insert a scale of character number for each individual
-# alignment in the interleaved-formatted concatenated matrix, as well as for the
-# entire non-interleaved concatenated matrix, and the associated gene names where
-# they starts along the matrix.
+#_______________________________________________________________________________
+# Auxiliary function to insert a scale of character number ####
+# for each individual alignment in the interleaved-formatted concatenated matrix,
+# as well as for the entire non-interleaved concatenated matrix, and the
+# associated gene names where they starts along the matrix.
 # Used inside the function writeNexus
 
 .charScale <- function(x,
@@ -642,8 +645,8 @@ seq_revcompl <- function(seq) {
 }
 
 
-#-------------------------------------------------------------------------------
-# Auxiliary functions to replace terminal GAPs into missing character (?)
+#_______________________________________________________________________________
+# Auxiliary functions to replace terminal GAPs into missing character (?) ####
 # Used inside the functions nexusdframe writeNexus
 
 .replace_terminal_gaps <- function (x) {

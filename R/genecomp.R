@@ -11,14 +11,14 @@
                       loop = NULL,
                       shortaxlabel = TRUE,
                       missdata = TRUE,
-                      outgroup = NULL) {
+                      outgroup = NULL,
+                      verbose = NULL) {
 
   twogenes <- list(...)
   names(twogenes)[1] <- names(data[1])
   gene_1 <- twogenes[[1]]
   names(twogenes)[2] <- names(data[loop+1])
   gene_2 <- twogenes[[2]]
-
 
   if (inherits(gene_1, "list")) {
     for (i in 1:length(gene_1)) {
@@ -47,21 +47,25 @@
   gene_1_temp <- .shortaxlabels(gene_1)
   if (any(duplicated(gene_1_temp$species))) {
     stop(paste("The", names(twogenes[1])), " dataset has species duplicated, with multiple accessions.\n",
-         "Please use the function catmultGenes.\n",
-         "Find help also at DBOSLab-UFBA (Domingos Cardoso; cardosobot@gmail.com)")
+         "Please use the function catmultGenes.\n\n",
+         "Find help also at DBOSLab-UFBA\n",
+         "(Domingos Cardoso; cardosobot@gmail.com)")
   }
 
   gene_2_temp <- .shortaxlabels(gene_2)
   if (any(duplicated(gene_2_temp$species))) {
     stop(paste("The", names(twogenes[2])), " dataset has species duplicated, with multiple accessions.\n",
-         "Please use the function catmultGenes, which deals with duplicated species.\n",
-         "Find help also at DBOSLab-UFBA (Domingos Cardoso; cardosobot@gmail.com)")
+         "Please use the function catmultGenes, which deals with duplicated species.\n\n",
+         "Find help also at DBOSLab-UFBA\n",
+         "(Domingos Cardoso; cardosobot@gmail.com)")
   }
 
   if (missdata) {
-    cat(cat("Gene comparison will include missing data into",
-            names(twogenes[1])), "", sep = "\n")
-    cat("PS. The resulting dataset will have sequences sorted alphabetically by taxon.", "", sep = "\n")
+    if (verbose) {
+      message(paste0("Gene comparison will include missing data into ",
+                     names(twogenes[1])), "\n")
+      message("PS. The resulting dataset will have sequences sorted alphabetically by taxon.", "\n")
+    }
     taxlabs <- gsub("(_[^_]+)_.*", "\\1", gene_1$species)
     gene_2 <- .shortaxlabels(gene_2)
     unmatching_seqs <- gene_2[which(!gene_2$species %in% taxlabs), ]
@@ -78,11 +82,16 @@
   }
 
   if (missdata == FALSE) {
-    cat(cat("Gene comparison will exclude sequence from", names(twogenes[1]),
-            "that is not in", names(twogenes[2])), "", sep = "\n")
+    if (verbose) {
+      message(paste0("Gene comparison will exclude sequence from ",
+                     names(twogenes[1]), " that is not in ",
+                     names(twogenes[2])), ".\n")
+    }
     if (is.null(outgroup)) {
-      cat(cat("You have not provided any outgroup"), "", sep = "\n")
-      cat(cat("Fully matching the genes..."), "", sep = "\n")
+      if (verbose) {
+        message("You have not provided any outgroup", ".\n")
+        message("Fully matching the genes...", ".\n")
+      }
       taxlabs <- gsub("(_[^_]+)_.*", "\\1", gene_1$species)
       gene_1 <- .shortaxlabels(gene_1)
       gene_2 <- .shortaxlabels(gene_2)
@@ -97,9 +106,10 @@
     }
 
     if (is.null(outgroup) == FALSE) {
-      cat(cat("You have provided outgroup:",
-              paste0(outgroup, collapse = ", ")), "", sep = "\n")
-
+      if (verbose) {
+        message("You have provided outgroup:\n",
+                paste0(outgroup, collapse = ", "), "\n")
+      }
       # Finding outgroup in each dataset
       gene_1 <- .shortaxlabels(gene_1)
       length_1 <- length(which(gene_1$species %in% outgroup))
@@ -108,12 +118,14 @@
 
       if (length_1 == 0 & length_2 == 0) {
         stop("OUTGROUP must match exactly with any taxon name in the DNA alignments.\n",
-             "Make sure outgroups are as VECTOR or LIST provided they are more than one.\n",
-             "Find help also at DBOSLab-UFBA (Domingos Cardoso; cardosobot@gmail.com)")
+             "Make sure outgroups are as VECTOR or LIST provided they are more than one.\n\n",
+             "Find help also at DBOSLab-UFBA\n",
+             "(Domingos Cardoso; cardosobot@gmail.com)")
       }
-
-      cat(cat("Outgroup is present in", names(twogenes[1]), "or", names(twogenes[2])), "", sep = "\n")
-
+      if (verbose) {
+        message(paste0("Outgroup is present in ", names(twogenes[1]), " or ",
+                       names(twogenes[2])), "\n")
+      }
       if (length_1 >= 1) {
         # Saving outgroup from gene_1
         gene_1 <- .shortaxlabels(gene_1)
@@ -156,12 +168,16 @@
 
       # Combining outgroup sequences
       if (length_2 < 1) {
-        cat(cat("Outgroup sequences only in", names(twogenes[1])), "", sep = "\n")
+        if (verbose) {
+          message(paste0("Outgroup sequences only in ", names(twogenes[1])), "\n")
+        }
         seqsout <- dplyr::arrange(seqs_1_out, species)
       }
 
       if (length_1 < 1) {
-        cat(cat("Outgroup sequences only in", names(twogenes[2])), "", sep = "\n")
+        if (verbose) {
+          message(paste0("Outgroup sequences only in", names(twogenes[2])), "\n")
+        }
         seqs_2_out <- .shortaxlabels(seqs_2_out)
         seqs_2_out$sequence <- NA
         seqs_2_out$sequence <- ifelse(is.na(seqs_2_out$sequence),
@@ -172,7 +188,9 @@
       }
 
       if (length_1 >= 1 & length_2 >= 1) {
-        cat(cat("Outgroup sequences in both genes", ".", sep = ""), "", sep = "\n")
+        if (verbose) {
+          message("Outgroup sequences in both genes.", "\n")
+        }
         taxlabsout <- gsub("(_[^_]+)_.*", "\\1", seqs_1_out$species)
         seqs_2_out <- .shortaxlabels(seqs_2_out)
         unmatching_seqsout <- seqs_2_out[which(!seqs_2_out$species %in% taxlabsout), ]
@@ -188,8 +206,9 @@
                                       as.character(seqs_1_out$sequence))
         seqsout <- dplyr::arrange(seqs_1_out, species)
       }
-
-      cat(cat("Fully matching sequences..."), "", sep = "\n")
+      if (verbose) {
+        message("Fully matching sequences...\n")
+      }
       # Combining outgroup with ingroup sequences
       gene_1 <- rbind(seqsout, seqs_1_in)
 
@@ -197,13 +216,16 @@
   }
 
   if (shortaxlabel) {
-    cat("Shortening taxon labels...", "", sep = "\n")
+    if (verbose) {
+      message("Shortening taxon labels...\n")
+    }
     gene_1 <- .shortaxlabels(gene_1)
   }
 
-  cat(cat("Match between", names(twogenes[1]),
-          "and", names(twogenes[2]), "is finished!"), "",
-      sep = "\n")
+  if (verbose) {
+    message(paste0("Match between ", names(twogenes[1]),
+                   " and ", names(twogenes[2]), " is finished!"), "\n")
+  }
 
   return(gene_1)
 }

@@ -7,7 +7,8 @@
 catfullGenes(\dots,
              shortaxlabel = TRUE,
              missdata = TRUE,
-             outgroup = NULL)
+             outgroup = NULL,
+             verbose = TRUE)
 }
 \arguments{
 \item{...}{a list of NEXUS-formatted gene datasets as read by ape's \code{\link{read.nexus.data}}
@@ -22,6 +23,9 @@ that lacks a complete sequence for one of the input gene dataset.}
 \item{outgroup}{Provide the outgroup taxa (either one taxon name or a vector of
 multiple taxon names that are present in all individual gene dataset) if the
 concatenation is intended to maintain incomplete taxa (taxa missing the sequence for a particular gene).}
+
+\item{verbose}{Logical, if \code{FALSE}, a message showing each step during
+gene matching search will not be printed in the console in full.}
 }
 \value{
 A list of dataframes of the equally-sized gene dataset, where the first column "species"
@@ -40,13 +44,15 @@ data(Gaya)
 catdf <- catfullGenes(Gaya,
                       shortaxlabel = TRUE,
                       missdata = FALSE,
-                      outgroup = "Abutilon_costicalyx")
+                      outgroup = "Abutilon_costicalyx",
+                      verbose = TRUE)
 
 outgrouptaxa <- c("Abutilon_costicalyx", "Abutilon_itatiaie")
 catdf <- catfullGenes(Gaya,
                       shortaxlabel = TRUE,
                       missdata = FALSE,
-                      outgroup = outgrouptaxa)
+                      outgroup = outgrouptaxa,
+                      verbose = TRUE)
 }
 
 }

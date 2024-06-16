@@ -21,7 +21,8 @@
 #'              maxspp = TRUE,
 #'              shortaxlabel = TRUE,
 #'              missdata = TRUE,
-#'              outgroup = NULL)
+#'              outgroup = NULL,
+#'              verbose = TRUE)
 #'
 #' @param ... a list of NEXUS-formatted gene datasets as read by ape's \code{\link{read.nexus.data}}
 #' or at least two individually ape-read objects of NEXUS-formatted gene datasets.
@@ -44,6 +45,9 @@
 #' multiple taxon names that are present in all individual gene dataset) if the
 #' concatenation is intended to maintain incomplete taxa (taxa missing the sequence for a particular gene).
 #'
+#' @param verbose Logical, if \code{FALSE}, a message showing each step during
+#' gene matching search will not be printed in the console in full.
+#'
 #' @return A list of dataframes of the equally-sized gene dataset, where the first column "species"
 #' include all taxon names and the second column "sequence" include the DNA sequence for the corresponding taxon.
 #'
@@ -59,14 +63,16 @@
 #' catdf <- catmultGenes(Luetzelburgia,
 #'                       maxspp = TRUE,
 #'                       shortaxlabel = TRUE,
-#'                       missdata = TRUE)
+#'                       missdata = TRUE,
+#'                       verbose = TRUE)
 #'
 #' outgrouptaxa <- c("Vataireopsis_araroba", "Vataireopsis_speciosa")
 #' catdf <- catmultGenes(Luetzelburgia,
 #'                       maxspp = FALSE,
 #'                       shortaxlabel = TRUE,
 #'                       missdata = FALSE,
-#'                       outgroup = outgrouptaxa)
+#'                       outgroup = outgrouptaxa,
+#'                       verbose = TRUE)
 #' }
 #'
 #' @importFrom dplyr arrange
@@ -78,9 +84,10 @@ catmultGenes <- function(...,
                          maxspp = TRUE,
                          shortaxlabel = TRUE,
                          missdata = TRUE,
-                         outgroup = NULL) {
+                         outgroup = NULL,
+                         verbose = TRUE) {
 
-  # Loading all individual genes into a single named list
+  # Loading all individual genes into a single named list ####
 
   datset <- .namedlist(...)
 
@@ -91,10 +98,11 @@ catmultGenes <- function(...,
   numberdatset <- length(datset)
 
   if (numberdatset == 1 | numberdatset == 0) {
-    stop("You must provide at least TWO gene datasets in the following format:
-         datset=gene1, gene2, gene3... or a list of genes in a single vector
-         Find help also at DBOSLab-UFBA
-         (Domingos Cardoso; cardosobot@gmail.com)")
+    stop(paste0("You must provide at least TWO gene datasets in the following format:\n",
+                "datset = gene1, gene2, gene3...\n",
+                "or a list of genes in a single vector.\n\n"),
+         "Find help also at DBOSLab-UFBA\n",
+         "(Domingos Cardoso; cardosobot@gmail.com)")
   }
 
   spp_labels_original <- lapply(datset, function(x) names(x))
@@ -115,13 +123,13 @@ catmultGenes <- function(...,
     nn <- unique(n[grepl(paste(gsub("(_[^_]+).*", "\\1", infranames[g]), collapse = "|"), n)])
 
     if (any(g)) {
-    stop("The following accessions are identified at infraspecific level:\n",
-         ni,
-         "\n\nBUT there are accessions of the same species that are NOT as well fully identified with infraspecific taxa...\n",
-         nn,
-         "\n\nYou should do so!\n
-         Find help also at DBOSLab-UFBA
-         (Domingos Cardoso; cardosobot@gmail.com)")
+      stop(paste0("The following accessions are identified at infraspecific level:\n",
+                  ni,
+                  "\n\nBUT there are accessions of the same species that are NOT as well fully identified with infraspecific taxa...\n",
+                  nn,
+                  "\n\nYou should do so!\n\n"),
+           "Find help also at DBOSLab-UFBA\n",
+           "(Domingos Cardoso; cardosobot@gmail.com)")
     }
   }
 
@@ -133,7 +141,7 @@ catmultGenes <- function(...,
                          aff = aff,
                          infraspp = infraspp)
 
-    # Adjusting species labels when they have cf. or aff.
+    # Adjusting species labels when they have cf. or aff. ####
     # Adjusting species names with infraspecific taxa just for the cross-gene comparisons
     datset <- .adjustnames(datset,
                            cf = cf,
@@ -142,19 +150,19 @@ catmultGenes <- function(...,
   }
 
 
-  # Stoping if the dataset do not include multiple accession
+  # Stoping if the dataset do not include multiple accession ####
   spp_temp <- lapply(datset, function(x) gsub("(_[^_]+)_.*", "\\1", names(x)))
   dup <- lapply(spp_temp, function(x) duplicated(x))
 
   if (!any(unlist(dup))) {
-
-    stop("The loaded alignments do not include species duplicated, with multiple accessions.\n",
-         "Please use the function catfullGenes.\n",
-         "Find help also at DBOSLab-UFBA (Domingos Cardoso; cardosobot@gmail.com)")
+    stop(paste0("The loaded alignments do not include species duplicated, with multiple accessions.\n",
+                "Please use the function catfullGenes.\n\n"),
+         "Find help also at DBOSLab-UFBA\n",
+         "(Domingos Cardoso; cardosobot@gmail.com)")
   }
 
 
-  # Shortening the taxon labels (keeping just the scientific names) in species
+  # Shortening the taxon labels (keeping just the scientific names) in species ####
   # not duplicated with multiple accessions so as to maximize the taxon coverage in
   # the final concatenatenated dataset.
   if (maxspp) {
@@ -169,7 +177,7 @@ catmultGenes <- function(...,
     for (i in seq_along(datset_temp)) {
 
       dup_temp[[i]] <- c(duplicated(names(datset_temp[[i]]), fromLast = TRUE) |
-                          duplicated(names(datset_temp[[i]])))
+                           duplicated(names(datset_temp[[i]])))
       dup_spp[[i]] <- unique(names(datset_temp[[i]])[dup_temp[[i]]])
       nondup_spp_temp[[i]] <- names(datset_temp[[i]])[!dup_temp[[i]]]
     }
@@ -190,47 +198,53 @@ catmultGenes <- function(...,
   }
 
 
-  # Now running genecompmult function in a for loop
-
-  cat(cat("Matching first the gene", names(datset[1]), "with:",
-          paste0(names(datset[-1]), "...", collapse = " ")), "", sep = "\n")
-
+  # Now running genecompmult function in a for loop ####
+  if (verbose) {
+    message(paste0("Matching first the gene ", names(datset[1]), " with:\n",
+                   paste0(names(datset[-1]), "...", collapse = " ")), "\n")
+  }
   # Creating an empty list to fill in during the loop iteration
   datsetcomp <- list()
   for (i in 1:(numberdatset-1)) {
-
-    if (numberdatset == 2) {
-      cat(cat("Gene comparison will exclude sequence set from", names(datset[1]),
-              "that is not in", paste0(names(datset[i+1]), "...", collapse = " ")), "",
-          sep = "\n")
-    } else {
-      cat(cat("Gene comparison will exclude sequence set from", names(datset[1]),
-              "that is not in",
-              paste0(names(datset[i+1]), "...", collapse = " ")), "", sep = "\n")
+    if (verbose) {
+      if (numberdatset == 2) {
+        message(paste0("Gene comparison will exclude sequence set from ",
+                       names(datset[1]), " that is not in ",
+                       paste0(names(datset[i+1]), "...", collapse = " ")), "\n")
+      } else {
+        message(paste0("Gene comparison will exclude sequence set from ",
+                       names(datset[1]), " that is not in ",
+                       paste0(names(datset[i+1]), "...", collapse = " ")), "\n")
+      }
     }
-    # Looping over genes
+    # Looping over genes ####
     datsetcomp[[1]] <- .genecompmult(datset[[1]], datset[[i+1]],
                                      data = datset,
                                      loop = i,
                                      shortaxlabel = shortaxlabel,
                                      missdata = missdata,
-                                     outgroup = outgroup)
+                                     outgroup = outgroup,
+                                     verbose = verbose)
     datset[[1]] <- datsetcomp[[1]]
   }
 
-  cat(cat("Matched result of gene", names(datset[1]),
-          "is again matched with",
-          paste0(names(datset[-1]), "...", collapse = " ")), "", sep = "\n")
+  if (verbose) {
+    message(paste0("Matched result of gene",
+                   names(datset[1]), " is again matched with:\n",
+                   paste0(names(datset[-1]), "...", collapse = " ")), "\n")
+  }
 
   for (i in 2:numberdatset) {
-
-    if (numberdatset == 2) {
-      cat(cat("Gene comparison will exclude sequence set from", names(datset[i]),
-              "that is not in", paste0(names(datset[1]), "...", collapse=" ")), "", sep = "\n")
-    } else {
-      cat(cat("Gene comparison will exclude sequence set from", names(datset[i]),
-              "that is not in the matched result of",
-              paste0(names(datset[1]), "...", collapse=" ")), "", sep = "\n")
+    if (verbose) {
+      if (numberdatset == 2) {
+        message(paste0("Gene comparison will exclude sequence set from ",
+                       names(datset[i]), " that is not in ",
+                       paste0(names(datset[1]), "...", collapse=" ")), "\n")
+      } else {
+        message(paste0("Gene comparison will exclude sequence set from ",
+                       names(datset[i]), " that is not in the matched result of ",
+                       paste0(names(datset[1]), "...", collapse=" ")), "\n")
+      }
     }
     # Looping over genes
     datset[[i]] <- .genecompmult(datset[[i]], datset[[1]],
@@ -238,13 +252,13 @@ catmultGenes <- function(...,
                                  loop = i-1,
                                  shortaxlabel = shortaxlabel,
                                  missdata = missdata,
-                                 outgroup = outgroup)
-
+                                 outgroup = outgroup,
+                                 verbose = verbose)
   }
 
 
   if (any(unlist(cf))|any(unlist(aff))|any(unlist(infraspp))) {
-    # Putting back the names under cf. and aff.
+    # Putting back the names under cf. and aff. ####
     # Adjusting names with infraspecific taxa
     datset <- .namesback(datset,
                          cf = cf,
@@ -257,7 +271,7 @@ catmultGenes <- function(...,
                          multispp = TRUE)
   }
 
-  #This is to insert original names back when using the arguments
+  # This is to insert original names back when using the arguments ####
   # maxspp = T & shortaxlabel = F
   if (maxspp == T & shortaxlabel == F) {
     for (i in seq_along(datset)) {
@@ -267,7 +281,7 @@ catmultGenes <- function(...,
         for (j in seq_along(ntemp)) {
           n <- spp_labels_original[[i]][grepl(ntemp[j], spp_labels_original[[i]])]
           if (length(n) > 1) {
-             n <- n[gsub("(_[^_]+)_.*", "\\1", n) %in% ntemp[j]]
+            n <- n[gsub("(_[^_]+)_.*", "\\1", n) %in% ntemp[j]]
           }
           if (length(n) == 0) {
             ntemp[j] <- ntemp[j]
@@ -281,14 +295,15 @@ catmultGenes <- function(...,
   }
 
 
-  # Removing empty, gap-only columns
+  # Removing empty, gap-only columns ####
   if (missdata == FALSE) {
     datset <- .delGaps(datset)
   }
 
-
-  cat("Full gene match is finished!", "",
-      sep="\n")
+  if (verbose) {
+    message("Full gene match is finished!", "",
+            sep="\n")
+  }
 
   return(datset)
 }
