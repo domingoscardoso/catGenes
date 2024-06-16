@@ -9,7 +9,8 @@ writePhylip(x,
            file,
            genomics = FALSE,
            catalignments = TRUE,
-           partitionfile = TRUE)
+           partitionfile = TRUE,
+           verbose = TRUE)
 }
 \arguments{
 \item{x}{The object to be written, a list of equally-sized dataframes containing
@@ -21,10 +22,10 @@ open for writing.}
 
 \item{genomics}{Logical, if \code{TRUE}, it will be helpful in phylogenomics
 where all provided species identifiers (e.g. collector number and GenBank
-acession numbers) will always be kept in the resultant concatenated dataset.}
+accession numbers) will always be kept in the resultant concatenated dataset.}
 
-\item{catalignments}{Logical, if \code{FALSE} will not write the concatednated
-matrix of DNA alinments. Better to keep it always as \code{TRUE}.}
+\item{catalignments}{Logical, if \code{FALSE} will not write the concatenated
+matrix of DNA alignments. Better to keep it always as \code{TRUE}.}
 
 \item{partitionfile}{Logical, if \code{FALSE} will not write the associated
 text-formatted partition file for the RAxML concatenated phylogenetic analysis
@@ -52,7 +53,8 @@ writePhylip(df,
             file = "filename.phy",
             genomics = FALSE,
             catalignments = TRUE,
-            partitionfile = TRUE)
+            partitionfile = TRUE,
+            verbose = TRUE)
 }
 
 }
@@ -62,5 +64,5 @@ writePhylip(df,
 \code{\link{catmultGenes}}
 }
 \author{
-Domingos Cardoso, Quezia Cavalcante, and Bruno Vilela
+Domingos Cardoso
 }

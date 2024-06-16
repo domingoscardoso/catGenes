@@ -1,7 +1,7 @@
 #' Writes a concatenated (non-interleaved) or combined (interleaved) NEXUS-formatted
 #' dataset for multigene phylogenetic analysis
 #'
-#' @author Domingos Cardoso, Quezia Cavalcante, and Bruno Vilela
+#' @author Domingos Cardoso
 #'
 #' @description Writes a final concatenated (non-interleaved) or combined (interleaved)
 #' NEXUS-formatted dataset for multigene phylogenetic analysis, from the resulting list
@@ -28,8 +28,8 @@
 #'
 #' @param genomics Logical, if \code{TRUE}, it will be helpful in phylogenomics
 #' where all provided species identifiers (e.g. collector number and GenBank
-#' acession numbers) will be kept in the resultant concatenated dataset. This means
-#' the concatenated dataset will never be written with species including brackted
+#' accession numbers) will be kept in the resultant concatenated dataset. This means
+#' the concatenated dataset will never be written with species including bracketed
 #' comments for identifiers that differ because at least one species is missing
 #' data for any gene.
 #'
@@ -37,8 +37,9 @@
 #' without individually distinguishing each gene dataset as separate named partitions
 #' within the complete matrix.
 #'
-#' @param bayesblock Logical, if \code{FALSE} will not create a preliminary Mr.Bayes
-#' command block including the charsets showing the number of characters of each
+#' @param bayesblock Logical, if \code{FALSE} will not create a preliminary
+#' [MrBayes](https://nbisweden.github.io/MrBayes/index.html) command block
+#' including the charsets showing the number of characters of each
 #' individual gene partition.
 #'
 #' @param endgaps.to.miss Logical, if \code{FALSE} the function will not replace
@@ -394,7 +395,7 @@ writeNexus <- function(x, file,
 
   if (bayesblock) {
     if (verbose) {
-      message("Building a preliminary Mr.Bayes command block...\n")
+      message("Building a preliminary MrBayes command block...\n")
     }
     genes[nrow(genes) + 2, ] <- ""
     mrbayes <- paste("begin mrbayes;",
