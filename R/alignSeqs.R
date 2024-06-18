@@ -54,16 +54,15 @@
 #'
 #' data(GenBank_accessions)
 #'
-# 'dir <- "RESULTS_mineSeq"
 # 'todaydate <- format(Sys.time(), "%d%b%Y")
-#' folder_name_mined_seqs <- paste0(dir, "/", todaydate)
+#' folder_name_mined_seqs <- paste0("RESULTS_mineSeq/", todaydate)
 #'
 #' mineSeq(inputdf = GenBank_accessions,
 #'         gb.colnames = c("ETS", "ITS", "matK", "petBpetD", "trnTF", "Xdh"),
 #'         as.character = FALSE,
 #'         verbose = TRUE,
 #'         save = TRUE,
-#'         dir = dir,
+#'         dir = "RESULTS_mineSeq",
 #'         filename = "GenBanK_seqs")
 #'
 #' alignSeqs(filepath = folder_name_mined_seqs,
