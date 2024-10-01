@@ -17,7 +17,7 @@ mineSeq(inputdf = NULL,
 column, the voucher information in 'Voucher' column, and the GenBank accessions
 for each genes in separate columns named by the corresponding gene. If the
 columns 'Species' and 'Voucher' are not provided in the dataframe, then the
-function with consider the taxonomy of the retrieved sequences as originally
+function will consider the taxonomy of the retrieved sequences as originally
 available in GenBank.}
 
 \item{gb.colnames}{A vector with column names within the \code{inputdf}
