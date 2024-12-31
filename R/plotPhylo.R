@@ -436,12 +436,12 @@ plotPhylo <- function(tree = NULL,
           !is.null(add.parsi.tree)) {
         if (!any(intree@data$prob > 1)) {
           tree_plot <- tree_plot +
-            geom_text2(aes(subset = !isTip & gsub("[/].*", "", prob) >= 0.7,
+            geom_text2(aes(subset = !isTip & gsub("[/].*", "", prob) >= 0.5,
                            label = prob),
                        size = 3, color = "gray40", hjust = 1.1, vjust = 1.5)
         } else {
           tree_plot <- tree_plot +
-            geom_text2(aes(subset = !isTip & gsub("[/].*", "", prob) >= 70,
+            geom_text2(aes(subset = !isTip & gsub("[/].*", "", prob) >= 50,
                            label = prob),
                        size = 3, color = "gray40", hjust = 1.1, vjust = 1.5)
         }
@@ -449,12 +449,12 @@ plotPhylo <- function(tree = NULL,
       } else {
         if (!any(intree@data$prob > 1)) {
           tree_plot <- tree_plot +
-            geom_text2(aes(subset = !isTip & prob>=0.7 & prob<1,
+            geom_text2(aes(subset = !isTip & prob>=0.5 & prob<1,
                            label = stringr::str_extract(prob, "[[:digit:]][.][[:digit:]][[:digit:]]")),
                        size = 3, color = "gray40", hjust = 1.5, vjust = 1.5)
         } else {
           tree_plot <- tree_plot +
-            geom_text2(aes(subset = !isTip & prob>=70 & prob<100,
+            geom_text2(aes(subset = !isTip & prob>=50 & prob<100,
                            label = prob),
                        size = 3, color = "gray40", hjust = 1.5, vjust = 1.5)
         }
@@ -566,6 +566,10 @@ plotPhylo <- function(tree = NULL,
       fulltree$data$label[fulltree$data$isTip] <- temp$abbrev_tiplabels
     }
 
+    # Remove duplicated tree layers
+    tree_plot <- .remove_tree_layers(tree_plot)
+    phylogram <- .remove_tree_layers(phylogram)
+
     fulltree <- tree_plot + ggplot2::annotation_custom(
       ggplot2::ggplotGrob(phylogram),
       xmin = -1,
@@ -574,6 +578,8 @@ plotPhylo <- function(tree = NULL,
       ymax = max(tree_plot$data$y)-(max(tree_plot$data$y)*1/100))
 
   } else {
+    # Remove duplicated tree layers
+    tree_plot <- .remove_tree_layers(tree_plot)
     fulltree <- tree_plot
     if (abbrev.tip.label) {
       temp <- abbrevGen(tiplabels = fulltree$data$label[fulltree$data$isTip])
@@ -785,6 +791,23 @@ plotPhylo <- function(tree = NULL,
 
 
 #-------------------------------------------------------------------------------
+# Auxiliary function to remove duplicated tree layers
+
+.remove_tree_layers <- function(tree_plot_obj) {
+  tf <- grepl("stat_tree", names(tree_plot_obj[["layers"]]))
+  if (length(which(tf)) >= 4) {
+    layers <- names(tree_plot_obj[["layers"]])[tf]
+    n_layers <- length(layers)
+    layers_to_del <- head(layers, n_layers-2)
+    for (i in seq_along(layers_to_del)) {
+      tree_plot_obj[["layers"]][[layers_to_del[i]]] <- NULL
+    }
+  }
+  return(tree_plot_obj)
+}
+
+
+#-------------------------------------------------------------------------------
 # Auxiliary function to get color highlights for different tip labels
 .col.tiplabels <- function(tiplabels = NULL,
                            highlight.taxa = NULL,
@@ -869,7 +892,7 @@ plotPhylo <- function(tree = NULL,
   df <- splitTips(tiplabels = tiplabels)
 
   df$size <- paste0(size.tip.label, "pt")
-  df$sizevoucher <- paste0(size.tip.label*(85/100), "pt")
+  df$sizevoucher <- paste0(size.tip.label*(75/100), "pt")
   df$color <- "black"
 
   if (!is.null(highlight.taxa) & is.null(understate.taxa)) {
