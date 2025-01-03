@@ -519,10 +519,6 @@ plotPhylo <- function(tree = NULL,
         plot.background = element_rect(fill = "transparent", color = NA),
       )
 
-    phylogram <- phylogram +
-      geom_treescale(x = 0, y = max(phylogram$data$y)/1.1, color = "gray60",
-                     fontsize = 3, linesize = 0.5, offset = 1)
-
     if (!is.null(highlight.clade)) {
       for (i in seq_along(highlight.clade)) {
         phylogram <- phylogram +
@@ -558,6 +554,10 @@ plotPhylo <- function(tree = NULL,
                       fill = "#009e73", alpha = 0.8, stroke = 0.05)
       }
     }
+
+    phylogram <- phylogram +
+      geom_treescale(x = 0, y = max(phylogram$data$y)/1.1, color = "gray60",
+                     fontsize = 3, linesize = 0.5, offset = 1)
 
     if (is.null(phylogram.height)) phylogram.height = max(tree_plot$data$y)*30/100
 
@@ -794,7 +794,7 @@ plotPhylo <- function(tree = NULL,
 # Auxiliary function to remove duplicated tree layers
 
 .remove_tree_layers <- function(tree_plot_obj) {
-  tf <- grepl("stat_tree", names(tree_plot_obj[["layers"]]))
+  tf <- grepl("stat_tree$|stat_tree[.][.][.]", names(tree_plot_obj[["layers"]]))
   if (length(which(tf)) >= 4) {
     layers <- names(tree_plot_obj[["layers"]])[tf]
     n_layers <- length(layers)
