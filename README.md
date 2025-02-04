@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# catGenes
+# catGenes <img src="man/figures/catGenes_hex_sticker.png" align="right" alt="" width="120" />
 
 <!-- badges: start -->
 <!-- badges: end -->
@@ -230,51 +230,6 @@ names(Vataireoids) <- gsub("[.].*", "", names(Vataireoids))
 catdf <- catfullGenes(Vataireoids,
                       shortaxlabel = TRUE,
                       missdata = TRUE)
-#> Matching first the gene ETS with: ITS... matK...
-#> 
-#> Gene comparison will exclude sequence set from ETS that is not in ITS...
-#> 
-#> Gene comparison will include missing data into ETS
-#> 
-#> PS. The resulting dataset will have sequences sorted alphabetically by taxon.
-#> 
-#> Shortening taxon labels...
-#> 
-#> Match between ETS and ITS is finished!
-#> 
-#> Gene comparison will exclude sequence set from ETS that is not in matK...
-#> 
-#> Gene comparison will include missing data into ETS
-#> 
-#> PS. The resulting dataset will have sequences sorted alphabetically by taxon.
-#> 
-#> Shortening taxon labels...
-#> 
-#> Match between ETS and matK is finished!
-#> 
-#> Matched result of gene ETS is again matched with ITS... matK...
-#> 
-#> Gene comparison will exclude sequence set from ITS that is not in the matched result of ETS...
-#> 
-#> Gene comparison will include missing data into ETS
-#> 
-#> PS. The resulting dataset will have sequences sorted alphabetically by taxon.
-#> 
-#> Shortening taxon labels...
-#> 
-#> Match between ETS and ITS is finished!
-#> 
-#> Gene comparison will exclude sequence set from matK that is not in the matched result of ETS...
-#> 
-#> Gene comparison will include missing data into ETS
-#> 
-#> PS. The resulting dataset will have sequences sorted alphabetically by taxon.
-#> 
-#> Shortening taxon labels...
-#> 
-#> Match between ETS and matK is finished!
-#> 
-#> Full gene match is finished!
 ```
 
 ### *Writing the concatenated matrix in NEXUS format*
@@ -292,23 +247,6 @@ writeNexus(catdf,
            genomics = FALSE,
            interleave = TRUE,
            bayesblock = TRUE)
-#> You are combining the following gene datasets:
-#> 
-#> ETS, ITS, matK
-#> 
-#> Total number of datasets: 3
-#> 
-#> Your final dataset will have these DIMENSIONS:
-#> 
-#> NCHAR=3125; [ETS=426 + ITS=830 + matK=1869]
-#> 
-#> NTAX=33
-#> 
-#> Combining genes as interleave...
-#> 
-#> Building a preliminary Mr.Bayes command block...
-#> 
-#> Gene concatenation is finished!
 ```
 
 See below a screenshot of the beggining of the NEXUS-formatted
@@ -363,19 +301,6 @@ writePhylip(catdf,
             genomics = FALSE,
             catalignments = TRUE,
             partitionfile = TRUE)
-#> You are combining the following gene datasets:
-#> 
-#> ETS, ITS, matK
-#> 
-#> Total number of datasets: 3
-#> 
-#> Your phylip-formatted concantenated dataset will have the following DIMENSIONS:
-#> 
-#> 33 TAXA
-#> 3125 CHARACTERS
-#> Concatenating the genes...
-#> 
-#> Gene concatenation is finished!
 ```
 
 See below a screenshot of the PHYLIP-formatted concatenated matrix:
