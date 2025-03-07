@@ -263,6 +263,12 @@ plotPhylo <- function(tree = NULL,
     names(tree@data)[1] = "prob"
   }
 
+  # I have added the following code for the examples of input pruned trees with
+  # treeio's function droptip
+  if (any(is.na(tree@data$prob))) {
+    tree@data$prob[is.na(tree@data$prob)] = 0
+  }
+
   intree <- tree
 
   if (!is.null(prune.taxa)) {
