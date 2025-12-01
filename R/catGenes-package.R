@@ -52,7 +52,7 @@
 #' combining multiple DNA alignments for multigene analysis in phylogenetics and
 #' phylogenomics.
 #'
-#' @import dplyr magrittr tidyr stringr R.utils rmarkdown ape shiny shinydashboard shinyjs tibble stats genbankr ggtree ggtext ggplot2 cowplot phangorn phytools flora glue
+#' @import dplyr magrittr tidyr stringr R.utils rmarkdown ape shiny shinydashboard shinyjs tibble stats ggtree ggtext ggplot2 cowplot phangorn phytools flora glue
 #'
 "_PACKAGE"
 
