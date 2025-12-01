@@ -84,8 +84,9 @@ nexusdframe <- function(x, file,
 
   ncolumns <- length(x)
   if (ncolumns == 1) {
-    stop("You must provide a two-column-sized data.frame containing the taxon names and DNA sequences
-          Find help also at DBOSLab-UFBA (Domingos Cardoso; cardosobot@gmail.com)")
+    stop("You must provide a two-column-sized data.frame containing the taxon names and DNA sequences.\n\n",
+         "Find help also with:\n",
+         "Domingos Cardoso (JBRJ; cardosobot@gmail.com")
   }
 
   if (names(x)[1] != "species" | names(x)[2] != "sequence") {

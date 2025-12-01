@@ -80,8 +80,8 @@ catfullGenes <- function(...,
     stop(paste0("You must provide at least TWO gene datasets in the following format:\n",
                 "datset = gene1, gene2, gene3...\n",
                 "or a list of genes in a single vector.\n\n"),
-         "Find help also at DBOSLab-UFBA\n",
-         "(Domingos Cardoso; cardosobot@gmail.com)")
+         "Find help also with:\n",
+         "Domingos Cardoso (JBRJ; cardosobot@gmail.com")
   }
 
 

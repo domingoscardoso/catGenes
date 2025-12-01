@@ -99,8 +99,8 @@
       if (length_1 == 0 & length_2 == 0) {
         stop("OUTGROUP must match exactly with any taxon name in the DNA alignments.\n",
              "Make sure outgroups are as VECTOR or LIST provided they are more than one.\n\n",
-             "Find help also at DBOSLab-UFBA\n",
-             "(Domingos Cardoso; cardosobot@gmail.com)")
+             "Find help also with:\n",
+             "Domingos Cardoso (JBRJ; cardosobot@gmail.com")
       }
       if (verbose) {
         message(paste0("Outgroup is present in ", names(twogenes[1]), " or ",

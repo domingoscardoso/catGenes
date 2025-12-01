@@ -48,8 +48,8 @@
   if (any(duplicated(gene_1_temp$species))) {
     stop(paste("The", names(twogenes[1])), " dataset has species duplicated, with multiple accessions.\n",
          "Please use the function catmultGenes.\n\n",
-         "Find help also at DBOSLab-UFBA\n",
-         "(Domingos Cardoso; cardosobot@gmail.com)")
+         "Find help also with:\n",
+         "Domingos Cardoso (JBRJ; cardosobot@gmail.com")
   }
 
   gene_2_temp <- .shortaxlabels(gene_2)
