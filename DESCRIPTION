@@ -29,6 +29,7 @@ Imports:
     phytools,
     msa,
     Biostrings,
+    geneviewer,
     flora,
     glue
 License: MIT + file LICENSE

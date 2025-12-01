@@ -228,15 +228,20 @@ equalnumb <- function(x) {
 #_______________________________________________________________________________
 # Secondary function to reverse and complement the DNA sequence originally ####
 # retrieved from GenBank.
-# Adpated from the original function at:
+# Adapated from the original function at:
 # https://medium.com/biosyntax/reverse-and-find-complement-sequence-in-r-baf33847aab1
 
 # Used inside the function minePlastome
 
-seq_revcompl <- function(seq) {
+.seq_revcompl <- function(seq, strand) {
 
   alphabets <- strsplit(seq, split = "")[[1]]
-  seq <- rev(alphabets)
+
+  if (strand %in% "complement") {
+    seq <- toupper(rev(alphabets))
+  } else {
+    seq <- toupper(alphabets)
+  }
 
   # Check if there's "T" in the sequence
   RNA <- Reduce(`|`, seq == "U")
