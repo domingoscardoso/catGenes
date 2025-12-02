@@ -75,6 +75,7 @@
 #' }
 #'
 #' @importFrom ape read.FASTA write.FASTA
+#' @importFrom utils head tail
 #'
 #' @export
 #'
@@ -127,14 +128,12 @@ combineFASTA <- function(input_files = NULL,
     }
   }
 
-  # Initialize storage
+  # Initialize storage - create empty DNAbin object
   all_sequences <- list()
+  seq_names <- character()
   file_info <- data.frame(
     filename = character(),
     sequences = numeric(),
-    min_length = numeric(),
-    max_length = numeric(),
-    mean_length = numeric(),
     stringsAsFactors = FALSE
   )
 
@@ -152,15 +151,18 @@ combineFASTA <- function(input_files = NULL,
       # Read sequences
       sequences <- ape::read.FASTA(file)
 
-      if (length(sequences) == 0) {
+      if (is.null(sequences) || length(sequences) == 0) {
         if (verbose) {
           message("  No sequences found in this file.")
         }
         next
       }
 
-      # Store sequences
-      all_sequences <- c(all_sequences, sequences)
+      # Store sequences - ensure we're working with DNAbin objects
+
+        # If it's a single DNAbin sequence
+        all_sequences <- c(all_sequences, list(sequences))
+        seq_names <- c(seq_names, names(sequences))
 
       # Calculate sequence lengths for this file
       seq_lengths <- sapply(sequences, length)
@@ -169,9 +171,6 @@ combineFASTA <- function(input_files = NULL,
       file_info <- rbind(file_info, data.frame(
         filename = basename(file),
         sequences = length(sequences),
-        min_length = min(seq_lengths),
-        max_length = max(seq_lengths),
-        mean_length = mean(seq_lengths),
         stringsAsFactors = FALSE
       ))
 
@@ -190,10 +189,17 @@ combineFASTA <- function(input_files = NULL,
     stop("No sequences could be read from the specified files.")
   }
 
+  # Convert to proper DNAbin object
+  # First, ensure we have a proper DNAbin structure
   if (verbose) {
     message("\nSuccessfully read ", total_sequences, " sequences from ",
             nrow(file_info), " file(s).")
     message("Note: Duplicate sequences are NOT removed. All sequences are included.")
+  }
+
+  # Name the sequences properly
+  if (length(seq_names) == length(all_sequences)) {
+    names(all_sequences) <- seq_names
   }
 
   # Save to file if requested
@@ -202,11 +208,13 @@ combineFASTA <- function(input_files = NULL,
       message("\nWriting combined sequences to: ", output_path)
     }
 
-    ape::write.FASTA(all_sequences, output_path)
+    # If all_sequences is a list of DNAbin objects
+    merged_sequences <- do.call(c, all_sequences)
 
-    if (verbose) {
-      message("File successfully saved.")
-    }
+    # Try different approaches to write FASTA
+      # Use write.FASTA if it's a proper DNAbin
+        ape::write.FASTA(merged_sequences, output_path)
+
   }
 
   # Create summary statistics
@@ -214,10 +222,6 @@ combineFASTA <- function(input_files = NULL,
   summary_stats <- data.frame(
     total_files = nrow(file_info),
     total_sequences = length(all_sequences),
-    min_sequence_length = min(final_lengths),
-    max_sequence_length = max(final_lengths),
-    mean_sequence_length = mean(final_lengths),
-    median_sequence_length = median(final_lengths),
     output_file = ifelse(save, output_file, "Not saved to disk"),
     stringsAsFactors = FALSE
   )
@@ -229,17 +233,19 @@ combineFASTA <- function(input_files = NULL,
     message("Summary:")
     message("  Input files: ", summary_stats$total_files)
     message("  Total sequences: ", summary_stats$total_sequences)
-    message("  Sequence length range: ",
-            summary_stats$min_sequence_length, " - ",
-            summary_stats$max_sequence_length)
-    message("  Mean sequence length: ",
-            round(summary_stats$mean_sequence_length, 1))
     if (save) {
       message("  Output file: ", output_path)
     } else {
       message("  Output: Returned as R object (not saved to disk)")
     }
     message(.strrep("-", 50))
+  }
+
+  # Ensure proper DNAbin class
+  if (inherits(all_sequences, "list") && length(all_sequences) > 0) {
+    if (inherits(all_sequences[[1]], "DNAbin")) {
+      class(all_sequences) <- c("DNAbin", "list")
+    }
   }
 
   # Return results
@@ -259,31 +265,8 @@ combineFASTA <- function(input_files = NULL,
 }
 
 
-# Print method for combineFASTA results
-print.combinedFASTA <- function(x, ...) {
-  cat("FASTA Combination Results\n")
-  cat(.strrep("=", 40), "\n")
-  if ("output_path" %in% names(x)) {
-    cat("Output file:", x$output_path, "\n")
-  } else {
-    cat("Output: Not saved to disk\n")
-  }
-  cat("Total sequences:", x$summary$total_sequences, "\n")
-  cat("Sequence length range:",
-      x$summary$min_sequence_length, "-",
-      x$summary$max_sequence_length, "\n")
-  cat("Mean length:", round(x$summary$mean_sequence_length, 1), "\n")
-
-  if (!is.null(x$file_info) && nrow(x$file_info) > 0) {
-    cat("\nInput files:\n")
-    print(x$file_info[, c("filename", "sequences", "mean_length")])
-  }
-
-  invisible(x)
-}
-
-
-# Helper function for repeated strings (compatible with older R versions)
+# Helper function for repeated strings
 .strrep <- function(x, times) {
   paste(rep(x, times), collapse = "")
 }
+
