@@ -1,33 +1,34 @@
-#' Read and download targeted loci from plastome sequences in GenBank
+#' Read and download targeted loci from mitochondrial genomes in GenBank
 #'
 #' @author Domingos Cardoso
 #'
 #' @description A function built on the [rentrez](https://docs.ropensci.org/rentrez/)
 #' and [geneviewer](https://nvelden.github.io/geneviewer/)
 #' packages, designed to establish a connection with the GenBank database, donwload,
-#' and parse plastomes. This function downloads plastome sequences using provided
-#' accession numbers, extracting and formatting any specified targeted loci, and
-#' finally writing them in a fasta file format.
+#' and parse mitochondrial genomes. This function downloads mitochondrial sequences
+#' using provided accession numbers, extracting and formatting any specified targeted
+#' loci, and finally writing them in a fasta file format.
 #'
 #' @usage
-#' minePlastome(genbank = NULL,
-#'              taxon = NULL,
-#'              voucher = NULL,
-#'              CDS = TRUE,
-#'              genes = NULL,
-#'              rm_gb_files = FALSE,
-#'              verbose = TRUE,
-#'              dir = "RESULTS_minePlastome")
+#' mineMitochondrion(genbank = NULL,
+#'                   taxon = NULL,
+#'                   voucher = NULL,
+#'                   CDS = TRUE,
+#'                   genes = NULL,
+#'                   rm_gb_files = FALSE,
+#'                   verbose = TRUE,
+#'                   dir = "RESULTS_mineMitochondrion")
 #'
 #' @param genbank A vector comprising the GenBank accession numbers specifically
-#' corresponding to the plastome sequence targeted for locus mining.
+#' corresponding to the mitochondrial genome targeted for locus mining.
 #'
-#' @param taxon A vector containing the taxon name linked to the plastome sequence.
-#' In the absence of this information, the function will default to the existing
-#' nomenclature linked to the plastome, as originally provided in GenBank.
+#' @param taxon A vector containing the taxon name linked to the mitochondrial
+#' genome. In the absence of this information, the function will default to the
+#' existing nomenclature linked to the mitochondrial genome, as originally
+#' provided in GenBank.
 #'
 #' @param voucher A vector containing relevant voucher information linked to the
-#' plastome sequence. If this information is supplied, the function will promptly
+#' mitochondrial genome. If this information is supplied, the function will promptly
 #' append it immediately following the taxon name of the downloaded targeted
 #' sequence.
 #'
@@ -44,30 +45,23 @@
 #' @param verbose Logical, if \code{FALSE}, a message showing each step during
 #' the GenBank search will not be printed in the console in full.
 #'
-#' @param dir The path to the directory where the mined DNA sequences
-#' in a fasta format file will be saved. The default is to create a directory
-#' named **RESULTS_minePlastome** and the sequences will be saved within a
+#' @param dir The path to the directory where the mined DNA sequences in a
+#' fasta format file will be saved. The default is to create a directory
+#' named **RESULTS_mineMitochondrion** and the sequences will be saved within a
 #' subfolder named after the current date.
+#'
+#' @return A fasta format file of DNA sequences saved on disk.
 #'
 #' @examples
 #' \dontrun{
 #' library(catGenes)
-#' library(dplyr)
 #'
-#' data(GenBank_accessions)
-#'
-#' GenBank_plastomes <- GenBank_accessions %>%
-#'   filter(!is.na(Plastome)) %>%
-#'   select(c("Species", "Voucher", "Plastome"))
-#'
-#' minePlastome(genbank = GenBank_plastomes$Plastome,
-#'              taxon = GenBank_plastomes$Species,
-#'              voucher = GenBank_plastomes$Voucher,
-#'              CDS = TRUE,
-#'              genes = c("matK", "rbcL"),
-#'              rm_gb_files = FALSE,
-#'              verbose = TRUE,
-#'              dir = "RESULTS_minePlastome")
+#' mineMitochondrion(genbank = c("MN356196", "NC_008549"),
+#'                   CDS = TRUE,
+#'                   genes = c("COX1", "COX2", "ND4L"),
+#'                   rm_gb_files = FALSE,
+#'                   verbose = TRUE,
+#'                   dir = "RESULTS_mineMitochondrion")
 #'}
 #'
 #' @importFrom rentrez entrez_fetch
@@ -76,16 +70,16 @@
 #'
 #' @export
 #'
-minePlastome <- function(genbank = NULL,
-                         taxon = NULL,
-                         voucher = NULL,
-                         CDS = TRUE,
-                         genes = NULL,
-                         rm_gb_files = FALSE,
-                         verbose = TRUE,
-                         dir = "RESULTS_minePlastome") {
+mineMitochondrion <- function(genbank = NULL,
+                              taxon = NULL,
+                              voucher = NULL,
+                              CDS = TRUE,
+                              genes = NULL,
+                              rm_gb_files = FALSE,
+                              verbose = TRUE,
+                              dir = "RESULTS_mineMitochondrion") {
 
-  # Create folder to save mined GenBank seqs from plastomes
+  # Create folder to save mined GenBank seqs from mitochondrial genomes
   foldername <- paste0(dir, "/", format(Sys.time(), "%d%b%Y"))
   if (!dir.exists(dir)) {
     dir.create(dir)
@@ -109,7 +103,7 @@ minePlastome <- function(genbank = NULL,
     #https://stackoverflow.com/questions/14748557/skipping-error-in-for-loop
     tryCatch({
 
-      filename <- paste0(genbank[i], "_plastome.gb")
+      filename <- paste0(genbank[i], "_mitochondrion.gb")
 
       record <- rentrez::entrez_fetch(db = "nucleotide",
                                       id = genbank[i],
@@ -178,12 +172,12 @@ minePlastome <- function(genbank = NULL,
                  ifelse(is.null(voucher), "", paste0(voucher[i], "_")),
                  genbank_temp, "\n",
                  .seq_revcompl(targeted_seq, strand)),
-          paste0(foldername, "/", genes[j], "_from_plastome.fasta"),
+          paste0(foldername, "/", genes[j], "_from_mitochondrion.fasta"),
           append = TRUE
         )
         if (verbose) {
           message("'", paste0(genes[j], "' of ", taxon_temp,
-                              " ", genbank_temp, " plastome retrieved!"))
+                              " ", genbank_temp, " mitochondrial genome retrieved!"))
         }
       }
 

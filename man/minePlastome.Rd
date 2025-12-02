@@ -9,6 +9,7 @@ minePlastome(genbank = NULL,
              voucher = NULL,
              CDS = TRUE,
              genes = NULL,
+             rm_gb_files = FALSE,
              verbose = TRUE,
              dir = "RESULTS_minePlastome")
 }
