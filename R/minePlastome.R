@@ -36,6 +36,10 @@
 #'
 #' @param genes A vector of one or more gene names as annotated in GenBank.
 #'
+#' @param rm_gb_files Logical, if \code{TRUE}, the downloaded .gb files from
+#' GenBank will be removed from the directory after extracting the targeted loci.
+#' The default is \code{FALSE}, keeping the original .gb files.
+#'
 #' @param verbose Logical, if \code{FALSE}, a message showing each step during
 #' the GenBank search will not be printed in the console in full.
 #'
@@ -60,6 +64,7 @@
 #'              voucher = GenBank_plastomes$Voucher,
 #'              CDS = TRUE,
 #'              genes = c("matK", "rbcL"),
+#'              rm_gb_files = FALSE,
 #'              verbose = TRUE,
 #'              dir = "RESULTS_minePlastome")
 #'}
@@ -76,6 +81,7 @@ minePlastome <- function(genbank = NULL,
                          voucher = NULL,
                          CDS = TRUE,
                          genes = NULL,
+                         rm_gb_files = FALSE,
                          verbose = TRUE,
                          dir = "RESULTS_minePlastome") {
 
@@ -181,7 +187,25 @@ minePlastome <- function(genbank = NULL,
                                 " ", genbank_temp, " plastome retrieved!"))
           }
         }
+
+      # Remove .gb files if rm_gb_files is TRUE
+      if (rm_gb_files) {
+        file.remove(file_path)
+        if (verbose) {
+          message("Removed .gb file: ", filename)
+        }
+      }
+
     }, error = function(e){cat(paste0("ERROR retrieving ", genbank[i], ":"),
                                conditionMessage(e), "\n")})
   }
+
+  # Final message about file removal
+  if (rm_gb_files && verbose) {
+    message("\nAll .gb files have been removed from directory.")
+    message("Only extracted loci in FASTA format are kept.")
+  } else if (!rm_gb_files && verbose) {
+    message("\nAll .gb files are kept in directory for reference.")
+  }
+
 }

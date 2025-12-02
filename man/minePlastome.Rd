@@ -31,6 +31,10 @@ intron or intergenic spacer regions.}
 
 \item{genes}{A vector of one or more gene names as annotated in GenBank.}
 
+\item{rm_gb_files}{Logical, if \code{TRUE}, the downloaded .gb files from
+GenBank will be removed from the directory after extracting the targeted loci.
+The default is \code{FALSE}, keeping the original .gb files.}
+
 \item{verbose}{Logical, if \code{FALSE}, a message showing each step during
 the GenBank search will not be printed in the console in full.}
 
@@ -63,6 +67,7 @@ minePlastome(genbank = GenBank_plastomes$Plastome,
              voucher = GenBank_plastomes$Voucher,
              CDS = TRUE,
              genes = c("matK", "rbcL"),
+             rm_gb_files = FALSE,
              verbose = TRUE,
              dir = "RESULTS_minePlastome")
 }
