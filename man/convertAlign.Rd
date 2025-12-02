@@ -5,9 +5,9 @@
 \title{Convert any format of DNA alignment into another format}
 \usage{
 convertAlign(filepath = NULL,
-          format = NULL,
-          rmfiles = FALSE,
-          dir = NULL)
+             format = NULL,
+             rmfiles = FALSE,
+             dir = NULL)
 }
 \arguments{
 \item{filepath}{Path to the directory where the DNA alignments are stored.}
@@ -43,13 +43,13 @@ mineSeq(inputdf = GenBank_accessions,
         save = TRUE,
         dir = "RESULTS_mineSeq",
         filename = "GenBanK_seqs")
-        
+
 alignSeqs(filepath = folder_mined_seqs,
           method = "ClustalW",
           gapOpening = "default",
           format = "NEXUS",
           verbose = TRUE,
-          dir = "RESULTS_alignSeqs")       
+          dir = "RESULTS_alignSeqs")
 
 convertAlign(filepath = folder_aligned_seqs,
           format = "PHILIP",
