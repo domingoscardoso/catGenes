@@ -52,8 +52,10 @@ alignSeqs(filepath = folder_mined_seqs,
           dir = "RESULTS_alignSeqs")
 
 convertAlign(filepath = folder_aligned_seqs,
-          format = "PHILIP",
-          rmfiles = FALSE)
+          format = "PHYLIP",
+          rmfiles = FALSE,
+          verbose = TRUE,
+          dir = "RESULTS_convertAlign")
 }
 
 }

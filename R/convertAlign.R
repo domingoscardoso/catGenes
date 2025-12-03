@@ -49,8 +49,10 @@
 #'           dir = "RESULTS_alignSeqs")
 #'
 #' convertAlign(filepath = folder_aligned_seqs,
-#'           format = "PHILIP",
-#'           rmfiles = FALSE)
+#'           format = "PHYLIP",
+#'           rmfiles = FALSE,
+#'           verbose = TRUE,
+#'           dir = "RESULTS_convertAlign")
 #'}
 #'
 #' @importFrom ape read.nexus.data
@@ -134,8 +136,8 @@ convertAlign <- function(filepath = NULL,
       }
 
     } else if (format == "PHYLIP") {
-      phylipdframe(convertedfile, paste0(foldername, "/",
-                                         inputfiles_names[i],".phy"))
+      phylipdframe(convertedfile,
+                   paste0(foldername, "/", inputfiles_names[i],".phy"))
       # Remove original file from the directory
       if (rmfiles) {
         unlink(paste0(filepath, "/", inputfiles[i]))
