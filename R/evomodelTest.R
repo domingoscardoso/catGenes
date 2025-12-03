@@ -428,13 +428,3 @@ model_to_mrbayes <- function(model_name,
   ))
 }
 
-
-result <- evomodelTest(
-  nexus_file_path = "matK_aligned.nex",
-  model_criteria = "BIC",
-  partition = "1",
-  verbose = TRUE
-)
-
-
-
