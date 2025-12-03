@@ -13,8 +13,8 @@
 #'         as.character = FALSE,
 #'         verbose = TRUE,
 #'         save = TRUE,
-#'         dir = "RESULTS_mineSeq",
-#'         filename = "GenBanK_seqs")
+#'         filename = "GenBanK_seqs",
+#'         dir = "RESULTS_mineSeq")
 #'
 #' @param inputdf A dataframe object containing the taxon names in a 'Species'
 #' column, the voucher information in 'Voucher' column, and the GenBank accessions
@@ -59,8 +59,8 @@
 #'         as.character = FALSE,
 #'         verbose = TRUE,
 #'         save = TRUE,
-#'         dir = "RESULTS_mineSeq",
-#'         filename = "GenBanK_seqs")
+#'         filename = "GenBanK_seqs",
+#'         dir = "RESULTS_mineSeq")
 #'}
 #'
 #' @importFrom ape read.GenBank write.dna
@@ -76,8 +76,8 @@ mineSeq <- function(inputdf = NULL,
                     as.character = FALSE,
                     verbose = TRUE,
                     save = TRUE,
-                    dir = "RESULTS_mineSeq",
-                    filename = "GenBanK_seqs") {
+                    filename = "GenBanK_seqs",
+                    dir = "RESULTS_mineSeq") {
 
   # dir check
   dir <- .arg_check_dir(dir)

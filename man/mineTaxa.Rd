@@ -13,8 +13,8 @@ mineTaxa(term = NULL,
          plastome_apart = TRUE,
          rm_duplicated = TRUE,
          retmax = 4000,
-         save = TRUE,
          verbose = TRUE,
+         save = TRUE,
          dir = "RESULTS_mineTaxa")
 }
 \arguments{
@@ -53,12 +53,12 @@ to plastomes and other sequences.}
 \item{retmax}{Numeric. Maximum number of sequences to retrieve from GenBank.
 Default is 4000. Increase for large queries, but note NCBI rate limits.}
 
+\item{verbose}{Logical. If \code{TRUE} (default), progress messages are printed
+to the console. If \code{FALSE}, function runs silently.}
+
 \item{save}{Logical. If \code{TRUE} (default), results are saved to disk in
 the specified directory. If \code{FALSE}, results are returned as R objects
 without saving.}
-
-\item{verbose}{Logical. If \code{TRUE} (default), progress messages are printed
-to the console. If \code{FALSE}, function runs silently.}
 
 \item{dir}{Character string specifying the directory path for saving results.
 Default is "RESULTS_mineTaxa". A subdirectory with current date will be created
@@ -145,8 +145,8 @@ result3 <- mineTaxa(
 # Example 4: Return results without saving to disk
 result4 <- mineTaxa(
   term = "Arabidopsis[Organism] AND chloroplast[Title]",
-  save = FALSE,
-  verbose = FALSE
+  verbose = FALSE,
+  save = FALSE
 )
 }
 

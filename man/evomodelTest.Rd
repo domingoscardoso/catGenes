@@ -4,36 +4,30 @@
 \alias{evomodelTest}
 \title{Automated Evolutionary Model Selection and MrBayes Command Generation}
 \usage{
-evomodelTest(
-  nexus_file_path = NULL,
-  model_criteria = "BIC",
-  partition = "all",
-  models_to_test = "all",
-  include_G = TRUE,
-  include_I = TRUE,
-  mc.cores = 4,
-  verbose = TRUE,
-  dir = "RESULTS_evomodelTest"
-)
+evomodelTest(nexus_file_path = NULL,
+             model_criteria = "AIC",
+             models_to_test = "all",
+             include_G = TRUE,
+             include_I = TRUE,
+             mc.cores = 4,
+             verbose = TRUE,
+             dir = "RESULTS_evomodelTest")
 }
 \arguments{
-\item{nexus_file_path}{Path to the NEXUS alignment file (required)}
+\item{nexus_file_path}{Path to the NEXUS alignment file(s).}
 
-\item{model_criteria}{Selection criterion: "AIC" or "BIC" (default: "BIC")}
+\item{model_criteria}{Selection criterion: "AIC" or "BIC" (default: "BIC").}
 
-\item{partition}{MrBayes partition number to apply model to (default: "all")}
+\item{models_to_test}{Which models to test: "all" for all models, "standard"
+for JC/F81/K80/HKY/SYM/GTR only, or a character vector of specific models.}
 
-\item{models_to_test}{Which models to test: "all" for all models,
-"standard" for JC/F81/K80/HKY/SYM/GTR only,
-or a character vector of specific models}
+\item{include_G}{Should Gamma rate heterogeneity be tested? (default: TRUE).}
 
-\item{include_G}{Should Gamma rate heterogeneity be tested? (default: TRUE)}
+\item{include_I}{Should invariant sites be tested? (default: TRUE).}
 
-\item{include_I}{Should invariant sites be tested? (default: TRUE)}
+\item{mc.cores}{Number of cores for parallel computation (default: 4).}
 
-\item{mc.cores}{Number of cores for parallel computation (default: 4)}
-
-\item{verbose}{Print progress messages? (default: TRUE)}
+\item{verbose}{Print progress messages? (default: TRUE).}
 
 \item{dir}{The path to the directory where the model selection results will
 be saved. The default is to create a directory named \strong{RESULTS_evomodelTest}
@@ -45,8 +39,9 @@ Invisibly returns a list containing all results. Saves a detailed
 report to a text file in the results directory.
 }
 \description{
-This function performs DNA substitution model selection using phangorn::modelTest,
-identifies the best model according to AIC and BIC criteria, and generates
+This function performs DNA substitution model selection using
+the modelTest function from \href{https://klausvigo.github.io/phangorn/index.html}{phangorn}
+package, identifies the best model according to AIC and BIC criteria, and generates
 corresponding MrBayes commands for phylogenetic analysis.
 }
 \examples{

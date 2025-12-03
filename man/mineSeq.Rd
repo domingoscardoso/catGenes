@@ -9,8 +9,8 @@ mineSeq(inputdf = NULL,
         as.character = FALSE,
         verbose = TRUE,
         save = TRUE,
-        dir = "RESULTS_mineSeq",
-        filename = "GenBanK_seqs")
+        filename = "GenBanK_seqs",
+        dir = "RESULTS_mineSeq")
 }
 \arguments{
 \item{inputdf}{A dataframe object containing the taxon names in a 'Species'
@@ -32,14 +32,14 @@ the GenBank search will not be printed in the console in full.}
 
 \item{save}{Logical, if \code{TRUE}, the mined sequences will be saved on disk.}
 
+\item{filename}{Name of the output file to be saved. The default is to create
+a file entitled \strong{GenBanK_seqs}.}
+
 \item{dir}{The path to the directory where the mined DNA sequences in a
 fasta format file will be saved provided that the argument \code{save}
 is set up in \code{TRUE}. The default is to create a directory named
 \strong{RESULTS_mineSeq} and the sequences will be saved within a subfolder named
 after the current date.}
-
-\item{filename}{Name of the output file to be saved. The default is to create
-a file entitled \strong{GenBanK_seqs}.}
 }
 \value{
 A list of DNA sequences made of vectors of class 'DNAbin', or of
@@ -63,8 +63,8 @@ mineSeq(inputdf = GenBank_accessions,
         as.character = FALSE,
         verbose = TRUE,
         save = TRUE,
-        dir = "RESULTS_mineSeq",
-        filename = "GenBanK_seqs")
+        filename = "GenBanK_seqs",
+        dir = "RESULTS_mineSeq")
 }
 
 }
