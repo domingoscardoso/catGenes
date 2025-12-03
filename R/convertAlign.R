@@ -61,6 +61,7 @@
 convertAlign <- function(filepath = NULL,
                          format = NULL,
                          rmfiles = FALSE,
+                         verbose = TRUE,
                          dir = "RESULTS_convertAlign") {
 
   inputfiles <- list.files(filepath)
