@@ -320,7 +320,7 @@ evomodelTest <- function(nexus_file_path = NULL,
     cat("  prset ratepr=variable;\n")
     cat("  \n")
     cat("  [ Unlink parameters between partitions ]\n")
-    cat("  unlink statefreqpr=(all) revmatpr=(all) shapepr=(all) pinvarpr=(all);\n")
+    cat("  unlink statefreq=(all) revmat=(all) shape=(all) pinvar=(all);\n")
     cat("  \n")
     cat("  [ MCMC settings (adjust as needed) ]\n")
     cat("  mcmc ngen=2000000 samplefreq=1000 printfreq=1000\n")
