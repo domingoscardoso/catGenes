@@ -78,7 +78,7 @@
 #'
 #' @export
 #'
-
+list.files(alin)
 alignSeqs <- function(filepath = NULL,
                       method = NULL,
                       gapOpening = "default",
@@ -92,8 +92,8 @@ alignSeqs <- function(filepath = NULL,
   if (length(fasta_files) == 0) {
     stop(paste0("There is no DNA alignment in the directory.\n",
                 "Make sure you have provided a correct filepath.\n\n"),
-         "Find help also at DBOSLab-UFBA\n",
-         "(Domingos Cardoso; cardosobot@gmail.com)")
+         "Find help also with:\n",
+         "Domingos Cardoso (JBRJ; cardosobot@gmail.com)")
   }
 
   temp <- readLines(paste0(filepath, "/", fasta_files[1]))
@@ -102,12 +102,12 @@ alignSeqs <- function(filepath = NULL,
                 fasta_files[1], ":\n",
                 '">"', " expected at beginning of line 1.\n\n"),
                 "Make sure input DNA sequences are in FASTA format.\n\n",
-                "Find help also at DBOSLab-UFBA\n",
-                "(Domingos Cardoso; cardosobot@gmail.com)")
+                "Find help also with:\n",
+                "Domingos Cardoso (JBRJ; cardosobot@gmail.com)")
   }
 
   if (!is.null(filename)) {
-    name_files <- filename
+    name_files <- paste0(filename, "_", gsub(".*_|[.]fasta", "", fasta_files))
   } else {
     name_files <- gsub(".*_|[.]fasta", "", fasta_files)
   }
