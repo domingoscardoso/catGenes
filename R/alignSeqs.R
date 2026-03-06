@@ -78,7 +78,7 @@
 #'
 #' @export
 #'
-list.files(alin)
+
 alignSeqs <- function(filepath = NULL,
                       method = NULL,
                       gapOpening = "default",
