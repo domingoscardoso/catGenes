@@ -24,8 +24,8 @@ executable is not found directly in \code{mrbayes_dir}, the function also checks
 
 Typical values for \code{mrbayes_dir}:
 \itemize{
-\item macOS (Apple Silicon, Homebrew): \code{"/opt/homebrew/bin"}
 \item macOS (Intel, Homebrew): \code{"/usr/local/bin"}
+\item macOS (Apple Silicon, Homebrew): \code{"/opt/homebrew/bin"}
 \item macOS/Linux (local install): \code{"~/.local/bin"} (use \code{path.expand("~/.local/bin")})
 \item Windows (typical): \code{"C:/Program Files/MrBayes"} or a folder containing \code{mb.exe}
 }}
@@ -91,7 +91,7 @@ Stopping the run:
 \dontrun{
 # Background mode (recommended for stop-anytime control)
 res <- mrbayesRun("analysis.nex",
-                  mrbayes_dir = "/opt/homebrew/bin",
+                  mrbayes_dir = "/usr/local/bin",
                   background = TRUE)
 res$poll()          # print new output
 mrbayesStop(res)    # graceful stop
@@ -99,7 +99,7 @@ mrbayesStop(res, TRUE) # force kill
 
 # Foreground mode (blocking): stop with Esc in RStudio
 mrbayesRun("analysis.nex",
-           mrbayes_dir = "/opt/homebrew/bin")
+           mrbayes_dir = "/usr/local/bin")
 }
 
 }
