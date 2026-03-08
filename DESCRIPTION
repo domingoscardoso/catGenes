@@ -1,12 +1,28 @@
 Type: Package
 Package: catGenes
-Title: Concatenating multiple DNA alignments and other phylogenetic features
-Version: 1.0
-Author: Domingos Cardoso and Quezia Cavalcante
-Description: The catGenes package is intended to help researchers in phylogenetics and phylogenomics to build a fully concatenated or combined (non-interleaved) dataset by automatically comparing individual DNA alignments. Other features also involve mining DNA sequences or targeted loci from plastomes and mitochondrial genomes from GenBank, as well as plotting phylogenetic figures.
-Maintainer: Domingos Cardoso <cardosobot@gmail.com>
-URL: https://github.com/domingoscardoso/catGenes
-Language: en-US
+Title: Tools for DNA Alignment Concatenation, Sequence Mining, and Phylogenetic Analysis
+Version: 1.0.0
+Authors@R:
+    c(
+      person(given = "Domingos",
+             family = "Cardoso",
+             role = c("aut", "cre", "cph"),
+             email = "domingoscardoso@jbrj.gov.br",
+             comment = c(ORCID = "0000-0001-7072-2656")),
+      person(given = "Quezia",
+             family = "Cavalcante",
+             role = c("aut", "cre", "cph"),
+             email = "queziacs@yahoo.com.br",
+             comment = c(ORCID = "0000-0002-6754-7188"))
+    )
+Maintainer: Domingos Cardoso <domingoscardoso@jbrj.gov.br>
+Description: Provides tools for assembling and preparing multilocus DNA datasets for phylogenetic and phylogenomic analyses. The package supports comparison and concatenation of multiple alignments with or without duplicated taxa/accessions, conversion among common alignment formats, and writing concatenated datasets in NEXUS and PHYLIP formats with partition information. It also includes functions to retrieve DNA sequences and targeted loci from GenBank, including plastid and mitochondrial genomes, perform evolutionary model selection, generate MrBayes command blocks, run MrBayes from R, and visualize phylogenetic trees with 'ggtree'. These features are designed to facilitate data assembly, dataset standardization, phylogenetic inference, and tree presentation within reproducible workflows.
+License: MIT + file LICENSE
+URL: https://dboslab.github.io/catGenes-website/, https://github.com/dboslab/catGenes
+BugReports: https://github.com/DBOSlab/catGenes/issues
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
 Depends:
     R (>= 3.5.0), ape, ggtree, rentrez, msa
 Imports:
@@ -32,10 +48,8 @@ Imports:
     geneviewer,
     flora,
     glue
-License: MIT + file LICENSE
-Encoding: UTF-8
 LazyData: true
-Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.3
-Suggests: knitr
-VignetteBuilder: knitr
+Suggests:
+    testthat (>= 3.0.0),
+    rmarkdown
+Config/testthat/edition: 3
