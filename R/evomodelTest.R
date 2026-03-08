@@ -372,7 +372,7 @@ evomodelTest <- function(nexus_file_path = NULL,
     cat("  # ADDITIONAL MRBAYES SETTINGS\n")
     cat("  # ================================================\n")
     cat("  [ Base frequencies (empirical) ]\n")
-    cat("  prset applyto=(all) statefreqpr=dirichlet(1,1,1,1);\n")
+    cat("  prset applyto=(all) statefreq=dirichlet(1,1,1,1);\n")
     cat("  \n")
     cat("  [ MCMC settings (adjust as needed) ]\n")
     cat("  mcmc ngen=10000000 samplefreq=10000 printfreq=10000\n")
@@ -589,13 +589,13 @@ evomodelTest <- function(nexus_file_path = NULL,
     cat("  # ADDITIONAL MRBAYES SETTINGS\n")
     cat("  # ================================================\n")
     cat("  [ Base frequencies (empirical) ]\n")
-    cat("  prset applyto=(all) statefreqpr=dirichlet(1,1,1,1);\n")
+    cat("  prset applyto=(all) statefreq=dirichlet(1,1,1,1);\n")
     cat("  \n")
     cat("  [ Allow different rates across partitions ]\n")
     cat("  prset ratepr=variable;\n")
     cat("  \n")
     cat("  [ Unlink parameters between partitions ]\n")
-    cat("  unlink statefreqpr=(all) revmatpr=(all) shapepr=(all) pinvarpr=(all);\n")
+    cat("  unlink statefreq=(all) revmat=(all) shape=(all) pinvar=(all);\n")
     cat("  \n")
     cat("  [ MCMC settings (adjust as needed) ]\n")
     cat("  mcmc ngen=10000000 samplefreq=10000 printfreq=10000\n")
@@ -670,7 +670,7 @@ evomodelTest <- function(nexus_file_path = NULL,
     "  [ ADDITIONAL MRBAYES SETTINGS                      ]",
     "  [ ================================================ ]",
     "  [ Base frequencies (empirical) ]",
-    "  prset applyto=(all) statefreqpr=dirichlet(1,1,1,1);",
+    "  prset applyto=(all) statefreq=dirichlet(1,1,1,1);",
     "",
     "  [ MCMC settings (adjust as needed) ]",
     "  mcmc ngen=10000000 samplefreq=10000 printfreq=10000",
@@ -735,13 +735,13 @@ evomodelTest <- function(nexus_file_path = NULL,
     "  [ ADDITIONAL MRBAYES SETTINGS                      ]",
     "  [ ================================================ ]",
     "  [ Base frequencies (empirical) ]",
-    "  prset applyto=(all) statefreqpr=dirichlet(1,1,1,1);",
+    "  prset applyto=(all) statefreq=dirichlet(1,1,1,1);",
     "",
     "  [ Allow different rates across partitions ]",
     "  prset ratepr=variable;",
     "",
     "  [ Unlink parameters between partitions ]",
-    "  unlink statefreqpr=(all) revmatpr=(all) shapepr=(all) pinvarpr=(all);",
+    "  unlink statefreq=(all) revmat=(all) shape=(all) pinvar=(all);",
     "",
     "  [ MCMC settings (adjust as needed) ]",
     "  mcmc ngen=10000000 samplefreq=10000 printfreq=10000",
