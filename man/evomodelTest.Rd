@@ -10,6 +10,9 @@ evomodelTest(nexus_file_path = NULL,
              include_G = TRUE,
              include_I = TRUE,
              mc.cores = 4,
+             append_mrbayes_to_nexus = TRUE,
+             overwrite_original_nexus = FALSE,
+             combined_nexus_file_path = NULL,
              verbose = TRUE,
              dir = "RESULTS_evomodelTest")
 }
@@ -26,6 +29,17 @@ for JC/F81/K80/HKY/SYM/GTR only, or a character vector of specific models.}
 \item{include_I}{Should invariant sites be tested? (default: TRUE).}
 
 \item{mc.cores}{Number of cores for parallel computation (default: 4).}
+
+\item{append_mrbayes_to_nexus}{Logical. If TRUE, appends the generated
+MrBayes block to each input NEXUS matrix.}
+
+\item{overwrite_original_nexus}{Logical. If TRUE and
+\code{append_mrbayes_to_nexus = TRUE}, the original NEXUS file is overwritten.
+If FALSE, a copy with the same basename is written to the results folder.}
+
+\item{combined_nexus_file_path}{Optional path to a concatenated/combined
+NEXUS matrix. If provided, the function appends the complete combined
+MrBayes block for partitioned analysis to that file.}
 
 \item{verbose}{Print progress messages? (default: TRUE).}
 

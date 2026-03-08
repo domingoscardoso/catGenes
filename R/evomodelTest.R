@@ -14,6 +14,9 @@
 #'              include_G = TRUE,
 #'              include_I = TRUE,
 #'              mc.cores = 4,
+#'              append_mrbayes_to_nexus = TRUE,
+#'              overwrite_original_nexus = FALSE,
+#'              combined_nexus_file_path = NULL,
 #'              verbose = TRUE,
 #'              dir = "RESULTS_evomodelTest")
 #'
@@ -24,6 +27,14 @@
 #' @param include_G Should Gamma rate heterogeneity be tested? (default: TRUE).
 #' @param include_I Should invariant sites be tested? (default: TRUE).
 #' @param mc.cores Number of cores for parallel computation (default: 4).
+#' @param append_mrbayes_to_nexus Logical. If TRUE, appends the generated
+#' MrBayes block to each input NEXUS matrix.
+#' @param overwrite_original_nexus Logical. If TRUE and
+#' \code{append_mrbayes_to_nexus = TRUE}, the original NEXUS file is overwritten.
+#' If FALSE, a copy with the same basename is written to the results folder.
+#' @param combined_nexus_file_path Optional path to a concatenated/combined
+#' NEXUS matrix. If provided, the function appends the complete combined
+#' MrBayes block for partitioned analysis to that file.
 #' @param verbose Print progress messages? (default: TRUE).
 #' @param dir The path to the directory where the model selection results will
 #' be saved. The default is to create a directory named **RESULTS_evomodelTest**
@@ -57,6 +68,9 @@ evomodelTest <- function(nexus_file_path = NULL,
                          include_G = TRUE,
                          include_I = TRUE,
                          mc.cores = 4,
+                         append_mrbayes_to_nexus = TRUE,
+                         overwrite_original_nexus = FALSE,
+                         combined_nexus_file_path = NULL,
                          verbose = TRUE,
                          dir = "RESULTS_evomodelTest") {
 
@@ -86,8 +100,9 @@ evomodelTest <- function(nexus_file_path = NULL,
     dir.create(foldername, recursive = TRUE)
   }
 
-  # Initialize storage
-  selected_models <- vector("character", length(nexus_files))
+  selected_models <- character(length(nexus_files))
+  partition_names <- character(length(nexus_files))
+  partition_lengths <- numeric(length(nexus_files))
   all_results <- list()
   file_results <- list()
 
@@ -102,7 +117,8 @@ evomodelTest <- function(nexus_file_path = NULL,
     }
 
     # Generate output filename
-    base_name <- tools::file_path_sans_ext(basename(nexus_files[l]))
+    base_name <- gsub("_.*", "", tools::file_path_sans_ext(basename(nexus_files[l])))
+    partition_names[l] <- base_name
     output_file <- file.path(foldername, paste0(base_name, "_model_selection.txt"))
 
     # Start writing to file
@@ -140,6 +156,7 @@ evomodelTest <- function(nexus_file_path = NULL,
     }
 
     phy <- phangorn::read.phyDat(nexus_files[l], format = "nexus")
+    partition_lengths[l] <- sum(attr(phy, "weight"))
 
     cat("\nALIGNMENT SUMMARY:\n")
     cat(rep("-", 50), "\n", sep = "")
@@ -286,6 +303,43 @@ evomodelTest <- function(nexus_file_path = NULL,
     # Generate commands using evomodelCmds
     mrbayes_commands <- evomodelCmds(model_vector = model_vector_single)
 
+    nexus_with_block_file <- NULL
+
+    if (append_mrbayes_to_nexus) {
+
+      original_lines <- readLines(nexus_files[l], warn = FALSE)
+
+      has_mrbayes_block <- any(
+        grepl("^\\s*begin\\s+mrbayes\\s*;", original_lines, ignore.case = TRUE)
+      )
+
+      if (has_mrbayes_block) {
+        warning("File already contains a MrBayes block: ", basename(nexus_files[l]))
+      } else {
+
+        block_lines <- .build_mrbayes_block(
+          selected_model = selected_model,
+          model_criteria = model_criteria,
+          mrbayes_commands = mrbayes_commands,
+          alignment_name = base_name
+        )
+
+        nexus_with_block_file <- if (overwrite_original_nexus) {
+          nexus_files[l]
+        } else {
+          file.path(foldername, basename(nexus_files[l]))
+        }
+
+        writeLines(c(original_lines, block_lines), nexus_with_block_file, useBytes = TRUE)
+
+        if (verbose) {
+          message("[", format(Sys.time(), "%H:%M:%S"),
+                  "] NEXUS file with embedded MrBayes block saved to: ",
+                  nexus_with_block_file, sep = "")
+        }
+      }
+    }
+
     # ============================================================
     # Write MrBayes blocks based on evomodelCmds output
     # ============================================================
@@ -297,11 +351,15 @@ evomodelTest <- function(nexus_file_path = NULL,
     cat(rep("=", 50), "\n\n", sep = "")
 
     cat("begin mrbayes;\n")
+    cat("set autoclose=yes;\n")
+    cat("  \n")
+    cat("outgroup WRITE_YOUR_OUTGROUP;\n")
+    cat("  \n")
     cat("  # ================================================\n")
     cat("  # MODEL SETTINGS (from evomodelTest)\n")
     cat("  # ================================================\n")
-    cat("  # Selected model: ", selected_model, "\n", sep = "")
-    cat("  # Selection criterion: ", model_criteria, "\n", sep = "")
+    cat("  [ Selected model: ", selected_model, "]\n", sep = "")
+    cat("  [ Selection criterion: ", model_criteria, "]\n", sep = "")
 
     # Use the commands from evomodelCmds - they're already optimized
     # For single partition, evomodelCmds creates commands like "applyto=(1)"
@@ -316,19 +374,14 @@ evomodelTest <- function(nexus_file_path = NULL,
     cat("  [ Base frequencies (empirical) ]\n")
     cat("  prset applyto=(all) statefreqpr=dirichlet(1,1,1,1);\n")
     cat("  \n")
-    cat("  [ Allow different rates across partitions if multiple exist ]\n")
-    cat("  prset ratepr=variable;\n")
-    cat("  \n")
-    cat("  [ Unlink parameters between partitions ]\n")
-    cat("  unlink statefreq=(all) revmat=(all) shape=(all) pinvar=(all);\n")
-    cat("  \n")
     cat("  [ MCMC settings (adjust as needed) ]\n")
-    cat("  mcmc ngen=2000000 samplefreq=1000 printfreq=1000\n")
-    cat("       nchains=4 nruns=2 savebrlens=yes;\n")
+    cat("  mcmc ngen=10000000 samplefreq=10000 printfreq=10000\n")
+    cat("       nchains=8 nruns=2 savebrlens=yes", paste0("filename=", base_name, "_Bayesian;"), "\n")
     cat("  \n")
     cat("  [ Convergence diagnostics ]\n")
-    cat("  sumt burnin=500;\n")
-    cat("  sump burnin=500;\n")
+    cat("  log start", paste0("filename=", base_name, "_mrbayes_sump_sumt.log"), "append;\n")
+    cat("  sump;\n")
+    cat("  sumt relburnin=yes burninfrac=0.25;\n")
     cat("end;\n\n")
 
     # Store alternative models for comparison
@@ -368,7 +421,8 @@ evomodelTest <- function(nexus_file_path = NULL,
       mrbayes_commands = mrbayes_commands,
       output_files = list(
         report = output_file,
-        raw_data = raw_results_file
+        raw_data = raw_results_file,
+        nexus_with_mrbayes = nexus_with_block_file
       ),
       settings = list(
         nexus_file = basename(nexus_files[l]),
@@ -391,8 +445,58 @@ evomodelTest <- function(nexus_file_path = NULL,
   # PART 2: CREATE COMBINED MRBAYES COMMANDS FOR MULTIPLE FILES
   # ============================================================
   if (length(selected_models) > 1) {
+
     # Generate optimized commands for all partitions together
     combined_mrbayes_commands <- evomodelCmds(model_vector = selected_models)
+
+
+    combined_nexus_with_block_file <- NULL
+
+    if (!is.null(combined_nexus_file_path)) {
+
+      if (!file.exists(combined_nexus_file_path)) {
+        warning("The combined NEXUS file does not exist: ", combined_nexus_file_path)
+      } else {
+
+        combined_original_lines <- readLines(combined_nexus_file_path, warn = FALSE)
+
+        has_mrbayes_block <- any(
+          grepl("^\\s*begin\\s+mrbayes\\s*;", combined_original_lines, ignore.case = TRUE)
+        )
+
+        if (has_mrbayes_block) {
+          warning("Combined NEXUS file already contains a MrBayes block: ",
+                  basename(combined_nexus_file_path))
+        } else {
+
+          combined_block_lines <- .build_combined_mrbayes_block(
+            partition_names = partition_names,
+            partition_lengths = partition_lengths,
+            combined_mrbayes_commands = combined_mrbayes_commands,
+            block_name = "regions",
+            combined_prefix = "comb_Bayesian"
+          )
+
+          combined_nexus_with_block_file <- if (overwrite_original_nexus) {
+            combined_nexus_file_path
+          } else {
+            file.path(foldername, basename(combined_nexus_file_path))
+          }
+
+          writeLines(
+            c(combined_original_lines, combined_block_lines),
+            combined_nexus_with_block_file,
+            useBytes = TRUE
+          )
+
+          if (verbose) {
+            message("[", format(Sys.time(), "%H:%M:%S"),
+                    "] Combined NEXUS file with embedded MrBayes block saved to: ",
+                    combined_nexus_with_block_file, sep = "")
+          }
+        }
+      }
+    }
 
     # ============================================================
     # CREATE SEPARATE TXT FILE WITH COMBINED MRBAYES BLOCKS
@@ -443,21 +547,32 @@ evomodelTest <- function(nexus_file_path = NULL,
     cat("COMPLETE MRBAYES BLOCK FOR ALL PARTITIONS\n")
     cat(rep("-", 50), "\n\n", sep = "")
 
-    cat("# Copy and paste this entire block into your NEXUS file\n\n")
+    cat("# Copy and paste this entire block into your concatenated NEXUS file\n\n")
+
+    # Compute cumulative ranges
+    start_pos <- c(1, cumsum(partition_lengths)[-length(partition_lengths)] + 1)
+    end_pos <- cumsum(partition_lengths)
 
     cat("begin mrbayes;\n")
-    cat("  \n")
+    cat("  set autoclose=yes;\n")
+    cat("\n")
+    cat("  outgroup WRITE_YOUR_OUTGROUP;\n")
+    cat("\n")
     cat("  # ================================================\n")
-    cat("  # PARTITION DEFINITIONS (ADJUST TO YOUR DATA)\n")
+    cat("  # PARTITION DEFINITIONS\n")
     cat("  # ================================================\n")
-    for (i in seq_along(nexus_files)) {
-      cat("  # charset part", i, " = [YOUR_RANGE_HERE];  # ",
-          basename(nexus_files[i]), "\n", sep = "")
+
+    for (i in seq_along(partition_names)) {
+      cat("  charset ", partition_names[i], " = ",
+          start_pos[i], "-", end_pos[i], "; [",
+          partition_lengths[i], " = ", partition_names[i], "]\n", sep = "")
     }
-    cat("  # partition analysis = ", length(nexus_files), ": ",
-        paste0("part", seq_along(nexus_files), collapse = ", "), ";\n", sep = "")
-    cat("  # set partition = analysis;\n")
-    cat("  \n")
+
+    cat("\n")
+    cat("  partition regions = ", length(partition_names), ": ",
+        paste(partition_names, collapse = ", "), ";\n", sep = "")
+    cat("  set partition = regions;\n")
+    cat("\n")
     cat("  # ================================================\n")
     cat("  # MODEL SETTINGS (optimized by evomodelTest)\n")
     cat("  # ================================================\n")
@@ -483,13 +598,14 @@ evomodelTest <- function(nexus_file_path = NULL,
     cat("  unlink statefreqpr=(all) revmatpr=(all) shapepr=(all) pinvarpr=(all);\n")
     cat("  \n")
     cat("  [ MCMC settings (adjust as needed) ]\n")
-    cat("  mcmc ngen=2000000 samplefreq=1000 printfreq=1000\n")
-    cat("       nchains=4 nruns=2 savebrlens=yes;\n")
+    cat("  mcmc ngen=10000000 samplefreq=10000 printfreq=10000\n")
+    cat("       nchains=8 nruns=2 savebrlens=yes filename=comb_Bayesian;\n")
     cat("  \n")
     cat("  [ Convergence diagnostics ]\n")
-    cat("  sumt burnin=500;\n")
-    cat("  sump burnin=500;\n")
-    cat("end;\n")
+    cat("  log start filename=comb_mrbayes_sump_sumt.log append;\n")
+    cat("  sump;\n")
+    cat("  sumt relburnin=yes burninfrac=0.25;\n")
+    cat("end;\n\n")
 
     sink()
 
@@ -512,6 +628,7 @@ evomodelTest <- function(nexus_file_path = NULL,
         selected_models = selected_models,
         mrbayes_commands = combined_mrbayes_commands,
         compact_output_file = compact_output_file,
+        combined_nexus_with_mrbayes = combined_nexus_with_block_file,
         partition_mapping = setNames(selected_models,
                                      paste0("Partition ", seq_along(selected_models)))
       )
@@ -523,6 +640,122 @@ evomodelTest <- function(nexus_file_path = NULL,
 
   # Return results invisibly
   invisible(all_results)
+}
+
+
+.build_mrbayes_block <- function(selected_model,
+                                 model_criteria,
+                                 mrbayes_commands,
+                                 alignment_name) {
+
+  cmd_lines <- mrbayes_commands$all_commands
+  cmd_lines <- cmd_lines[!grepl("^#", cmd_lines)]
+
+  c(
+    "",
+    "",
+    "begin mrbayes;",
+    "  set autoclose=yes;",
+    "",
+    "  outgroup WRITE_YOUR_OUTGROUP;",
+    "",
+    "  [ ================================================ ]",
+    "  [ MODEL SETTINGS (from evomodelTest)               ]",
+    "  [ ================================================ ]",
+    paste0("  [ Selected model: ", selected_model, " ]"),
+    paste0("  [ Selection criterion: ", model_criteria, " ]"),
+    paste0("  ", cmd_lines),
+    "",
+    "  [ ================================================ ]",
+    "  [ ADDITIONAL MRBAYES SETTINGS                      ]",
+    "  [ ================================================ ]",
+    "  [ Base frequencies (empirical) ]",
+    "  prset applyto=(all) statefreqpr=dirichlet(1,1,1,1);",
+    "",
+    "  [ MCMC settings (adjust as needed) ]",
+    "  mcmc ngen=10000000 samplefreq=10000 printfreq=10000",
+    paste0("       nchains=8 nruns=2 savebrlens=yes filename=", alignment_name, "_Bayesian;"),
+    "",
+    "  [ Convergence diagnostics ]",
+    paste0("  log start filename=", alignment_name, "_mrbayes_sump_sumt.log append;"),
+    "  sump;",
+    "  sumt relburnin=yes burninfrac=0.25;",
+    "end;"
+  )
+}
+
+
+.build_combined_mrbayes_block <- function(partition_names,
+                                          partition_lengths,
+                                          combined_mrbayes_commands,
+                                          block_name = "regions",
+                                          combined_prefix = "comb_Bayesian") {
+
+  start_pos <- c(1, cumsum(partition_lengths)[-length(partition_lengths)] + 1)
+  end_pos <- cumsum(partition_lengths)
+
+  cmd_lines <- combined_mrbayes_commands$all_commands
+  cmd_lines <- cmd_lines[!grepl("^#", cmd_lines)]
+
+  block <- c(
+    "",
+    "",
+    "begin mrbayes;",
+    "  set autoclose=yes;",
+    "",
+    "  outgroup WRITE_YOUR_OUTGROUP;",
+    "",
+    "  [ ================================================ ]",
+    "  [ PARTITION DEFINITIONS                            ]",
+    "  [ ================================================ ]"
+  )
+
+  for (i in seq_along(partition_names)) {
+    block <- c(
+      block,
+      paste0("  charset ", partition_names[i], " = ",
+             start_pos[i], "-", end_pos[i], "; [",
+             partition_lengths[i], " = ", partition_names[i], "]")
+    )
+  }
+
+  block <- c(
+    block,
+    "",
+    paste0("  partition ", block_name, " = ", length(partition_names), ": ",
+           paste(partition_names, collapse = ", "), ";"),
+    paste0("  set partition = ", block_name, ";"),
+    "",
+    "  [ ================================================ ]",
+    "  [ MODEL SETTINGS (optimized by evomodelTest).      ]",
+    "  [ ================================================ ]",
+    paste0("  ", cmd_lines),
+    "",
+    "  [ ================================================ ]",
+    "  [ ADDITIONAL MRBAYES SETTINGS                      ]",
+    "  [ ================================================ ]",
+    "  [ Base frequencies (empirical) ]",
+    "  prset applyto=(all) statefreqpr=dirichlet(1,1,1,1);",
+    "",
+    "  [ Allow different rates across partitions ]",
+    "  prset ratepr=variable;",
+    "",
+    "  [ Unlink parameters between partitions ]",
+    "  unlink statefreqpr=(all) revmatpr=(all) shapepr=(all) pinvarpr=(all);",
+    "",
+    "  [ MCMC settings (adjust as needed) ]",
+    "  mcmc ngen=10000000 samplefreq=10000 printfreq=10000",
+    paste0("       nchains=8 nruns=2 savebrlens=yes filename=", combined_prefix, ";"),
+    "",
+    "  [ Convergence diagnostics ]",
+    paste0("  log start filename=", gsub("_Bayesian$", "", combined_prefix),
+           "_mrbayes_sump_sumt.log append;"),
+    "  sump;",
+    "  sumt relburnin=yes burninfrac=0.25;",
+    "end;"
+  )
+
+  block
 }
 
 
